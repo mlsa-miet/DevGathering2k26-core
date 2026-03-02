@@ -5,20 +5,23 @@ import GetInTouch from '../components/get-in-touch';
 import PastEvents from '@/components/PastEvents';
 import FAQ from '@/components/FAQ';
 import Sponsors from "@/components/Sponsors";
-
-
+import IntroOverlay from "../components/IntroOverlay";
 
 export default function Home() {
   return (
-    <main className="bg-gray-50"> 
-     return <DevGathering />
-      <EventTimeline />
-      <LeadOrganizers /> 
-      <PastEvents />
-     <Sponsors />
-      <FAQ />
-      <GetInTouch />
-    </main>
+    <>
+      <IntroOverlay>
+      <main className="relative z-10"> 
+        <DevGathering />
+        <EventTimeline />
+        <LeadOrganizers /> 
+        <PastEvents />
+        <Sponsors />
+        <FAQ />
+        <GetInTouch />
+      </main>
+      </IntroOverlay>
+    </>
   );
 }
 
