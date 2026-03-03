@@ -1,205 +1,354 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 
-type Faq = {
-  id: number;
-  question: string;
-  answer: string;
-};
+/* ── Palette ── */
+const BLUE   = "#CFE8FF";
+const YELLOW = "#FFE9A8";
+const GREEN  = "#D7F5D0";
+const PINK   = "#FFD6E8";
 
-// ─── FAQ Data ─────────────────────────────────────────────────────────────────
-const faqs: Faq[] = [
+const ACCENT_CYCLE = ["#5BA4E6", "#E8916E", "#4CAF50", "#D85C8A", "#C89A2A"];
+const BG_CYCLE     = [BLUE, YELLOW, GREEN, PINK, YELLOW, BLUE, GREEN, PINK];
+
+/* ── FAQ Data ── */
+const FAQS = [
   {
-    id: 1,
-    question: "How do I register, and what if I make a mistake in application?",
-    answer:
-      "You must submit an application to participate. If you submit incorrect details, you need to re-register using a new ID. For cancellations, email your request to mlsa.community@miet.ac.in with the reason for withdrawal.",
+    q: "How do I register, and what if I make a mistake in my application?",
+    a: "Submit an application to participate. If you submit incorrect details, re-register using a new ID. For cancellations, email your request to mlsa.community@miet.ac.in with the reason for withdrawal.",
   },
   {
-    id: 2,
-    question: "Who can participate and what are the team requirements?",
-    answer:
-      "Participation is open to students from any college/university in India. Teams must have 2 to 4 members, and you must form your team before registration. Cross-college teams are allowed, and a college can have multiple teams.",
+    q: "Who can participate and what are the team requirements?",
+    a: "Participation is open to students from any college or university in India. Teams must have 2 to 4 members, and you must form your team before registration. Cross-college teams are allowed, and a college can have multiple teams.",
   },
   {
-    id: 3,
-    question: "What is the event format, and how will projects be evaluated?",
-    answer:
-      "You must select your own idea within the event's themes. The hackathon follows a structured format: mid-submission in PPT/PDF format and final presentation to judges. Evaluation is based on innovation, technical feasibility, impact, and presentation.",
+    q: "What is the event format, and how will projects be evaluated?",
+    a: "You must select your own idea within the event's themes. The hackathon follows a structured format: mid-submission in PPT/PDF format and final presentation to judges. Evaluation is based on innovation, technical feasibility, impact, and presentation.",
   },
   {
-    id: 4,
-    question: "What are the rules regarding coding, tech and AI usage?",
-    answer:
-      "There are no restrictions on programming languages, technology stacks, or pre-built libraries. AI tools can be used, but they must be explicitly mentioned in your submission and presentation.",
+    q: "What are the rules regarding coding, tech, and AI usage?",
+    a: "There are no restrictions on programming languages, technology stacks, or pre-built libraries. AI tools can be used, but they must be explicitly mentioned in your submission and presentation.",
   },
   {
-    id: 5,
-    question: "Do I need to be physically present at the venue?",
-    answer:
-      "Yes, all participants must be onsite at MIET, Meerut, on the event day. The hackathon is free to join, and a high-speed internet connection will be provided. You can also bring your own internet device.",
+    q: "Do I need to be physically present at the venue?",
+    a: "Yes, all participants must be on-site at MIET, Meerut, on the event day. The hackathon is free to join, and a high-speed internet connection will be provided. You can also bring your own internet device.",
   },
   {
-    id: 6,
-    question: "Can I change my team or send replacement if I cant attend?",
-    answer:
-      "Yes, replacements are allowed if the new participant meets the eligibility criteria and you inform the organizers via email misa.community@miet.ac.in before the event.",
+    q: "Can I change my team or send a replacement if I can't attend?",
+    a: "Yes, replacements are allowed if the new participant meets the eligibility criteria and you inform the organizers via email mlsa.community@miet.ac.in before the event.",
   },
   {
-    id: 7,
-    question: "Who owns the Intellectual Property (IP) of the projects?",
-    answer:
-      "The developers retain ownership of their work unless a problem statement specifies otherwise. However, all submitted code must be open-source for evaluation.",
+    q: "Who owns the Intellectual Property (IP) of the projects?",
+    a: "The developers retain ownership of their work unless a problem statement specifies otherwise. However, all submitted code must be open-source for evaluation.",
   },
   {
-    id: 8,
-    question: "Where can I find event details, and contact for support?",
-    answer:
-      "Event details are available on the official website devgathering2k25.xyz, and updates will be shared via email. For any queries, contact misa.community@miet.ac.in. Rest areas will be available for participants, but personal belongings are your responsibility.",
+    q: "Where can I find event details and contact for support?",
+    a: "Event details are available on the official website devgathering2k25.xyz, and updates will be shared via email. For any queries, contact mlsa.community@miet.ac.in. Rest areas will be available for participants, but personal belongings are your responsibility.",
   },
 ];
 
-// ─── Grid Background (same as PastEvents) ─────────────────────────────────────
-function GridBackground() {
+/* ── Plus / X animated icon ── */
+function PlusIcon({ open, accent }: { open: boolean; accent: string }) {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden>
-      {/* Colored quadrants */}
-     <div className="absolute inset-0 flex" aria-hidden="true">
-        <div className="flex-1" style={{ backgroundColor: "#d4e4fc" }} />
-        <div className="flex-1" style={{ backgroundColor: "#fce9a8" }} />
-        <div className="flex-1" style={{ backgroundColor: "#c8e6c9" }} />
-        <div className="flex-1" style={{ backgroundColor: "#f8bbd0" }} />
+    <motion.div
+      className="relative flex items-center justify-center rounded-full shrink-0"
+      style={{
+        width: 30, height: 30,
+        background: open ? accent : `${accent}18`,
+        border: `1.5px solid ${accent}55`,
+        boxShadow: open ? `0 0 0 4px ${accent}20` : "none",
+      }}
+      animate={{ background: open ? accent : `${accent}18` }}
+      transition={{ duration: 0.25 }}
+    >
+      {/* Horizontal bar */}
+      <motion.span
+        className="absolute rounded-full"
+        style={{ width: 12, height: 2, background: open ? "white" : accent }}
+        animate={{ rotate: open ? 45 : 0, y: open ? 0 : 0 }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      />
+      {/* Vertical bar */}
+      <motion.span
+        className="absolute rounded-full"
+        style={{ width: 2, height: 12, background: open ? "white" : accent }}
+        animate={{ rotate: open ? 45 : 0, scaleY: open ? 0 : 1, opacity: open ? 0 : 1 }}
+        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+      />
+    </motion.div>
+  );
+}
+
+/* ── Single FAQ card ── */
+function FAQCard({
+  faq, index, accentIndex,
+}: {
+  faq: { q: string; a: string };
+  index: number;
+  accentIndex: number;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref    = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+
+  const accent = ACCENT_CYCLE[accentIndex % ACCENT_CYCLE.length];
+  const bg     = BG_CYCLE[accentIndex % BG_CYCLE.length];
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 28, scale: 0.96 }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ duration: 0.55, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
+      className="relative overflow-hidden cursor-pointer"
+      style={{
+        borderRadius: 18,
+        background: open ? bg : "white",
+        /* Asymmetric border — thick left accent bar */
+        borderLeft: `3.5px solid ${accent}`,
+        borderTop: `1px solid ${accent}30`,
+        borderRight: `1px solid ${accent}20`,
+        borderBottom: `1px solid ${accent}20`,
+        boxShadow: open
+          ? `0 0 0 3px ${accent}18, 0 8px 28px ${accent}22, inset 0 1px 0 rgba(255,255,255,0.8)`
+          : `0 2px 10px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.03)`,
+        transition: "background 0.3s, box-shadow 0.3s",
+      }}
+      onClick={() => setOpen(o => !o)}
+    >
+      {/* Diagonal gloss — only when open */}
+      {open && (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 50%)",
+            borderRadius: "inherit",
+          }}
+        />
+      )}
+
+      {/* Dot texture — only when open */}
+      {open && (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `radial-gradient(${accent}22 1px, transparent 1px)`,
+            backgroundSize: "14px 14px",
+            opacity: 0.5,
+            borderRadius: "inherit",
+          }}
+        />
+      )}
+
+      {/* Question row */}
+      <div className="relative z-10 flex items-center gap-3 px-5 py-4">
+        {/* Index number */}
+        <span
+          className="text-[10px] font-bold shrink-0 w-5 text-center"
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            color: open ? accent : "#ccc",
+            transition: "color 0.25s",
+          }}
+        >
+          {String(index + 1).padStart(2, "0")}
+        </span>
+
+        <p
+          className="flex-1 text-sm font-semibold leading-snug"
+          style={{
+            fontFamily: "'Syne', sans-serif",
+            color: open ? "#1a1a1a" : "#2d2d2d",
+          }}
+        >
+          {faq.q}
+        </p>
+
+        <PlusIcon open={open} accent={accent} />
       </div>
 
-      {/* Grid lines */}
+      {/* Divider line — animated */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="mx-5"
+            style={{ height: 1, background: `linear-gradient(90deg, ${accent}60, ${accent}20, transparent)` }}
+            initial={{ scaleX: 0, opacity: 0, transformOrigin: "left" }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            exit={{ scaleX: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Answer — animated expand */}
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="answer"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ height: { duration: 0.38, ease: [0.22, 1, 0.36, 1] }, opacity: { duration: 0.28, delay: 0.08 } }}
+            className="overflow-hidden"
+          >
+            <p
+              className="relative z-10 px-5 pt-3 pb-5 text-sm leading-relaxed"
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                color: "#555",
+              }}
+            >
+              {faq.a}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
+/* ════════════════════════════════════════════════════ */
+export default function FAQSection() {
+  const titleRef    = useRef<HTMLDivElement>(null);
+  const titleInView = useInView(titleRef, { once: true, margin: "-60px" });
+
+  const half = Math.ceil(FAQS.length / 2);
+  const col1 = FAQS.slice(0, half);
+  const col2 = FAQS.slice(half);
+
+  return (
+    <section className="relative w-full py-24 px-4 overflow-hidden" style={{ background: "#f7f8fa" }}>
+
+      {/* 4-band pastel wash */}
+      <div className="absolute inset-0 flex pointer-events-none">
+        {[BLUE, YELLOW, GREEN, PINK].map((c, i) => (
+          <div key={i} className="flex-1 opacity-[0.06]" style={{ background: c }} />
+        ))}
+      </div>
+
+      {/* Grid */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: `
-            linear-gradient(rgba(100, 140, 200, 0.25) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(100, 140, 200, 0.25) 1px, transparent 1px)
-          `,
-          backgroundSize: "28px 28px",
+          backgroundImage:
+            "linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
         }}
       />
-    </div>
-  );
-}
 
-// ─── FAQ Accordion Item ────────────────────────────────────────────────────────
-function FaqItem({ faq }: { faq: Faq }) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div
-      className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden transition-shadow hover:shadow-md"
-      style={{ fontFamily: "inherit" }}
-    >
-      <button
-        className="w-full flex items-center justify-between px-6 py-5 text-left gap-4"
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
+      {/* Large decorative "?" watermark */}
+      <div
+        className="absolute right-8 top-16 select-none pointer-events-none"
+        style={{
+          fontSize: 320,
+          fontFamily: "'Syne', sans-serif",
+          fontWeight: 800,
+          color: "rgba(91,164,230,0.05)",
+          lineHeight: 1,
+          userSelect: "none",
+        }}
       >
-        <span className="font-bold text-gray-900 text-[15px] leading-snug" style={{ fontFamily: "'Courier New', monospace" }}>
-          {faq.question}
-        </span>
-        <span
-          className="flex-shrink-0 w-7 h-8 rounded-full border-2 border-gray-400 flex items-center justify-center transition-transform"
-          style={{ transform: open ? "rotate(0deg)" : "rotate(0deg)" }}
-        >
-          {open ? (
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <line x1="2" y1="6" x2="10" y2="6" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          ) : (
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <line x1="2" y1="6" x2="10" y2="6" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" />
-              <line x1="6" y1="2" x2="6" y2="10" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          )}
-        </span>
-      </button>
-
-      {open && (
-        <div className="px-9 pb-5 ">
-          <div className="border-t border-gray-100 pt-4">
-            <p className="font-semibold text-gray-400 text-sm leading-relaxed" style={{ fontFamily: "'Courier New', monospace" }}>
-              {faq.answer}
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── Main FAQ Section ──────────────────────────────────────────────────────────
-export default function FAQ() {
-  const left = faqs.filter((_, i) => i % 2 === 0);
-  const right = faqs.filter((_, i) => i % 2 === 1);
-
-  return (
-    <section
-      className="relative w-full py-10 px-10 overflow-hidden"
-      style={{ fontFamily: "'Geist', sans-serif" }}
-    >
-      <GridBackground />
-
-      <div className="relative z-10 max-w-6xl mx-auto">
-        {/* heading row with illustration */}
-        <div className="flex items-start justify-center gap-4 mb-3">
-       
-          <div className="text-center">
-            <h2 className="text-5xl font-black text-gray-900 leading-tight">
-              Frequently Asked{" "}
-              <span className="text-blue-500">Questions</span>
-            </h2>
-            <p className="text-gray-700 underline underline-offset-2 mt-3 text-base">
-              Got questions? We've got answers.
-            </p>
-          </div>
-        </div>
-
-        {/* outer card */}
-        <div
-          className="mt-10 rounded-3xl border-2 border-gray-800 bg-black/10 backdrop-blur-sm p-6 md:p-8"
-        >
-          {/* two-column FAQ grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 rounded-b-2xl">
-            {/* left column */}
-            <div className="flex flex-col gap-4">
-              {left.map((faq) => (
-                <FaqItem key={faq.id} faq={faq} />
-              ))}
-            </div>
-            {/* right column */}
-            <div className="flex flex-col gap-4">
-              {right.map((faq) => (
-                <FaqItem key={faq.id} faq={faq} />
-              ))}
-            </div>
-          </div>
-
-          {/* "Can't find your answer?" footer card */}
-          <div className="mt-8 flex items-center justify-center">
-            <div className="relative bg-white rounded-2xl shadow-sm border border-gray-500 px-10 py-6 flex flex-col items-center gap-3 max-w-sm w-full">
-              {/* illustration overlapping top-left */}
-          
-              <p className="font-black text-gray-900 text-lg">Can't find your answer?</p>
-              <p className="text-gray-700 font-semibold text-sm text-center" style={{ fontFamily: "'Courier New', monospace" }}>
-                Get in touch with us—we'll get back to you quickly.
-              </p>
-              <a
-                href="mailto:misa.community@miet.ac.in"
-                className="mt-1 px-8 py-2.5 rounded-full bg-blue-100 text-blue-700 font-semibold text-sm hover:bg-blue-200 transition-colors"
-              >
-                Contact us!
-              </a>
-            </div>
-          </div>
-        </div>
+        ?
       </div>
+
+      <div className="relative z-10 max-w-5xl mx-auto">
+
+        {/* ── Title ── */}
+        <div ref={titleRef} className="text-center mb-14">
+          <motion.p
+            className="text-[10px] uppercase tracking-[0.55em] mb-3"
+            style={{ fontFamily: "'DM Sans', sans-serif", color: "#aaa" }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={titleInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            Got Questions?
+          </motion.p>
+
+          <motion.h2
+            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight"
+            style={{ fontFamily: "'Syne', sans-serif", lineHeight: 1.1 }}
+            initial={{ opacity: 0, y: 28 }}
+            animate={titleInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <span style={{ color: "#2d2d2d" }}>Frequently </span>
+            <span style={{ color: "#5BA4E6" }}>Asked</span>
+            <br />
+            <span style={{ color: "#E8916E" }}>Questions</span>
+          </motion.h2>
+
+          <motion.div
+            className="mx-auto mt-4 rounded-full"
+            style={{ height: 3, background: "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8)" }}
+            initial={{ width: 0, opacity: 0 }}
+            animate={titleInView ? { width: 140, opacity: 1 } : {}}
+            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          />
+
+          <motion.p
+            className="mt-5 text-sm max-w-xs mx-auto"
+            style={{ fontFamily: "'DM Sans', sans-serif", color: "#999" }}
+            initial={{ opacity: 0 }}
+            animate={titleInView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            Everything you need to know before you build.
+          </motion.p>
+        </div>
+
+        {/* ── Two-column FAQ grid ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {/* Column 1 */}
+          <div className="flex flex-col gap-3">
+            {col1.map((faq, i) => (
+              <FAQCard key={i} faq={faq} index={i} accentIndex={i} />
+            ))}
+          </div>
+          {/* Column 2 */}
+          <div className="flex flex-col gap-3">
+            {col2.map((faq, i) => (
+              <FAQCard key={i} faq={faq} index={half + i} accentIndex={half + i} />
+            ))}
+          </div>
+        </div>
+
+        {/* ── Contact CTA ── */}
+        <motion.div
+          className="mt-14 flex flex-col items-center gap-3"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-30px" }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <p className="text-xs uppercase tracking-[0.38em]"
+            style={{ fontFamily: "'DM Sans', sans-serif", color: "#bbb" }}>
+            Still have questions?
+          </p>
+          <motion.a
+            href="mailto:mlsa.community@miet.ac.in"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold text-white"
+            style={{
+              background: "linear-gradient(135deg, #5BA4E6, #E8916E)",
+              fontFamily: "'DM Sans', sans-serif",
+              boxShadow: "0 4px 20px rgba(91,164,230,0.3)",
+            }}
+            whileHover={{ scale: 1.05, boxShadow: "0 6px 28px rgba(91,164,230,0.45)" }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            Reach Out to Us
+          </motion.a>
+        </motion.div>
+
+      </div>
+
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap');`}</style>
     </section>
   );
-}             
+}

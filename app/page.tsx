@@ -6,6 +6,7 @@ import PastEvents from '@/components/PastEvents';
 import FAQ from '@/components/FAQ';
 import Sponsors from "@/components/Sponsors";
 import IntroOverlay from "../components/IntroOverlay";
+import OrganisersSection from "@/components/Organisers";
 
 export default function Home() {
   return (
@@ -14,7 +15,8 @@ export default function Home() {
       <main className="relative z-10"> 
         <DevGathering />
         <EventTimeline />
-        <LeadOrganizers /> 
+        <LeadOrganizers />
+        <OrganisersSection/> 
         <PastEvents />
         <Sponsors />
         <FAQ />
