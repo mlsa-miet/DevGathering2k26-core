@@ -7,16 +7,26 @@ import FAQ from '@/components/FAQ';
 import Sponsors from "@/components/Sponsors";
 import IntroOverlay from "../components/IntroOverlay";
 import OrganisersSection from "@/components/Organisers";
+import HeroSection from "@/components/Hero";
+import AboutSection from "@/components/About";
+import PastEventsSection from "@/components/PastEventsSection";
+import EventTimelineDetails from "@/components/EventsTimeline";
+import ThemesSection from "@/components/ThemeSection";
 
 export default function Home() {
   return (
     <>
       <IntroOverlay>
-      <main className="relative z-10"> 
+      <main className="relative z-10">
+        <HeroSection /> 
+        <AboutSection />
         <DevGathering />
+        <ThemesSection/>
+        <EventTimelineDetails/>
         <EventTimeline />
         <LeadOrganizers />
         <OrganisersSection/> 
+        <PastEventsSection/>
         <PastEvents />
         <Sponsors />
         <FAQ />
