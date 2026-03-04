@@ -18,26 +18,29 @@ interface Person {
   linkedin: string;
 }
 
+/* ════════════════════════════════════════════════════ */
+// I Wrote the names as they were given to me 
+
 const LEADS: Person[] = [
-  { name: "Name Here", role: "Lead",               linkedin: "#" },
-  { name: "Name Here", role: "Lead",               linkedin: "#" },
-  { name: "Name Here", role: "Head of Operations", linkedin: "#" },
+  { name: "Pranav", role: "Lead",               linkedin: "#" },
+  { name: "Avni", role: "Lead",               linkedin: "#" },
+  { name: "Kushagra", role: "Head of Operations", linkedin: "#" },
 ];
 
 const ORG_ROW1: Person[] = [
-  { name: "Name Here", role: "Tech Head",     linkedin: "#" },
-  { name: "Name Here", role: "Tech Head",     linkedin: "#" },
-  { name: "Name Here", role: "Graphic Head",  linkedin: "#" },
-  { name: "Name Here", role: "Content Head",  linkedin: "#" },
-  { name: "Name Here", role: "Visual Head",   linkedin: "#" },
+  { name: "Ankit", role: "Tech Head",     linkedin: "#" },
+  { name: "Aayushi", role: "Tech Head",     linkedin: "#" },
+  { name: "Geetanshi", role: "Content Head",  linkedin: "#" },
+  { name: "Bhavya", role: "Graphics Head", linkedin: "#" },
+  { name: "Prafullit", role: "Outreach Head",  linkedin: "#" },
 ];
 
 const ORG_ROW2: Person[] = [
-  { name: "Name Here", role: "Workflow Head", linkedin: "#" },
-  { name: "Name Here", role: "Outreach Head", linkedin: "#" },
-  { name: "Name Here", role: "Outreach Head", linkedin: "#" },
-  { name: "Name Here", role: "Social Head",   linkedin: "#" },
-  { name: "Name Here", role: "Social Head",   linkedin: "#" },
+  { name: "Ansh", role: "Outreach Head",   linkedin: "#" },
+  { name: "Yojit", role: "Visuals Head", linkedin: "#" },
+  { name: "Yash", role: "Socials Head", linkedin: "#" },
+  { name: "Daksh", role: "Workflow Head",   linkedin: "#" },
+  // { name: "Name Here", role: "Social Head",   linkedin: "#" },
 ];
 
 const ROLE_INDEX: Record<string, number> = {
@@ -327,19 +330,19 @@ export default function OrganisersSection() {
         </div>
 
         {/* ══ LEAD ORGANISERS — 3 centred ══ */}
-        <SubLabel label="Lead Organisers" color="#5BA4E6" />
+         {/* ══ SEPARATOR ══ */}
+        <Separator label="Lead Organisers" />
+
+        <SubLabel label="Meet the team" color="#E8916E" />
         <div className="grid grid-cols-3 gap-4 max-w-sm mx-auto">
           {LEADS.map((p, i) => (
             <PersonCard key={i} person={p} index={i} delay={0} avatarSize={66} />
           ))}
         </div>
 
-        {/* ══ SEPARATOR ══ */}
-        <Separator label="Organisers" />
-
         {/* ══ ORGANISERS — 5 + 5 ══ */}
-        <SubLabel label="Organisers" color="#E8916E" delay={0.1} />
-        <div className="flex flex-col gap-3">
+        {/* <SubLabel label="Meet the team" color="#E8916E" delay={0.1} /> */}
+        <div className="flex flex-col gap-3 md:mt-4">
           <div className="grid grid-cols-5 gap-3">
             {ORG_ROW1.map((p, i) => (
               <PersonCard key={i} person={p} index={i} delay={0.05} avatarSize={58} />

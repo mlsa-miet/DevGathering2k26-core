@@ -12,6 +12,7 @@ import AboutSection from "@/components/About";
 import PastEventsSection from "@/components/PastEventsSection";
 import EventTimelineDetails from "@/components/EventsTimeline";
 import ThemesSection from "@/components/ThemeSection";
+import PrizePoolSection from "@/components/PrizePool";
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
         <AboutSection />
         <DevGathering />
         <ThemesSection/>
+        <PrizePoolSection/>
         <EventTimelineDetails/>
         <EventTimeline />
         <LeadOrganizers />
