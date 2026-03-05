@@ -104,7 +104,7 @@ function VSep({ color, delay }: { color: string; delay: number }) {
   const ref    = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   return (
-    <div ref={ref} className="hidden md:flex flex-col items-center gap-1.5 shrink-0 self-stretch py-6">
+    <div ref={ref} className="hidden md:flex flex-col items-center gap-1.5 shrink-0 self-stretch py-6 md:ml-6">
       <motion.div
         className="w-[1.5px] flex-1 rounded-full"
         style={{ background: `linear-gradient(to bottom, transparent, ${color}70 30%, ${color}70 70%, transparent)` }}

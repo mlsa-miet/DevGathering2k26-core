@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import { Trophy, Medal, Award } from "lucide-react";
 
 /* ── Palette ── */
 const BLUE   = "#CFE8FF";
@@ -59,7 +60,6 @@ function ConfettiOverlay({ active }: { active: boolean }) {
           transition={{ duration: p.duration, delay: p.delay, ease: "easeIn" }}
         />
       ))}
-      {/* Central burst */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         initial={{ opacity: 0 }} animate={{ opacity: [0, 0.2, 0] }}
@@ -83,7 +83,6 @@ function ScratchCard({ onRevealed }: { onRevealed: () => void }) {
   const revealed   = useRef(false);
   const [done, setDone] = useState(false);
 
-  /* Build the scratch layer */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -91,12 +90,9 @@ function ScratchCard({ onRevealed }: { onRevealed: () => void }) {
     if (!ctx) return;
     const W = canvas.width, H = canvas.height;
 
-    /* Base coat */
-   /* Base coat - black scratch layer */
-ctx.fillStyle = "#000000";
-ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(0, 0, W, H);
 
-    /* Diagonal shimmer */
     const shine = ctx.createLinearGradient(W*0.1, 0, W*0.9, 0);
     shine.addColorStop(0,    "transparent");
     shine.addColorStop(0.48, "rgba(255,255,255,0.25)");
@@ -105,7 +101,6 @@ ctx.fillRect(0, 0, W, H);
     ctx.fillStyle = shine;
     ctx.fillRect(0, 0, W, H);
 
-    /* Watermark */
     ctx.save();
     ctx.font = "bold 60px 'Syne', sans-serif";
     ctx.fillStyle = "rgba(148,163,184,0.18)";
@@ -116,7 +111,6 @@ ctx.fillRect(0, 0, W, H);
     ctx.fillText("PRIZE POOL", 0, 0);
     ctx.restore();
 
-    /* Instruction text */
     ctx.font = "700 17px 'DM Sans', sans-serif";
     ctx.fillStyle = "rgba(51,65,85,0.82)";
     ctx.textAlign = "center";
@@ -127,7 +121,6 @@ ctx.fillRect(0, 0, W, H);
     ctx.fillStyle = "rgba(100,116,139,0.65)";
     ctx.fillText("drag your finger or mouse anywhere", W/2, H/2 + 26);
 
-    /* Dot texture */
     for (let r = 0; r < H; r += 14) {
       for (let c = 0; c < W; c += 14) {
         ctx.beginPath();
@@ -149,7 +142,7 @@ ctx.fillRect(0, 0, W, H);
       if (data[i] < 128) transparent++;
     }
     const ratio = transparent / (canvas.width * canvas.height);
-    if (ratio > 0.30) {   /* ← 30% threshold — easy */
+    if (ratio > 0.30) {
       revealed.current = true;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       setDone(true);
@@ -167,7 +160,6 @@ ctx.fillRect(0, 0, W, H);
     const scaleY = canvas.height / rect.height;
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    /* Larger radius = faster reveal */
     ctx.arc((x - rect.left) * scaleX, (y - rect.top) * scaleY, 36, 0, Math.PI*2);
     ctx.fill();
     checkThreshold();
@@ -181,66 +173,40 @@ ctx.fillRect(0, 0, W, H);
 
   return (
     <div className="relative select-none" style={{ touchAction: "none" }}>
-
-      {/* ── Revealed layer (light, on-theme) ── */}
       <div
         className="absolute inset-0 rounded-2xl overflow-hidden"
-        style={{
-          background: YELLOW,
-          outline: "1.5px solid rgba(200,154,42,0.35)",
-        }}
+        style={{ background: YELLOW, outline: "1.5px solid rgba(200,154,42,0.35)" }}
       >
-        {/* Dot grid */}
         <div className="absolute inset-0" style={{
           backgroundImage: "radial-gradient(rgba(200,154,42,0.22) 1px, transparent 1px)",
           backgroundSize: "13px 13px", opacity: 0.55,
         }} />
-        {/* Diagonal gloss */}
         <div className="absolute inset-0" style={{
           background: "linear-gradient(140deg, rgba(255,255,255,0.58) 0%, transparent 52%)",
         }} />
-
-        {/* Money / ₹ watermarks */}
         {["₹","$","₹","$","₹"].map((sym, i) => (
-          <div
-            key={i}
-            className="absolute pointer-events-none select-none"
-            style={{
-              fontFamily: "'Syne', sans-serif",
-              fontWeight: 900,
-              fontSize: 52 + (i % 3) * 16,
-              color: "rgba(200,154,42,0.1)",
-              left: `${10 + i * 18}%`,
-              top:  `${15 + (i % 2) * 40}%`,
-              transform: `rotate(${-15 + i * 12}deg)`,
-              userSelect: "none",
-            }}
-          >
-            {sym}
-          </div>
+          <div key={i} className="absolute pointer-events-none select-none" style={{
+            fontFamily: "'Syne', sans-serif", fontWeight: 900,
+            fontSize: 52 + (i % 3) * 16, color: "rgba(200,154,42,0.1)",
+            left: `${10 + i * 18}%`, top: `${15 + (i % 2) * 40}%`,
+            transform: `rotate(${-15 + i * 12}deg)`, userSelect: "none",
+          }}>{sym}</div>
         ))}
-
-        {/* Top accent bar */}
         <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl" style={{
           background: "linear-gradient(90deg, transparent, rgba(200,154,42,0.9) 40%, #C89A2A 50%, rgba(200,154,42,0.9) 60%, transparent)",
         }} />
-        {/* Corner pip */}
         <div className="absolute top-3 right-3 w-1.5 h-1.5 rounded-full opacity-40" style={{ background: "#C89A2A" }} />
 
-        {/* Prize amount */}
         <motion.div
           className="absolute inset-0 flex flex-col items-center justify-center gap-2"
           initial={{ scale: 0.7, opacity: 0 }}
           animate={done ? { scale: 1, opacity: 1 } : { scale: 0.7, opacity: 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p
-            className="text-[10px] uppercase tracking-[0.5em] font-semibold"
-            style={{ fontFamily: "'DM Sans', sans-serif", color: "#92701a" }}
-          >
+          <p className="text-[10px] uppercase tracking-[0.5em] font-semibold"
+            style={{ fontFamily: "'DM Sans', sans-serif", color: "#92701a" }}>
             Total Prize Pool
           </p>
-
           <motion.p
             className="font-black leading-none"
             style={{
@@ -253,19 +219,15 @@ ctx.fillRect(0, 0, W, H);
             animate={done ? { scale: [0.85, 1.08, 1] } : {}}
             transition={{ duration: 0.55, delay: 0.2 }}
           >
-            ₹4,00,000
+            $4,00,000
           </motion.p>
-
-          <p
-            className="text-xs uppercase tracking-[0.42em]"
-            style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(120,53,15,0.5)" }}
-          >
+          <p className="text-xs uppercase tracking-[0.42em]"
+            style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(120,53,15,0.5)" }}>
             in prizes &amp; goodies
           </p>
         </motion.div>
       </div>
 
-      {/* ── Canvas scratch layer ── */}
       <canvas
         ref={canvasRef}
         width={560}
@@ -291,45 +253,66 @@ ctx.fillRect(0, 0, W, H);
 }
 
 /* ══════════════════════════════════════════════════════
-   PRIZE CARDS (on-theme, 3 positions)
+   PRIZE CARDS
+   Sizes: 1st > 2nd > 3rd
+   On mobile: stacked vertically, full width, equal size
 ══════════════════════════════════════════════════════ */
 const PRIZES = [
   {
     rank: "1st",
     label: "First Place",
-    icon: "🏆",
+    LucideIcon: Trophy,
     accent: "#5BA4E6",
     bg: BLUE,
+    iconColor: "#5BA4E6",
   },
   {
     rank: "2nd",
     label: "Second Place",
-    icon: "🎖️",
+    LucideIcon: Medal,
     accent: "#4CAF50",
     bg: GREEN,
+    iconColor: "#4CAF50",
   },
   {
     rank: "3rd",
     label: "Third Place",
-    icon: "🎗️",
+    LucideIcon: Award,
     accent: "#D85C8A",
     bg: PINK,
+    iconColor: "#D85C8A",
   },
 ];
 
-function PrizeCard({ prize, index }: { prize: typeof PRIZES[0]; index: number }) {
+/* Card size config per rank */
+const CARD_SIZES = [
+  /* 1st */ { padding: "32px 20px 28px", iconBox: 72, iconSize: 34, nameSize: 20, rankFontSize: 96 },
+  /* 2nd */ { padding: "24px 18px 22px", iconBox: 60, iconSize: 28, nameSize: 17, rankFontSize: 80 },
+  /* 3rd */ { padding: "20px 16px 18px", iconBox: 54, iconSize: 24, nameSize: 15, rankFontSize: 72 },
+];
+
+function PrizeCard({
+  prize,
+  sizeIndex,  // 0=1st(largest), 1=2nd, 2=3rd(smallest)
+  animIndex,
+}: {
+  prize: typeof PRIZES[0];
+  sizeIndex: number;
+  animIndex: number;
+}) {
   const ref    = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
-  const isFirst = index === 0;
+  const sz     = CARD_SIZES[sizeIndex];
+  const { LucideIcon } = prize;
 
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 38, scale: 0.9 }}
       animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-      transition={{ duration: 0.58, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -7, scale: 1.04 }}
-      className="relative flex flex-col items-center overflow-hidden rounded-2xl cursor-default"
+      transition={{ duration: 0.58, delay: animIndex * 0.12, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -7, scale: 1.03 }}
+      className="relative flex flex-col items-center overflow-hidden rounded-2xl cursor-default w-full"
       style={{
         background: prize.bg,
         outline: `1.5px solid ${prize.accent}42`,
@@ -339,9 +322,7 @@ function PrizeCard({ prize, index }: { prize: typeof PRIZES[0]; index: number })
           0 10px 32px ${prize.accent}22,
           inset 0 1px 0 rgba(255,255,255,0.85)
         `,
-        padding: isFirst ? "28px 18px 24px" : "22px 16px 20px",
-        flex: isFirst ? "1.15 1 0" : "1 1 0",
-        minWidth: 0,
+        padding: sz.padding,
       }}
     >
       {/* Shimmer sweep */}
@@ -372,7 +353,7 @@ function PrizeCard({ prize, index }: { prize: typeof PRIZES[0]; index: number })
         }}
         initial={{ scaleX: 0, opacity: 0 }}
         animate={inView ? { scaleX: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.6, delay: index * 0.12 + 0.2 }}
+        transition={{ duration: 0.6, delay: animIndex * 0.12 + 0.2 }}
       />
       {/* Corner pip */}
       <div className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full opacity-50"
@@ -382,41 +363,42 @@ function PrizeCard({ prize, index }: { prize: typeof PRIZES[0]; index: number })
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
         style={{
           fontFamily: "'Syne', sans-serif", fontWeight: 900,
-          fontSize: isFirst ? 88 : 72, color: prize.accent,
+          fontSize: sz.rankFontSize, color: prize.accent,
           opacity: 0.07, letterSpacing: "-0.04em",
         }}
       >
         {prize.rank}
       </div>
 
-      {/* Pulsing ring */}
+      {/* Pulsing ring behind icon */}
       <motion.div
         className="absolute rounded-full pointer-events-none"
         style={{
-          width: isFirst ? 84 : 68, height: isFirst ? 84 : 68,
+          width: sz.iconBox + 18, height: sz.iconBox + 18,
           border: `1.5px solid ${prize.accent}40`,
-          top: isFirst ? 20 : 14, left: "50%", translateX: "-50%",
+          top: parseInt(sz.padding) - 4,
+          left: "50%", translateX: "-50%",
         }}
-        animate={{ scale: [1, 1.3], opacity: [0.5, 0] }}
+        animate={{ scale: [1, 1.28], opacity: [0.5, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
       />
 
-      {/* Icon */}
+      {/* Icon — NO swing, just scale-in */}
       <motion.div
         className="relative z-10 flex items-center justify-center rounded-xl"
         style={{
-          width:    isFirst ? 66 : 54,
-          height:   isFirst ? 66 : 54,
-          fontSize: isFirst ? 30 : 24,
+          width:  sz.iconBox,
+          height: sz.iconBox,
           background: "rgba(255,255,255,0.6)",
           border: `1.5px solid ${prize.accent}28`,
           boxShadow: `0 0 0 4px ${prize.accent}12`,
           backdropFilter: "blur(4px)",
         }}
-        animate={{ rotate: [0, 3, -3, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        initial={{ scale: 0.6, opacity: 0 }}
+        animate={inView ? { scale: 1, opacity: 1 } : {}}
+        transition={{ duration: 0.45, delay: animIndex * 0.12 + 0.15, ease: [0.22, 1, 0.36, 1] }}
       >
-        {prize.icon}
+        <LucideIcon size={sz.iconSize} color={prize.iconColor} strokeWidth={1.7} />
       </motion.div>
 
       {/* Label */}
@@ -424,7 +406,7 @@ function PrizeCard({ prize, index }: { prize: typeof PRIZES[0]; index: number })
         className="relative z-10 font-black mt-3 tracking-tight"
         style={{
           fontFamily: "'Syne', sans-serif",
-          fontSize: isFirst ? 18 : 15,
+          fontSize: sz.nameSize,
           color: "#1a1a1a",
         }}
       >
@@ -469,11 +451,23 @@ export default function PrizePoolSection() {
   const [confetti, setConfetti] = useState(false);
   const titleRef    = useRef<HTMLDivElement>(null);
   const titleInView = useInView(titleRef, { once: true, margin: "-60px" });
+  const audioRef    = useRef<HTMLAudioElement | null>(null);
+
+  /* Preload hooray sound */
+  useEffect(() => {
+    audioRef.current = new Audio("/hooting.mpeg");
+    audioRef.current.preload = "auto";
+  }, []);
 
   const handleRevealed = useCallback(() => {
     setRevealed(true);
     setConfetti(true);
     setTimeout(() => setConfetti(false), 4000);
+    /* Play hooray once */
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
+    }
   }, []);
 
   return (
@@ -483,7 +477,6 @@ export default function PrizePoolSection() {
       <section
         id="prizes"
         className="relative w-full py-24 px-4 overflow-hidden"
-        // style={{ background: "#fafafa" }}
       >
         {/* 4-band pastel wash */}
         <div className="absolute inset-0 flex pointer-events-none">
@@ -491,12 +484,6 @@ export default function PrizePoolSection() {
             <div key={i} className="flex-1 opacity-[0.08]" style={{ background: c }} />
           ))}
         </div>
-
-        {/* Grid */}
-        {/* <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }} /> */}
 
         {/* Ghost watermark */}
         <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none select-none overflow-hidden" style={{ opacity: 0.017 }}>
@@ -593,14 +580,14 @@ export default function PrizePoolSection() {
                       boxShadow: "0 4px 16px rgba(200,154,42,0.22)",
                     }}
                   >
-                    🎉 You revealed it! Total prize pool is ₹4,00,000
+                    🎉 You revealed it! Total prize pool is $4,00,000
                   </span>
                 </motion.div>
               )}
             </AnimatePresence>
           </motion.div>
 
-          {/* ── Prize breakdown separator ── */}
+          {/* ── Separator ── */}
           <motion.div
             className="flex items-center gap-3 mb-6"
             initial={{ opacity: 0 }}
@@ -615,11 +602,32 @@ export default function PrizePoolSection() {
             <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, rgba(0,0,0,0.08), transparent)" }} />
           </motion.div>
 
-          {/* ── Prize cards — 3 horizontal, silver | gold | bronze ordering ── */}
-          <div className="flex flex-col sm:flex-row gap-4 items-stretch">
-            <PrizeCard prize={PRIZES[1]} index={1} />
-            <PrizeCard prize={PRIZES[0]} index={0} />
-            <PrizeCard prize={PRIZES[2]} index={2} />
+          {/* ══════════════════════════════════════
+              DESKTOP: podium layout — 2nd | 1st | 3rd
+              MOBILE:  stacked, 1st on top, equal width
+          ══════════════════════════════════════ */}
+
+          {/* Desktop layout */}
+          <div className="hidden sm:flex gap-4 items-end">
+            {/* 2nd place — medium */}
+            <div className="flex-1">
+              <PrizeCard prize={PRIZES[1]} sizeIndex={1} animIndex={1} />
+            </div>
+            {/* 1st place — tallest, slight lift */}
+            <div className="flex-1" style={{ marginBottom: -14 }}>
+              <PrizeCard prize={PRIZES[0]} sizeIndex={0} animIndex={0} />
+            </div>
+            {/* 3rd place — smallest */}
+            <div className="flex-1">
+              <PrizeCard prize={PRIZES[2]} sizeIndex={2} animIndex={2} />
+            </div>
+          </div>
+
+          {/* Mobile layout — stacked vertically, 1st > 2nd > 3rd */}
+          <div className="flex sm:hidden flex-col gap-3">
+            <PrizeCard prize={PRIZES[0]} sizeIndex={0} animIndex={0} />
+            <PrizeCard prize={PRIZES[1]} sizeIndex={1} animIndex={1} />
+            <PrizeCard prize={PRIZES[2]} sizeIndex={2} animIndex={2} />
           </div>
 
           <motion.p

@@ -26,23 +26,23 @@ const EVENTS = [
     id: 2,
     name: "SAMAARAMBH 3.0",
     tag: "Orientation & Launch",
-    year: "24",
+    year: "26",
     description:
       "Grand orientation for MLSA MIET's new cohort — keynotes, live demos, and community kickoff.",
-    image: "/images/samaarambh3.jpg",
+    image: "/images/samarambh.JPG",
     accent: "#E8916E",
     bg: YELLOW,
     link: "#",
-    desktopOffset: "mt-10",
+    desktopOffset: "mt-15",
   },
   {
     id: 3,
     name: "Salesforce",
     tag: "Industry Workshop",
-    year: "24",
+    year: "26",
     description:
       "Exclusive hands-on workshop with Salesforce engineers on CRM dev, Apex, and LWC.",
-    image: "/images/salesforce.jpg",
+    image: "/images/avsar.JPG",
     accent: "#4CAF50",
     bg: GREEN,
     link: "#",
@@ -165,7 +165,7 @@ function EventCard({
             fontWeight: 900,
             fontSize: "clamp(52px, 8vw, 80px)",
             color: event.accent,
-            opacity: 0.18,
+            opacity: 0.8,
             letterSpacing: "-0.04em",
           }}
         >

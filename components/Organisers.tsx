@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 
 /* ── Palette ── */
 const BLUE   = "#CFE8FF";
@@ -19,40 +19,37 @@ interface Person {
 }
 
 /* ════════════════════════════════════════════════════ */
-// I Wrote the names as they were given to me 
-
 const LEADS: Person[] = [
-  { name: "Pranav", role: "Lead",               linkedin: "#" },
-  { name: "Avni", role: "Lead",               linkedin: "#" },
-  { name: "Kushagra", role: "Head of Operations", linkedin: "#" },
+  { name: "Pranav",    role: "Lead",               linkedin: "#" },
+  { name: "Avni",      role: "Lead",               linkedin: "#" },
+  { name: "Kushagra",  role: "Head of Operations", linkedin: "#" },
 ];
 
 const ORG_ROW1: Person[] = [
-  { name: "Ankit", role: "Tech Head",     linkedin: "#" },
-  { name: "Aayushi", role: "Tech Head",     linkedin: "#" },
+  { name: "Ankit",     role: "Tech Head",     linkedin: "#" },
+  { name: "Aayushi",   role: "Tech Head",     linkedin: "#" },
   { name: "Geetanshi", role: "Content Head",  linkedin: "#" },
-  { name: "Bhavya", role: "Graphics Head", linkedin: "#" },
-  { name: "Prafullit", role: "Outreach Head",  linkedin: "#" },
+  { name: "Bhavya",    role: "Graphics Head", linkedin: "#" },
+  { name: "Prafullit", role: "Outreach Head", linkedin: "#" },
 ];
 
 const ORG_ROW2: Person[] = [
-  { name: "Ansh", role: "Outreach Head",   linkedin: "#" },
-  { name: "Yojit", role: "Visuals Head", linkedin: "#" },
-  { name: "Yash", role: "Socials Head", linkedin: "#" },
-  { name: "Daksh", role: "Workflow Head",   linkedin: "#" },
-  // { name: "Name Here", role: "Social Head",   linkedin: "#" },
+  { name: "Ansh",  role: "Outreach Head", linkedin: "#" },
+  { name: "Yojit", role: "Visuals Head",  linkedin: "#" },
+  { name: "Yash",  role: "Socials Head",  linkedin: "#" },
+  { name: "Daksh", role: "Workflow Head", linkedin: "#" },
 ];
 
 const ROLE_INDEX: Record<string, number> = {
   "Lead":               0,
   "Head of Operations": 1,
   "Tech Head":          0,
-  "Graphic Head":       3,
+  "Graphics Head":      3,
   "Content Head":       4,
-  "Visual Head":        2,
+  "Visuals Head":       2,
   "Workflow Head":      1,
   "Outreach Head":      3,
-  "Social Head":        0,
+  "Socials Head":       0,
 };
 
 const LinkedInIcon = ({ color }: { color: string }) => (
@@ -76,7 +73,6 @@ function Avatar({ name, accent, size }: { name: string; accent: string; size: nu
         color: accent,
         fontFamily: "'Syne', sans-serif",
         fontSize: size * 0.32,
-        /* double-ring halo effect */
         boxShadow: `0 0 0 3px ${accent}18, 0 0 0 6px ${accent}0c, 0 4px 14px ${accent}30`,
       }}
     >
@@ -87,7 +83,7 @@ function Avatar({ name, accent, size }: { name: string; accent: string; size: nu
 
 /* ════════════════════════════════════════════════════ */
 function PersonCard({
-  person, index, delay = 0, avatarSize = 60,
+  person, index, delay = 0, avatarSize = 58,
 }: {
   person: Person; index: number; delay?: number; avatarSize?: number;
 }) {
@@ -108,7 +104,6 @@ function PersonCard({
       style={{
         background: bg,
         padding: "18px 10px 14px",
-        /* layered border: sharp inner + soft outer glow */
         outline: `1.5px solid ${accent}50`,
         outlineOffset: "0px",
         boxShadow: `
@@ -127,7 +122,6 @@ function PersonCard({
           borderRadius: "inherit",
         }}
       />
-
       {/* Dot-grid texture */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -138,8 +132,7 @@ function PersonCard({
           borderRadius: "inherit",
         }}
       />
-
-      {/* Animated top accent bar — full width, rounded top */}
+      {/* Animated top accent bar */}
       <motion.div
         className="absolute top-0 left-0 right-0 h-[3px]"
         style={{
@@ -150,16 +143,13 @@ function PersonCard({
         animate={inView ? { scaleX: 1, opacity: 1 } : {}}
         transition={{ duration: 0.65, delay: delay + index * 0.08 + 0.2 }}
       />
-
       {/* Corner pip */}
       <div
         className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full opacity-60"
         style={{ background: accent }}
       />
-
       {/* Avatar */}
       <Avatar name={person.name} accent={accent} size={avatarSize} />
-
       {/* Name */}
       <p
         className="relative z-10 text-xs font-bold text-center leading-tight px-1"
@@ -167,8 +157,7 @@ function PersonCard({
       >
         {person.name}
       </p>
-
-      {/* Role badge + LinkedIn icon — inline flex */}
+      {/* Role badge + LinkedIn icon */}
       <div className="relative z-10 flex items-center justify-center gap-1.5 flex-wrap px-1">
         <span
           className="text-[8px] font-semibold uppercase tracking-wider px-2 py-[3px] rounded-full whitespace-nowrap"
@@ -181,7 +170,6 @@ function PersonCard({
         >
           {person.role}
         </span>
-
         <motion.a
           href={person.linkedin}
           target="_blank"
@@ -274,6 +262,16 @@ function SubLabel({ label, color, delay = 0 }: { label: string; color: string; d
 export default function OrganisersSection() {
   const titleRef    = useRef<HTMLDivElement>(null);
   const titleInView = useInView(titleRef, { once: true, margin: "-60px" });
+  const [showAll, setShowAll] = useState(false);
+
+  // All organiser cards combined for mobile 3-per-row layout
+  // Leads (3) → Row 1 on mobile
+  // ORG_ROW1 (5) → Row 2 (3) + Row 3 (2 of 3 visible partially)
+  // ORG_ROW2 (4) → continues row 3 + row 4
+  const allOrganisers = [...LEADS, ...ORG_ROW1, ...ORG_ROW2];
+
+  // On mobile: show first 6 cards (2 full rows of 3), 3rd row (cards 7-9) half visible
+  // showAll reveals everything
 
   return (
     <section className="relative w-full py-20 px-4 overflow-hidden">
@@ -284,16 +282,6 @@ export default function OrganisersSection() {
           <div key={i} className="flex-1 opacity-[0.07]" style={{ background: c }} />
         ))}
       </div>
-
-      {/* Grid */}
-      {/* <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-      /> */}
 
       <div className="relative z-10 max-w-5xl mx-auto">
 
@@ -308,7 +296,6 @@ export default function OrganisersSection() {
           >
             The People Behind It
           </motion.p>
-
           <motion.h2
             className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight"
             style={{ fontFamily: "'Syne', sans-serif", lineHeight: 1.1 }}
@@ -319,7 +306,6 @@ export default function OrganisersSection() {
             <span style={{ color: "#2d2d2d" }}>Meet the </span>
             <span style={{ color: "#5BA4E6" }}>Organisers</span>
           </motion.h2>
-
           <motion.div
             className="mx-auto mt-4 rounded-full"
             style={{ height: 3, background: "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8)" }}
@@ -329,29 +315,121 @@ export default function OrganisersSection() {
           />
         </div>
 
-        {/* ══ LEAD ORGANISERS — 3 centred ══ */}
-         {/* ══ SEPARATOR ══ */}
-        <Separator label="Lead Organisers" />
+        {/* ══════════════════════════════════════
+            DESKTOP LAYOUT (md and above)
+        ══════════════════════════════════════ */}
+        <div className="hidden md:block">
+          <Separator label="Lead Organisers" />
+          <SubLabel label="Meet the team" color="#E8916E" />
 
-        <SubLabel label="Meet the team" color="#E8916E" />
-        <div className="grid grid-cols-3 gap-4 max-w-sm mx-auto">
-          {LEADS.map((p, i) => (
-            <PersonCard key={i} person={p} index={i} delay={0} avatarSize={66} />
-          ))}
+          {/* Leads — 3 centred in a 5-col grid */}
+          <div className="grid grid-cols-5 gap-3">
+            <div />
+            {LEADS.map((p, i) => (
+              <PersonCard key={i} person={p} index={i} delay={0} avatarSize={58} />
+            ))}
+            <div />
+          </div>
+
+          {/* Org rows */}
+          <div className="flex flex-col gap-3 mt-4">
+            {/* Row 1 — 5 cards full width */}
+            <div className="grid grid-cols-5 gap-3">
+              {ORG_ROW1.map((p, i) => (
+                <PersonCard key={i} person={p} index={i} delay={0.05} avatarSize={58} />
+              ))}
+            </div>
+
+            {/* Row 2 — 4 cards centred: left spacer + 4 cards + right spacer (total 6 cols trick via justify-center) */}
+            {/* We use flex with equal margins to truly center 4 cards matching the 5-col card width */}
+            <div className="grid grid-cols-5 gap-3">
+              {/* Push 4 cards to center: wrap in a col-span-5 flex row with auto margins */}
+              <div className="col-span-5 grid gap-3" style={{ gridTemplateColumns: "repeat(10, 1fr)" }}>
+                <div className="col-span-1" />
+                {ORG_ROW2.map((p, i) => (
+                  <div key={i} className="col-span-2">
+                    <PersonCard person={p} index={i} delay={0.15} avatarSize={58} />
+                  </div>
+                ))}
+                <div className="col-span-1" />
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* ══ ORGANISERS — 5 + 5 ══ */}
-        {/* <SubLabel label="Meet the team" color="#E8916E" delay={0.1} /> */}
-        <div className="flex flex-col gap-3 md:mt-4">
-          <div className="grid grid-cols-5 gap-3">
-            {ORG_ROW1.map((p, i) => (
-              <PersonCard key={i} person={p} index={i} delay={0.05} avatarSize={58} />
-            ))}
+        {/* ══════════════════════════════════════
+            MOBILE LAYOUT (below md)
+            3 cards per row, first 2 rows shown,
+            3rd row half-visible with fade + View More button
+        ══════════════════════════════════════ */}
+        <div className="block md:hidden">
+          <Separator label="Organisers" />
+          <SubLabel label="Meet the team" color="#E8916E" />
+
+          {/* Clipping container */}
+          <div
+            className="relative"
+            style={{
+              // Show 2 full rows + ~half of 3rd row when collapsed
+              // Each card ~120px tall + 12px gap ≈ 132px per row
+              // 2 rows = 264px, half of 3rd = ~66px → total ~330px
+              maxHeight: showAll ? "none" : "340px",
+              overflow: "hidden",
+              transition: "max-height 0.5s cubic-bezier(0.22,1,0.36,1)",
+            }}
+          >
+            <div className="grid grid-cols-3 gap-3">
+              {allOrganisers.map((p, i) => (
+                <PersonCard key={i} person={p} index={i % 3} delay={Math.floor(i / 3) * 0.06} avatarSize={52} />
+              ))}
+            </div>
+
+            {/* Gradient fade at bottom — only shown when collapsed */}
+            {!showAll && (
+              <div
+                className="absolute bottom-0 left-0 right-0 pointer-events-none"
+                style={{
+                  height: "100px",
+                  background: "linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 60%, rgba(255,255,255,1) 100%)",
+                }}
+              />
+            )}
           </div>
-          <div className="grid grid-cols-5 gap-3">
-            {ORG_ROW2.map((p, i) => (
-              <PersonCard key={i} person={p} index={i} delay={0.15} avatarSize={58} />
-            ))}
+
+          {/* View More / View Less button */}
+          <div className="flex justify-center mt-5">
+            <motion.button
+              onClick={() => setShowAll(v => !v)}
+              className="relative flex items-center gap-2 px-6 py-2.5 rounded-full font-semibold text-sm overflow-hidden"
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                background: "white",
+                border: "1.5px solid rgba(91,164,230,0.4)",
+                color: "#5BA4E6",
+                boxShadow: "0 4px 18px rgba(91,164,230,0.18)",
+              }}
+              whileHover={{ scale: 1.04, boxShadow: "0 6px 24px rgba(91,164,230,0.28)" }}
+              whileTap={{ scale: 0.97 }}
+            >
+              {/* Shimmer background */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "linear-gradient(135deg, rgba(207,232,255,0.3) 0%, transparent 60%)",
+                }}
+              />
+              <span className="relative z-10">
+                {showAll ? "View Less" : "View All Members"}
+              </span>
+              <motion.svg
+                className="relative z-10"
+                width="14" height="14" viewBox="0 0 14 14" fill="none"
+                animate={{ rotate: showAll ? 180 : 0 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <path d="M2 5l5 5 5-5" stroke="#5BA4E6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              </motion.svg>
+            </motion.button>
           </div>
         </div>
 

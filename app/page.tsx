@@ -16,7 +16,7 @@ export default function Home() {
     <>
     <BackgroundCanvas />
     <div className='bg-white'>
-      <IntroOverlay>
+      {/* <IntroOverlay> */}
       <main className="relative z-10">
         <HeroSection /> 
         <AboutSection />
@@ -29,7 +29,7 @@ export default function Home() {
         <FAQ />
         <GetInTouch />
       </main>
-      </IntroOverlay>
+      {/* </IntroOverlay> */}
       </div>
     </>
   );
