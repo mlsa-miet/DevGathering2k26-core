@@ -10,45 +10,37 @@ const GREEN  = "#D7F5D0";
 const PINK   = "#FFD6E8";
 
 /* ══════════════════════════════════════════════════════
-   CONFETTI PARTICLE
+   CONFETTI
 ══════════════════════════════════════════════════════ */
-interface Particle {
-  id: number;
-  x: number;
-  color: string;
-  size: number;
-  delay: number;
-  duration: number;
-  rotate: number;
-  shape: "rect" | "circle" | "strip";
-  drift: number;
-}
-
 const CONFETTI_COLORS = [
-  "#5BA4E6", "#E8916E", "#4CAF50", "#D85C8A", "#C89A2A",
-  "#fbbf24", "#a78bfa", "#34d399", "#f87171", "#60a5fa",
-  "#FFE9A8", "#CFE8FF", "#D7F5D0", "#FFD6E8",
+  "#5BA4E6","#E8916E","#4CAF50","#D85C8A","#C89A2A",
+  "#fbbf24","#a78bfa","#34d399","#f87171","#60a5fa",
+  "#FFE9A8","#CFE8FF","#D7F5D0","#FFD6E8",
 ];
 
-function generateParticles(count: number): Particle[] {
-  return Array.from({ length: count }, (_, i) => ({
+interface Particle {
+  id: number; x: number; color: string; size: number;
+  delay: number; duration: number; rotate: number;
+  shape: "rect"|"circle"|"strip"; drift: number;
+}
+
+function generateParticles(n: number): Particle[] {
+  return Array.from({ length: n }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
     color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
     size: 6 + Math.random() * 10,
-    delay: Math.random() * 0.8,
+    delay: Math.random() * 0.7,
     duration: 2.2 + Math.random() * 1.8,
     rotate: Math.random() * 720 - 360,
-    shape: (["rect", "circle", "strip"] as const)[Math.floor(Math.random() * 3)],
-    drift: (Math.random() - 0.5) * 120,
+    shape: (["rect","circle","strip"] as const)[Math.floor(Math.random() * 3)],
+    drift: (Math.random() - 0.5) * 130,
   }));
 }
 
 function ConfettiOverlay({ active }: { active: boolean }) {
-  const [particles] = useState(() => generateParticles(110));
-
+  const [particles] = useState(() => generateParticles(120));
   if (!active) return null;
-
   return (
     <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden">
       {particles.map((p) => (
@@ -56,118 +48,97 @@ function ConfettiOverlay({ active }: { active: boolean }) {
           key={p.id}
           className="absolute"
           style={{
-            left: `${p.x}%`,
-            top: -20,
-            width:  p.shape === "strip"  ? p.size * 0.4  : p.size,
-            height: p.shape === "strip"  ? p.size * 2.8  :
-                    p.shape === "circle" ? p.size         : p.size * 0.7,
+            left: `${p.x}%`, top: -20,
+            width:  p.shape === "strip" ? p.size * 0.38 : p.size,
+            height: p.shape === "strip" ? p.size * 3    : p.shape === "circle" ? p.size : p.size * 0.65,
             background: p.color,
             borderRadius: p.shape === "circle" ? "50%" : p.shape === "strip" ? 2 : 3,
           }}
           initial={{ y: -20, x: 0, rotate: 0, opacity: 1 }}
-          animate={{
-            y: "110vh",
-            x: p.drift,
-            rotate: p.rotate,
-            opacity: [1, 1, 1, 0.4, 0],
-          }}
-          transition={{
-            duration: p.duration,
-            delay: p.delay,
-            ease: "easeIn",
-          }}
+          animate={{ y: "115vh", x: p.drift, rotate: p.rotate, opacity: [1,1,1,0.4,0] }}
+          transition={{ duration: p.duration, delay: p.delay, ease: "easeIn" }}
         />
       ))}
-
-      {/* Central burst flash */}
+      {/* Central burst */}
       <motion.div
-        className="absolute inset-0 flex items-center justify-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 0.18, 0] }}
-        transition={{ duration: 0.6, delay: 0.1 }}
+        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        initial={{ opacity: 0 }} animate={{ opacity: [0, 0.2, 0] }}
+        transition={{ duration: 0.55, delay: 0.05 }}
       >
-        <div
-          style={{
-            width: 600,
-            height: 600,
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(251,191,36,0.5) 0%, transparent 70%)",
-          }}
-        />
+        <div style={{
+          width: 640, height: 640, borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(251,191,36,0.45) 0%, transparent 70%)",
+        }} />
       </motion.div>
     </div>
   );
 }
 
 /* ══════════════════════════════════════════════════════
-   SCRATCH CARD CANVAS
+   SCRATCH CARD
 ══════════════════════════════════════════════════════ */
 function ScratchCard({ onRevealed }: { onRevealed: () => void }) {
-  const canvasRef   = useRef<HTMLCanvasElement>(null);
-  const isDrawing   = useRef(false);
-  const revealed    = useRef(false);
+  const canvasRef  = useRef<HTMLCanvasElement>(null);
+  const isDrawing  = useRef(false);
+  const revealed   = useRef(false);
   const [done, setDone] = useState(false);
 
-  /* Initialize canvas scratch layer */
+  /* Build the scratch layer */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    const W = canvas.width, H = canvas.height;
 
-    const W = canvas.width;
-    const H = canvas.height;
+    /* Base coat */
+   /* Base coat - black scratch layer */
+ctx.fillStyle = "#000000";
+ctx.fillRect(0, 0, W, H);
 
-    /* Scratch surface gradient */
-    const grad = ctx.createLinearGradient(0, 0, W, H);
-    grad.addColorStop(0,   "#e2e8f0");
-    grad.addColorStop(0.3, "#cbd5e1");
-    grad.addColorStop(0.7, "#e2e8f0");
-    grad.addColorStop(1,   "#94a3b8");
-    ctx.fillStyle = grad;
+    /* Diagonal shimmer */
+    const shine = ctx.createLinearGradient(W*0.1, 0, W*0.9, 0);
+    shine.addColorStop(0,    "transparent");
+    shine.addColorStop(0.48, "rgba(255,255,255,0.25)");
+    shine.addColorStop(0.52, "rgba(255,255,255,0.25)");
+    shine.addColorStop(1,    "transparent");
+    ctx.fillStyle = shine;
     ctx.fillRect(0, 0, W, H);
-
-    /* "Scratch to Reveal" text on the layer */
-    ctx.save();
-    ctx.globalCompositeOperation = "source-over";
 
     /* Watermark */
-    ctx.font = "bold 72px 'Syne', sans-serif";
-    ctx.fillStyle = "rgba(148,163,184,0.25)";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
     ctx.save();
-    ctx.translate(W / 2, H / 2);
-    ctx.rotate(-0.2);
-    ctx.fillText("PRIZE", 0, -24);
-    ctx.fillText("POOL",  0,  36);
-    ctx.restore();
-
-    /* Main instruction */
-    ctx.font = "700 18px 'DM Sans', sans-serif";
-    ctx.fillStyle = "rgba(71,85,105,0.85)";
+    ctx.font = "bold 60px 'Syne', sans-serif";
+    ctx.fillStyle = "rgba(148,163,184,0.18)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText("✦  Scratch to Reveal  ✦", W / 2, H / 2);
-
-    /* Sub label */
-    ctx.font = "500 12px 'DM Sans', sans-serif";
-    ctx.fillStyle = "rgba(100,116,139,0.7)";
-    ctx.fillText("drag your finger or mouse", W / 2, H / 2 + 28);
+    ctx.translate(W/2, H/2);
+    ctx.rotate(-0.18);
+    ctx.fillText("PRIZE POOL", 0, 0);
     ctx.restore();
 
-    /* Shimmer stripe */
-    const shimmer = ctx.createLinearGradient(W * 0.1, 0, W * 0.9, 0);
-    shimmer.addColorStop(0,    "transparent");
-    shimmer.addColorStop(0.45, "rgba(255,255,255,0.22)");
-    shimmer.addColorStop(0.55, "rgba(255,255,255,0.22)");
-    shimmer.addColorStop(1,    "transparent");
-    ctx.fillStyle = shimmer;
-    ctx.fillRect(0, 0, W, H);
+    /* Instruction text */
+    ctx.font = "700 17px 'DM Sans', sans-serif";
+    ctx.fillStyle = "rgba(51,65,85,0.82)";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("✦  Scratch to Reveal  ✦", W/2, H/2);
+
+    ctx.font = "500 11px 'DM Sans', sans-serif";
+    ctx.fillStyle = "rgba(100,116,139,0.65)";
+    ctx.fillText("drag your finger or mouse anywhere", W/2, H/2 + 26);
+
+    /* Dot texture */
+    for (let r = 0; r < H; r += 14) {
+      for (let c = 0; c < W; c += 14) {
+        ctx.beginPath();
+        ctx.arc(c, r, 1, 0, Math.PI*2);
+        ctx.fillStyle = "rgba(148,163,184,0.14)";
+        ctx.fill();
+      }
+    }
   }, []);
 
-  /* Check how much is scratched */
-  const checkRevealThreshold = useCallback(() => {
+  const checkThreshold = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas || revealed.current) return;
     const ctx = canvas.getContext("2d");
@@ -178,134 +149,133 @@ function ScratchCard({ onRevealed }: { onRevealed: () => void }) {
       if (data[i] < 128) transparent++;
     }
     const ratio = transparent / (canvas.width * canvas.height);
-    if (ratio > 0.48) {
+    if (ratio > 0.30) {   /* ← 30% threshold — easy */
       revealed.current = true;
-      /* Clear remaining */
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       setDone(true);
       onRevealed();
     }
   }, [onRevealed]);
 
-  /* Scratch helpers */
-  const scratch = useCallback(
-    (x: number, y: number) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width  / rect.width;
-      const scaleY = canvas.height / rect.height;
-      const cx = (x - rect.left) * scaleX;
-      const cy = (y - rect.top)  * scaleY;
-      ctx.globalCompositeOperation = "destination-out";
-      ctx.beginPath();
-      ctx.arc(cx, cy, 28, 0, Math.PI * 2);
-      ctx.fill();
-      checkRevealThreshold();
-    },
-    [checkRevealThreshold]
-  );
+  const scratch = useCallback((x: number, y: number) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const rect   = canvas.getBoundingClientRect();
+    const scaleX = canvas.width  / rect.width;
+    const scaleY = canvas.height / rect.height;
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    /* Larger radius = faster reveal */
+    ctx.arc((x - rect.left) * scaleX, (y - rect.top) * scaleY, 36, 0, Math.PI*2);
+    ctx.fill();
+    checkThreshold();
+  }, [checkThreshold]);
 
-  const onMouseMove  = (e: React.MouseEvent)  => { if (isDrawing.current) scratch(e.clientX, e.clientY); };
-  const onTouchMove  = (e: React.TouchEvent)  => { e.preventDefault(); scratch(e.touches[0].clientX, e.touches[0].clientY); };
   const onMouseDown  = (e: React.MouseEvent)  => { isDrawing.current = true; scratch(e.clientX, e.clientY); };
+  const onMouseMove  = (e: React.MouseEvent)  => { if (isDrawing.current) scratch(e.clientX, e.clientY); };
   const onTouchStart = (e: React.TouchEvent)  => { isDrawing.current = true; scratch(e.touches[0].clientX, e.touches[0].clientY); };
+  const onTouchMove  = (e: React.TouchEvent)  => { e.preventDefault(); scratch(e.touches[0].clientX, e.touches[0].clientY); };
   const onEnd        = ()                      => { isDrawing.current = false; };
 
   return (
     <div className="relative select-none" style={{ touchAction: "none" }}>
-      {/* Revealed content underneath */}
+
+      {/* ── Revealed layer (light, on-theme) ── */}
       <div
-        className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl overflow-hidden"
+        className="absolute inset-0 rounded-2xl overflow-hidden"
         style={{
-          background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)",
+          background: YELLOW,
+          outline: "1.5px solid rgba(200,154,42,0.35)",
         }}
       >
-        {/* Stars bg */}
-        {Array.from({ length: 28 }).map((_, i) => (
+        {/* Dot grid */}
+        <div className="absolute inset-0" style={{
+          backgroundImage: "radial-gradient(rgba(200,154,42,0.22) 1px, transparent 1px)",
+          backgroundSize: "13px 13px", opacity: 0.55,
+        }} />
+        {/* Diagonal gloss */}
+        <div className="absolute inset-0" style={{
+          background: "linear-gradient(140deg, rgba(255,255,255,0.58) 0%, transparent 52%)",
+        }} />
+
+        {/* Money / ₹ watermarks */}
+        {["₹","$","₹","$","₹"].map((sym, i) => (
           <div
             key={i}
-            className="absolute rounded-full bg-white"
+            className="absolute pointer-events-none select-none"
             style={{
-              width:  1 + (i % 3),
-              height: 1 + (i % 3),
-              left:   `${(i * 37) % 95}%`,
-              top:    `${(i * 53) % 95}%`,
-              opacity: 0.15 + (i % 5) * 0.08,
+              fontFamily: "'Syne', sans-serif",
+              fontWeight: 900,
+              fontSize: 52 + (i % 3) * 16,
+              color: "rgba(200,154,42,0.1)",
+              left: `${10 + i * 18}%`,
+              top:  `${15 + (i % 2) * 40}%`,
+              transform: `rotate(${-15 + i * 12}deg)`,
+              userSelect: "none",
             }}
-          />
+          >
+            {sym}
+          </div>
         ))}
 
+        {/* Top accent bar */}
+        <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl" style={{
+          background: "linear-gradient(90deg, transparent, rgba(200,154,42,0.9) 40%, #C89A2A 50%, rgba(200,154,42,0.9) 60%, transparent)",
+        }} />
+        {/* Corner pip */}
+        <div className="absolute top-3 right-3 w-1.5 h-1.5 rounded-full opacity-40" style={{ background: "#C89A2A" }} />
+
+        {/* Prize amount */}
         <motion.div
-          className="flex flex-col items-center gap-2"
-          initial={{ scale: 0.6, opacity: 0 }}
-          animate={done ? { scale: 1, opacity: 1 } : { scale: 0.6, opacity: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0 flex flex-col items-center justify-center gap-2"
+          initial={{ scale: 0.7, opacity: 0 }}
+          animate={done ? { scale: 1, opacity: 1 } : { scale: 0.7, opacity: 0 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          <motion.p
-            className="text-sm uppercase tracking-[0.5em] font-semibold"
-            style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(251,191,36,0.75)" }}
-            animate={done ? { opacity: [0, 1] } : {}}
-            transition={{ delay: 0.2 }}
+          <p
+            className="text-[10px] uppercase tracking-[0.5em] font-semibold"
+            style={{ fontFamily: "'DM Sans', sans-serif", color: "#92701a" }}
           >
             Total Prize Pool
-          </motion.p>
-
-          <motion.div
-            className="relative"
-            animate={done ? { scale: [0.8, 1.12, 1] } : {}}
-            transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {/* Glow behind number */}
-            <div
-              className="absolute inset-0 rounded-full"
-              style={{
-                background: "radial-gradient(circle, rgba(251,191,36,0.25) 0%, transparent 70%)",
-                filter: "blur(20px)",
-                transform: "scale(1.8)",
-              }}
-            />
-            <p
-              className="relative font-black leading-none"
-              style={{
-                fontFamily: "'Syne', sans-serif",
-                fontSize: "clamp(42px, 10vw, 72px)",
-                background: "linear-gradient(135deg, #fef3c7, #fbbf24, #f59e0b, #fef3c7)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                letterSpacing: "-0.03em",
-                textShadow: "none",
-              }}
-            >
-              ₹4,00,000
-            </p>
-          </motion.div>
+          </p>
 
           <motion.p
-            className="text-xs uppercase tracking-[0.45em]"
-            style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(255,255,255,0.35)" }}
-            animate={done ? { opacity: [0, 1] } : {}}
-            transition={{ delay: 0.5 }}
+            className="font-black leading-none"
+            style={{
+              fontFamily: "'Syne', sans-serif",
+              fontSize: "clamp(40px, 10vw, 68px)",
+              color: "#78350f",
+              letterSpacing: "-0.03em",
+              textShadow: "0 2px 0 rgba(200,154,42,0.25)",
+            }}
+            animate={done ? { scale: [0.85, 1.08, 1] } : {}}
+            transition={{ duration: 0.55, delay: 0.2 }}
+          >
+            ₹4,00,000
+          </motion.p>
+
+          <p
+            className="text-xs uppercase tracking-[0.42em]"
+            style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(120,53,15,0.5)" }}
           >
             in prizes &amp; goodies
-          </motion.p>
+          </p>
         </motion.div>
       </div>
 
-      {/* Canvas scratch layer */}
+      {/* ── Canvas scratch layer ── */}
       <canvas
         ref={canvasRef}
-        width={520}
-        height={200}
+        width={560}
+        height={190}
         className="relative z-10 w-full rounded-2xl"
         style={{
           cursor: done ? "default" : "crosshair",
           display: done ? "none" : "block",
           borderRadius: 16,
-          boxShadow: "0 4px 28px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.6)",
+          boxShadow: "0 4px 24px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.6)",
         }}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
@@ -315,187 +285,176 @@ function ScratchCard({ onRevealed }: { onRevealed: () => void }) {
         onTouchMove={onTouchMove}
         onTouchEnd={onEnd}
       />
-
-      {/* Placeholder height when done */}
-      {done && <div style={{ height: 200 }} />}
+      {done && <div style={{ height: 190 }} />}
     </div>
   );
 }
 
 /* ══════════════════════════════════════════════════════
-   MEDAL CARD
+   PRIZE CARDS (on-theme, 3 positions)
 ══════════════════════════════════════════════════════ */
-const MEDALS = [
+const PRIZES = [
   {
-    rank: 1,
-    label: "1st Place",
-    emoji: "🥇",
-    prize: "To Be Revealed",
-    gradient: "linear-gradient(135deg, #fef3c7 0%, #fbbf24 40%, #f59e0b 70%, #fef3c7 100%)",
-    accent: "#f59e0b",
-    border: "#fbbf24",
-    glow: "rgba(251,191,36,0.35)",
-    shimmer: "rgba(255,255,255,0.5)",
-    size: "lg",
+    rank: "1st",
+    label: "First Place",
+    icon: "🏆",
+    accent: "#5BA4E6",
+    bg: BLUE,
   },
   {
-    rank: 2,
-    label: "2nd Place",
-    emoji: "🥈",
-    prize: "To Be Revealed",
-    gradient: "linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 40%, #94a3b8 70%, #f1f5f9 100%)",
-    accent: "#64748b",
-    border: "#cbd5e1",
-    glow: "rgba(148,163,184,0.28)",
-    shimmer: "rgba(255,255,255,0.45)",
-    size: "md",
+    rank: "2nd",
+    label: "Second Place",
+    icon: "🎖️",
+    accent: "#4CAF50",
+    bg: GREEN,
   },
   {
-    rank: 3,
-    label: "3rd Place",
-    emoji: "🥉",
-    prize: "To Be Revealed",
-    gradient: "linear-gradient(135deg, #fff7ed 0%, #fb923c 40%, #ea580c 70%, #fff7ed 100%)",
-    accent: "#ea580c",
-    border: "#fb923c",
-    glow: "rgba(251,146,60,0.28)",
-    shimmer: "rgba(255,255,255,0.4)",
-    size: "md",
+    rank: "3rd",
+    label: "Third Place",
+    icon: "🎗️",
+    accent: "#D85C8A",
+    bg: PINK,
   },
 ];
 
-function MedalCard({
-  medal,
-  index,
-}: {
-  medal: (typeof MEDALS)[0];
-  index: number;
-}) {
+function PrizeCard({ prize, index }: { prize: typeof PRIZES[0]; index: number }) {
   const ref    = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
-  const isLg   = medal.size === "lg";
+  const isFirst = index === 0;
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 40, scale: 0.88 }}
+      initial={{ opacity: 0, y: 38, scale: 0.9 }}
       animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -8, scale: 1.04 }}
+      transition={{ duration: 0.58, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -7, scale: 1.04 }}
       className="relative flex flex-col items-center overflow-hidden rounded-2xl cursor-default"
       style={{
-        background: medal.gradient,
-        border: `1.5px solid ${medal.border}`,
-        boxShadow: `0 0 0 4px ${medal.glow}, 0 10px 32px ${medal.glow}, inset 0 1px 0 ${medal.shimmer}`,
-        padding: isLg ? "28px 20px 24px" : "22px 16px 20px",
-        flex: isLg ? "1.2 1 0" : "1 1 0",
+        background: prize.bg,
+        outline: `1.5px solid ${prize.accent}42`,
+        outlineOffset: 0,
+        boxShadow: `
+          0 0 0 4px ${prize.accent}10,
+          0 10px 32px ${prize.accent}22,
+          inset 0 1px 0 rgba(255,255,255,0.85)
+        `,
+        padding: isFirst ? "28px 18px 24px" : "22px 16px 20px",
+        flex: isFirst ? "1.15 1 0" : "1 1 0",
         minWidth: 0,
-        alignSelf: isLg ? "flex-start" : "center",
       }}
     >
-      {/* Shimmer sweep animation */}
+      {/* Shimmer sweep */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.55) 50%, transparent 70%)",
+          background: "linear-gradient(108deg, transparent 28%, rgba(255,255,255,0.52) 50%, transparent 72%)",
           backgroundSize: "200% 100%",
         }}
         animate={{ backgroundPosition: ["200% 0", "-200% 0"] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "linear", repeatDelay: 1.5 }}
+        transition={{ duration: 3.2, repeat: Infinity, ease: "linear", repeatDelay: 1.8 }}
       />
-
       {/* Diagonal gloss */}
-      <div
-        className="absolute inset-0 pointer-events-none rounded-2xl"
-        style={{ background: "linear-gradient(140deg, rgba(255,255,255,0.45) 0%, transparent 50%)" }}
+      <div className="absolute inset-0 pointer-events-none rounded-2xl"
+        style={{ background: "linear-gradient(140deg, rgba(255,255,255,0.55) 0%, transparent 50%)" }} />
+      {/* Dot grid */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `radial-gradient(${prize.accent}28 1px, transparent 1px)`,
+          backgroundSize: "13px 13px", opacity: 0.45, borderRadius: "inherit",
+        }} />
+      {/* Top accent bar */}
+      <motion.div
+        className="absolute top-0 left-0 right-0 h-[3px]"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${prize.accent}bb 35%, ${prize.accent} 50%, ${prize.accent}bb 65%, transparent)`,
+          borderRadius: "16px 16px 0 0",
+        }}
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={inView ? { scaleX: 1, opacity: 1 } : {}}
+        transition={{ duration: 0.6, delay: index * 0.12 + 0.2 }}
       />
+      {/* Corner pip */}
+      <div className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full opacity-50"
+        style={{ background: prize.accent }} />
 
       {/* Rank watermark */}
-      <div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
         style={{
-          fontFamily: "'Syne', sans-serif",
-          fontWeight: 900,
-          fontSize: isLg ? 100 : 80,
-          color: medal.accent,
-          opacity: 0.07,
-          letterSpacing: "-0.04em",
+          fontFamily: "'Syne', sans-serif", fontWeight: 900,
+          fontSize: isFirst ? 88 : 72, color: prize.accent,
+          opacity: 0.07, letterSpacing: "-0.04em",
         }}
       >
-        #{medal.rank}
+        {prize.rank}
       </div>
 
-      {/* Pulsing outer ring */}
+      {/* Pulsing ring */}
       <motion.div
         className="absolute rounded-full pointer-events-none"
         style={{
-          width: isLg ? 90 : 72, height: isLg ? 90 : 72,
-          border: `1.5px solid ${medal.border}`,
-          top: isLg ? 20 : 14, left: "50%", translateX: "-50%",
+          width: isFirst ? 84 : 68, height: isFirst ? 84 : 68,
+          border: `1.5px solid ${prize.accent}40`,
+          top: isFirst ? 20 : 14, left: "50%", translateX: "-50%",
         }}
-        animate={{ scale: [1, 1.25], opacity: [0.45, 0] }}
+        animate={{ scale: [1, 1.3], opacity: [0.5, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
       />
 
-      {/* Emoji medal */}
+      {/* Icon */}
       <motion.div
-        className="relative z-10 flex items-center justify-center rounded-full"
+        className="relative z-10 flex items-center justify-center rounded-xl"
         style={{
-          width:  isLg ? 72 : 58,
-          height: isLg ? 72 : 58,
-          background: "rgba(255,255,255,0.55)",
-          border: `2px solid ${medal.shimmer}`,
-          boxShadow: `0 0 0 4px ${medal.glow}`,
-          fontSize: isLg ? 32 : 26,
+          width:    isFirst ? 66 : 54,
+          height:   isFirst ? 66 : 54,
+          fontSize: isFirst ? 30 : 24,
+          background: "rgba(255,255,255,0.6)",
+          border: `1.5px solid ${prize.accent}28`,
+          boxShadow: `0 0 0 4px ${prize.accent}12`,
           backdropFilter: "blur(4px)",
         }}
-        animate={{ rotate: [0, 4, -4, 0] }}
+        animate={{ rotate: [0, 3, -3, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       >
-        {medal.emoji}
+        {prize.icon}
       </motion.div>
 
-      {/* Rank label */}
-      <motion.p
+      {/* Label */}
+      <p
         className="relative z-10 font-black mt-3 tracking-tight"
         style={{
           fontFamily: "'Syne', sans-serif",
-          fontSize: isLg ? 20 : 17,
-          color: medal.rank === 2 ? "#1e293b" : medal.rank === 1 ? "#78350f" : "#7c2d12",
+          fontSize: isFirst ? 18 : 15,
+          color: "#1a1a1a",
         }}
       >
-        {medal.label}
-      </motion.p>
+        {prize.label}
+      </p>
 
       {/* Divider */}
-      <div
-        className="w-3/4 my-3 h-px rounded-full"
-        style={{ background: `linear-gradient(90deg, transparent, ${medal.border}, transparent)` }}
-      />
+      <div className="w-3/4 my-2.5 h-px rounded-full"
+        style={{ background: `linear-gradient(90deg, transparent, ${prize.accent}55, transparent)` }} />
 
-      {/* Lock icon */}
+      {/* Locked state */}
       <div className="relative z-10 flex flex-col items-center gap-1.5">
         <motion.div
           className="flex items-center justify-center rounded-full"
           style={{
-            width: 34, height: 34,
-            background: "rgba(255,255,255,0.5)",
-            border: `1.5px solid ${medal.border}`,
+            width: 32, height: 32,
+            background: `${prize.accent}18`,
+            border: `1.5px solid ${prize.accent}45`,
           }}
           animate={{ scale: [1, 1.1, 1] }}
-          transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={medal.accent} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={prize.accent} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
         </motion.div>
-
-        <p
-          className="text-[9px] uppercase tracking-[0.4em] font-semibold text-center"
-          style={{ fontFamily: "'DM Sans', sans-serif", color: medal.accent, opacity: 0.8 }}
-        >
-          {medal.prize}
+        <p className="text-[9px] uppercase tracking-[0.38em] font-semibold text-center"
+          style={{ fontFamily: "'DM Sans', sans-serif", color: prize.accent, opacity: 0.75 }}>
+          To be revealed
         </p>
       </div>
     </motion.div>
@@ -506,8 +465,8 @@ function MedalCard({
    PRIZE POOL SECTION — default export
 ══════════════════════════════════════════════════════ */
 export default function PrizePoolSection() {
-  const [revealed,   setRevealed]   = useState(false);
-  const [confetti,   setConfetti]   = useState(false);
+  const [revealed, setRevealed] = useState(false);
+  const [confetti, setConfetti] = useState(false);
   const titleRef    = useRef<HTMLDivElement>(null);
   const titleInView = useInView(titleRef, { once: true, margin: "-60px" });
 
@@ -519,7 +478,7 @@ export default function PrizePoolSection() {
 
   return (
     <>
-      
+      <ConfettiOverlay active={confetti} />
 
       <section
         id="prizes"
@@ -534,34 +493,22 @@ export default function PrizePoolSection() {
         </div>
 
         {/* Grid */}
-        {/* <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
-        /> */}
+        {/* <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+        }} /> */}
 
         {/* Ghost watermark */}
-        <div
-          className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none select-none overflow-hidden"
-          style={{ opacity: 0.017 }}
-        >
-          <span
-            style={{
-              fontFamily: "'Syne', sans-serif",
-              fontWeight: 900,
-              fontSize: "clamp(100px, 18vw, 240px)",
-              color: "#2d2d2d",
-              whiteSpace: "nowrap",
-            }}
-          >
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none select-none overflow-hidden" style={{ opacity: 0.017 }}>
+          <span style={{
+            fontFamily: "'Syne', sans-serif", fontWeight: 900,
+            fontSize: "clamp(100px, 18vw, 240px)", color: "#2d2d2d", whiteSpace: "nowrap",
+          }}>
             PRIZES
           </span>
         </div>
 
-        <div className="relative z-10 max-w-5xl mx-auto">
+        <div className="relative z-10 max-w-4xl mx-auto">
 
           {/* ── Title ── */}
           <div ref={titleRef} className="text-center mb-12">
@@ -602,94 +549,88 @@ export default function PrizePoolSection() {
               transition={{ delay: 0.5 }}
             >
               {revealed
-                ? "The prize pool has been revealed. Now go win it."
-                : "Scratch the card below to reveal the total prize pool."}
+                ? "The prize pool is out. Now go build and claim it."
+                : "Scratch the card below to reveal what's waiting for you."}
             </motion.p>
           </div>
 
           {/* ── Scratch card ── */}
           <motion.div
-            className="max-w-xl mx-auto mb-14"
-            initial={{ opacity: 0, y: 28, scale: 0.94 }}
+            className="w-full mx-auto mb-12"
+            style={{ maxWidth: 560 }}
+            initial={{ opacity: 0, y: 28, scale: 0.95 }}
             animate={titleInView ? { opacity: 1, y: 0, scale: 1 } : {}}
             transition={{ duration: 0.65, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* Card wrapper with ring glow */}
             <div
               className="relative rounded-2xl overflow-hidden"
               style={{
                 boxShadow: revealed
-                  ? "0 0 0 3px rgba(251,191,36,0.4), 0 12px 40px rgba(251,191,36,0.25)"
-                  : "0 0 0 2px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08)",
+                  ? "0 0 0 3px rgba(200,154,42,0.35), 0 12px 36px rgba(200,154,42,0.2)"
+                  : "0 0 0 1.5px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08)",
                 transition: "box-shadow 0.5s",
               }}
             >
               <ScratchCard onRevealed={handleRevealed} />
             </div>
 
-            {/* "You revealed it!" badge */}
             <AnimatePresence>
               {revealed && (
                 <motion.div
                   className="flex justify-center mt-4"
-                  initial={{ opacity: 0, y: 10, scale: 0.85 }}
+                  initial={{ opacity: 0, y: 8, scale: 0.88 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.45, delay: 0.3 }}
+                  transition={{ duration: 0.4, delay: 0.25 }}
                 >
                   <span
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold"
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold"
                     style={{
-                      background: "linear-gradient(135deg, #fef3c7, #fbbf24)",
+                      background: YELLOW,
                       color: "#78350f",
                       fontFamily: "'DM Sans', sans-serif",
-                      boxShadow: "0 4px 16px rgba(251,191,36,0.35)",
+                      border: "1.5px solid rgba(200,154,42,0.4)",
+                      boxShadow: "0 4px 16px rgba(200,154,42,0.22)",
                     }}
                   >
-                    🎉 You revealed it! The prize pool is ₹4,00,000
+                    🎉 You revealed it! Total prize pool is ₹4,00,000
                   </span>
                 </motion.div>
               )}
             </AnimatePresence>
           </motion.div>
 
-          {/* ── Medal cards ── */}
+          {/* ── Prize breakdown separator ── */}
           <motion.div
-            initial={{ opacity: 0, y: 32 }}
-            animate={titleInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="flex items-center gap-3 mb-6"
+            initial={{ opacity: 0 }}
+            animate={titleInView ? { opacity: 1 } : {}}
+            transition={{ delay: 0.65 }}
           >
-            <div className="flex items-center gap-3 mb-6">
-              <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.08))" }} />
-              <span
-                className="text-[9px] uppercase tracking-[0.45em] font-semibold"
-                style={{ fontFamily: "'DM Sans', sans-serif", color: "#bbb" }}
-              >
-                Prize Breakdown
-              </span>
-              <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, rgba(0,0,0,0.08), transparent)" }} />
-            </div>
-
-            {/* Gold on top (center), silver left, bronze right on mobile — all three horizontal on desktop */}
-            <div className="flex flex-col sm:flex-row gap-4 items-stretch">
-              {/* Silver — index 1 */}
-              <MedalCard medal={MEDALS[1]} index={1} />
-              {/* Gold — center, taller */}
-              <MedalCard medal={MEDALS[0]} index={0} />
-              {/* Bronze — index 2 */}
-              <MedalCard medal={MEDALS[2]} index={2} />
-            </div>
-
-            <motion.p
-              className="text-center text-[10px] uppercase tracking-[0.4em] mt-6"
-              style={{ fontFamily: "'DM Sans', sans-serif", color: "#ccc" }}
-              initial={{ opacity: 0 }}
-              animate={titleInView ? { opacity: 1 } : {}}
-              transition={{ delay: 1 }}
-            >
-              Individual prize amounts will be announced on event day
-            </motion.p>
+            <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.08))" }} />
+            <span className="text-[9px] uppercase tracking-[0.45em] font-semibold"
+              style={{ fontFamily: "'DM Sans', sans-serif", color: "#bbb" }}>
+              Prize Breakdown
+            </span>
+            <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, rgba(0,0,0,0.08), transparent)" }} />
           </motion.div>
+
+          {/* ── Prize cards — 3 horizontal, silver | gold | bronze ordering ── */}
+          <div className="flex flex-col sm:flex-row gap-4 items-stretch">
+            <PrizeCard prize={PRIZES[1]} index={1} />
+            <PrizeCard prize={PRIZES[0]} index={0} />
+            <PrizeCard prize={PRIZES[2]} index={2} />
+          </div>
+
+          <motion.p
+            className="text-center text-[10px] uppercase tracking-[0.42em] mt-6"
+            style={{ fontFamily: "'DM Sans', sans-serif", color: "#ccc" }}
+            initial={{ opacity: 0 }}
+            animate={titleInView ? { opacity: 1 } : {}}
+            transition={{ delay: 1 }}
+          >
+            Individual prize amounts revealed on event day
+          </motion.p>
 
         </div>
 

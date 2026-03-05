@@ -800,7 +800,7 @@ export default function ThemesSection() {
                 angle={ANGLES[i]}
                 radius={RADIUS_DESKTOP * 0.5}
                 revealed={on}
-                delay={on ? i * 0.08 : (TRACKS.length - 1 - i) * 0.04}
+                delay={on ? i * 0.24 : (TRACKS.length - 1 - i) * 0.12}
               />
             ))}
 

@@ -15,6 +15,7 @@ export default function Home() {
   return (
     <>
     <BackgroundCanvas />
+    <div className='bg-white'>
       <IntroOverlay>
       <main className="relative z-10">
         <HeroSection /> 
@@ -29,6 +30,7 @@ export default function Home() {
         <GetInTouch />
       </main>
       </IntroOverlay>
+      </div>
     </>
   );
 }
