@@ -276,7 +276,7 @@ export default function OrganisersSection() {
   const titleInView = useInView(titleRef, { once: true, margin: "-60px" });
 
   return (
-    <section className="relative w-full py-20 px-4 overflow-hidden" style={{ background: "#fafafa" }}>
+    <section className="relative w-full py-20 px-4 overflow-hidden">
 
       {/* 4-band pastel wash */}
       <div className="absolute inset-0 flex pointer-events-none">
@@ -286,14 +286,14 @@ export default function OrganisersSection() {
       </div>
 
       {/* Grid */}
-      <div
+      {/* <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
             "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
           backgroundSize: "48px 48px",
         }}
-      />
+      /> */}
 
       <div className="relative z-10 max-w-5xl mx-auto">
 

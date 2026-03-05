@@ -296,7 +296,7 @@ export default function SponsorsSection() {
   const partnerAccents = ["#D85C8A","#4CAF50","#5BA4E6","#C89A2A","#D85C8A","#4CAF50","#5BA4E6"];
 
   return (
-    <section className="relative w-full py-24 px-4 overflow-hidden" style={{ background: "#fafafa" }}>
+    <section className="relative w-full py-24 px-4 overflow-hidden">
       {/* 4-band pastel wash */}
       <div className="absolute inset-0 flex pointer-events-none">
         {[BLUE, YELLOW, GREEN, PINK].map((c, i) => (
@@ -304,13 +304,13 @@ export default function SponsorsSection() {
         ))}
       </div>
       {/* Grid */}
-      <div
+      {/* <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
           backgroundSize: "48px 48px",
         }}
-      />
+      /> */}
 
       <div className="relative z-10 max-w-5xl mx-auto">
 

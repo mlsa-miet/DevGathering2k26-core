@@ -9,10 +9,12 @@ import PastEventsSection from "@/components/PastEventsSection";
 import EventTimelineDetails from "@/components/EventsTimeline";
 import ThemesSection from "@/components/ThemeSection";
 import PrizePoolSection from "@/components/PrizePool";
+import BackgroundCanvas from '@/components/BackgroundCanvas';
 
 export default function Home() {
   return (
     <>
+    <BackgroundCanvas />
       <IntroOverlay>
       <main className="relative z-10">
         <HeroSection /> 

@@ -390,7 +390,7 @@ export default function PastEventsSection() {
       ref={sectionRef}
       id="past-events"
       className="relative w-full py-24 px-4 overflow-hidden"
-      style={{ background: "#fafafa" }}
+      // style={{ background: "#fafafa" }}
     >
       {/* Parallax pastel bands */}
       <motion.div className="absolute inset-0 flex pointer-events-none" style={{ y: bgY }}>
@@ -400,14 +400,14 @@ export default function PastEventsSection() {
       </motion.div>
 
       {/* Grid texture */}
-      <div
+      {/* <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
             "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
           backgroundSize: "48px 48px",
         }}
-      />
+      /> */}
 
       {/* Ghost watermark */}
       <div

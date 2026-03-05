@@ -251,7 +251,7 @@ export default function HeroSection() {
     <section
       ref={containerRef}
       className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden px-4 py-24"
-      style={{ background: "#fafafa" }}
+      // style={{ background: "#fafafa" }}
     >
       {/* ── Parallax 4-band pastel background ── */}
       <motion.div
@@ -264,14 +264,14 @@ export default function HeroSection() {
       </motion.div>
 
       {/* ── Grid texture ── */}
-      <div
+      {/* <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
             "linear-gradient(rgba(0,0,0,0.034) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.034) 1px, transparent 1px)",
           backgroundSize: "48px 48px",
         }}
-      />
+      /> */}
 
       {/* ── Floating pastel blobs ── */}
       {SHAPES.map((s, i) => (

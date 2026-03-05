@@ -568,7 +568,7 @@ export default function ThemesSection() {
     <section
       id="themes"
       className="relative w-full py-20 px-4 overflow-hidden"
-      style={{ background: "#fafafa" }}
+      // style={{ background: "#fafafa" }}
     >
       {/* 4-band pastel wash */}
       <div className="absolute inset-0 flex pointer-events-none">
@@ -578,14 +578,14 @@ export default function ThemesSection() {
       </div>
 
       {/* Grid */}
-      <div
+      {/* <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
             "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
           backgroundSize: "48px 48px",
         }}
-      />
+      /> */}
 
       {/* Ghost watermark */}
       <div
@@ -596,7 +596,7 @@ export default function ThemesSection() {
           style={{
             fontFamily: "'Syne', sans-serif",
             fontWeight: 900,
-            fontSize: "clamp(100px, 20vw, 280px)",
+            fontSize: "clamp(100px, 20vw, 180px)",
             color: "#2d2d2d",
             whiteSpace: "nowrap",
           }}

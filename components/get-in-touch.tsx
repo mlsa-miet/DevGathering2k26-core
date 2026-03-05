@@ -182,7 +182,7 @@ export default function GetInTouchSection() {
       ref={ref}
       id="contact"
       className="relative w-full overflow-hidden"
-      style={{ background: "#fafafa" }}
+      // style={{ background: "#fafafa" }}
     >
 
       <Separator label="Wanna Reach Out ?" />
@@ -194,10 +194,10 @@ export default function GetInTouchSection() {
         ))}
       </div>
       {/* Grid */}
-      <div className="absolute inset-0 pointer-events-none" style={{
+      {/* <div className="absolute inset-0 pointer-events-none" style={{
         backgroundImage: "linear-gradient(rgba(0,0,0,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.03) 1px,transparent 1px)",
         backgroundSize: "48px 48px",
-      }} />
+      }} /> */}
       {/* Rainbow top border */}
       <div className="absolute top-0 left-0 right-0 h-[3px]"
         style={{ background: "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8, #CFE8FF)" }} />
