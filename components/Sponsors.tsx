@@ -337,17 +337,12 @@ export default function SponsorsSection() {
             <span style={{ color: "#2d2d2d" }}> &amp; </span>
             <span style={{ color: "#E8916E" }}>Partners</span>
           </motion.h2>
-          <motion.div
-            className="mx-auto mt-4 rounded-full"
-            style={{ height: 3, background: "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8)" }}
-            initial={{ width: 0, opacity: 0 }}
-            animate={titleInView ? { width: 160, opacity: 1 } : {}}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          />
         </div>
 
         {/* ── Sponsors block ── */}
-        <SubHeader label="Sponsors" color="#5BA4E6" />
+        <Separator label="Sponsers" />
+
+        {/* <SubHeader label="Sponsors" color="#5BA4E6" /> */}
         <div className="grid grid-cols-5 sm:grid-cols-5 md:grid-cols-10 gap-2.5">
           {SPONSORS_REVEALED.map((s, i) => (
             <SponsorCard key={s.name} card={s} index={i} />
@@ -366,7 +361,7 @@ export default function SponsorsSection() {
         <Separator label="Community Partners" />
 
         {/* ── Community Partners block ── */}
-        <SubHeader label="Community Partners" color="#E8916E" delay={0.1} />
+        {/* <SubHeader label="Community Partners" color="#E8916E" delay={0.1} /> */}
         <div className="grid grid-cols-5 sm:grid-cols-5 md:grid-cols-10 gap-2.5">
           {PARTNERS_REVEALED.map((p, i) => (
             <SponsorCard key={p.name} card={p} index={i} globalDelay={0.1} />
