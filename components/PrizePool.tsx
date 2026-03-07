@@ -11,63 +11,64 @@ const GREEN  = "#D7F5D0";
 const PINK   = "#FFD6E8";
 
 /* ══════════════════════════════════════════════════════
-   CONFETTI
+   LOTTIE CONFETTI OVERLAY
+   Plays once fullscreen on reveal, then disappears.
+   Uses @lottiefiles/lottie-player web component loaded
+   from CDN so no extra npm install is needed.
+   Falls back gracefully if the script hasn't loaded yet.
 ══════════════════════════════════════════════════════ */
-const CONFETTI_COLORS = [
-  "#5BA4E6","#E8916E","#4CAF50","#D85C8A","#C89A2A",
-  "#fbbf24","#a78bfa","#34d399","#f87171","#60a5fa",
-  "#FFE9A8","#CFE8FF","#D7F5D0","#FFD6E8",
-];
+function LottieConfettiOverlay({ active, onDone }: { active: boolean; onDone: () => void }) {
+  const playerRef = useRef<HTMLElement & { play: () => void }>(null);
 
-interface Particle {
-  id: number; x: number; color: string; size: number;
-  delay: number; duration: number; rotate: number;
-  shape: "rect"|"circle"|"strip"; drift: number;
-}
+  /* Inject the lottie-player script once */
+  useEffect(() => {
+    if (document.querySelector('script[data-lottie-cdn]')) return;
+    const s = document.createElement("script");
+    s.src = "https://unpkg.com/@lottiefiles/lottie-player@2/dist/lottie-player.js";
+    s.setAttribute("data-lottie-cdn", "1");
+    document.head.appendChild(s);
+  }, []);
 
-function generateParticles(n: number): Particle[] {
-  return Array.from({ length: n }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
-    size: 6 + Math.random() * 10,
-    delay: Math.random() * 0.7,
-    duration: 2.2 + Math.random() * 1.8,
-    rotate: Math.random() * 720 - 360,
-    shape: (["rect","circle","strip"] as const)[Math.floor(Math.random() * 3)],
-    drift: (Math.random() - 0.5) * 130,
-  }));
-}
+  /* When active becomes true, fire play and schedule cleanup */
+  useEffect(() => {
+    if (!active) return;
+    const timer = setTimeout(onDone, 4200); // match lottie duration
+    return () => clearTimeout(timer);
+  }, [active, onDone]);
 
-function ConfettiOverlay({ active }: { active: boolean }) {
-  const [particles] = useState(() => generateParticles(120));
   if (!active) return null;
+
   return (
-    <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden">
-      {particles.map((p) => (
-        <motion.div
-          key={p.id}
-          className="absolute"
-          style={{
-            left: `${p.x}%`, top: -20,
-            width:  p.shape === "strip" ? p.size * 0.38 : p.size,
-            height: p.shape === "strip" ? p.size * 3    : p.shape === "circle" ? p.size : p.size * 0.65,
-            background: p.color,
-            borderRadius: p.shape === "circle" ? "50%" : p.shape === "strip" ? 2 : 3,
-          }}
-          initial={{ y: -20, x: 0, rotate: 0, opacity: 1 }}
-          animate={{ y: "115vh", x: p.drift, rotate: p.rotate, opacity: [1,1,1,0.4,0] }}
-          transition={{ duration: p.duration, delay: p.delay, ease: "easeIn" }}
-        />
-      ))}
+    <div
+      className="fixed inset-0 pointer-events-none z-[9999]"
+      style={{ overflow: "hidden" }}
+    >
+      {/* @ts-ignore — lottie-player is a custom element */}
+      <lottie-player
+        ref={playerRef}
+        src="/celebrate2.json"
+        background="transparent"
+        speed="1"
+        autoplay
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+        }}
+      />
+      {/* Golden flash burst on reveal */}
       <motion.div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        initial={{ opacity: 0 }} animate={{ opacity: [0, 0.2, 0] }}
-        transition={{ duration: 0.55, delay: 0.05 }}
+        className="absolute inset-0 flex items-center justify-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 0.22, 0] }}
+        transition={{ duration: 0.6, delay: 0.05 }}
       >
         <div style={{
-          width: 640, height: 640, borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(251,191,36,0.45) 0%, transparent 70%)",
+          width: 700,
+          height: 700,
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(251,191,36,0.5) 0%, transparent 68%)",
         }} />
       </motion.div>
     </div>
@@ -90,45 +91,74 @@ function ScratchCard({ onRevealed }: { onRevealed: () => void }) {
     if (!ctx) return;
     const W = canvas.width, H = canvas.height;
 
-    ctx.fillStyle = "#000000";
+    /* ── Base layer: rich dark silver-charcoal scratch surface ── */
+    const base = ctx.createLinearGradient(0, 0, W, H);
+    base.addColorStop(0,    "#2a2e35");
+    base.addColorStop(0.45, "#3a3f4a");
+    base.addColorStop(1,    "#1e2229");
+    ctx.fillStyle = base;
     ctx.fillRect(0, 0, W, H);
 
-    const shine = ctx.createLinearGradient(W*0.1, 0, W*0.9, 0);
+    /* Subtle noise texture */
+    for (let i = 0; i < 3200; i++) {
+      const tx = Math.random() * W;
+      const ty = Math.random() * H;
+      const a  = Math.random() * 0.06;
+      ctx.fillStyle = `rgba(255,255,255,${a})`;
+      ctx.fillRect(tx, ty, 1.2, 1.2);
+    }
+
+    /* Diagonal shimmer band */
+    const shine = ctx.createLinearGradient(W * 0.1, 0, W * 0.9, 0);
     shine.addColorStop(0,    "transparent");
-    shine.addColorStop(0.48, "rgba(255,255,255,0.25)");
-    shine.addColorStop(0.52, "rgba(255,255,255,0.25)");
+    shine.addColorStop(0.42, "rgba(255,255,255,0.07)");
+    shine.addColorStop(0.5,  "rgba(255,255,255,0.13)");
+    shine.addColorStop(0.58, "rgba(255,255,255,0.07)");
     shine.addColorStop(1,    "transparent");
     ctx.fillStyle = shine;
     ctx.fillRect(0, 0, W, H);
 
+    /* Ghost watermark text — using Syne-like weight/spacing */
     ctx.save();
-    ctx.font = "bold 60px 'Syne', sans-serif";
-    ctx.fillStyle = "rgba(148,163,184,0.18)";
+    ctx.font = "900 64px 'Syne', 'Arial Black', sans-serif";
+    ctx.fillStyle = "rgba(255,255,255,0.04)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.translate(W/2, H/2);
-    ctx.rotate(-0.18);
+    ctx.translate(W / 2, H / 2);
+    ctx.rotate(-0.15);
     ctx.fillText("PRIZE POOL", 0, 0);
     ctx.restore();
 
-    ctx.font = "700 17px 'DM Sans', sans-serif";
-    ctx.fillStyle = "rgba(51,65,85,0.82)";
+    /* ── Main CTA line — bright white, Syne-style ── */
+    ctx.font = "800 18px 'Syne', 'Arial Black', sans-serif";
+    ctx.fillStyle = "rgba(255,255,255,0.96)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText("✦  Scratch to Reveal  ✦", W/2, H/2);
+    ctx.fillText("✦  Scratch to Reveal  ✦", W / 2, H / 2 - 2);
 
-    ctx.font = "500 11px 'DM Sans', sans-serif";
-    ctx.fillStyle = "rgba(100,116,139,0.65)";
-    ctx.fillText("drag your finger or mouse anywhere", W/2, H/2 + 26);
+    /* ── Sub-hint line — soft warm-white, DM Sans ── */
+    ctx.font = "500 12px 'DM Sans', 'Helvetica Neue', sans-serif";
+    ctx.fillStyle = "rgba(220,230,245,0.68)";
+    ctx.fillText("drag your finger or mouse anywhere", W / 2, H / 2 + 26);
 
+    /* Dot grid overlay */
     for (let r = 0; r < H; r += 14) {
       for (let c = 0; c < W; c += 14) {
         ctx.beginPath();
-        ctx.arc(c, r, 1, 0, Math.PI*2);
-        ctx.fillStyle = "rgba(148,163,184,0.14)";
+        ctx.arc(c, r, 0.9, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(200,220,255,0.10)";
         ctx.fill();
       }
     }
+
+    /* Top edge highlight */
+    const topHighlight = ctx.createLinearGradient(0, 0, W, 0);
+    topHighlight.addColorStop(0, "transparent");
+    topHighlight.addColorStop(0.3, "rgba(255,255,255,0.12)");
+    topHighlight.addColorStop(0.7, "rgba(255,255,255,0.12)");
+    topHighlight.addColorStop(1, "transparent");
+    ctx.fillStyle = topHighlight;
+    ctx.fillRect(0, 0, W, 2);
   }, []);
 
   const checkThreshold = useCallback(() => {
@@ -160,7 +190,7 @@ function ScratchCard({ onRevealed }: { onRevealed: () => void }) {
     const scaleY = canvas.height / rect.height;
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    ctx.arc((x - rect.left) * scaleX, (y - rect.top) * scaleY, 36, 0, Math.PI*2);
+    ctx.arc((x - rect.left) * scaleX, (y - rect.top) * scaleY, 36, 0, Math.PI * 2);
     ctx.fill();
     checkThreshold();
   }, [checkThreshold]);
@@ -237,7 +267,7 @@ function ScratchCard({ onRevealed }: { onRevealed: () => void }) {
           cursor: done ? "default" : "crosshair",
           display: done ? "none" : "block",
           borderRadius: 16,
-          boxShadow: "0 4px 24px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.6)",
+          boxShadow: "0 4px 24px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.12)",
         }}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
@@ -254,48 +284,20 @@ function ScratchCard({ onRevealed }: { onRevealed: () => void }) {
 
 /* ══════════════════════════════════════════════════════
    PRIZE CARDS
-   Sizes: 1st > 2nd > 3rd
-   On mobile: stacked vertically, full width, equal size
 ══════════════════════════════════════════════════════ */
 const PRIZES = [
-  {
-    rank: "1st",
-    label: "First Place",
-    LucideIcon: Trophy,
-    accent: "#5BA4E6",
-    bg: BLUE,
-    iconColor: "#5BA4E6",
-  },
-  {
-    rank: "2nd",
-    label: "Second Place",
-    LucideIcon: Medal,
-    accent: "#4CAF50",
-    bg: GREEN,
-    iconColor: "#4CAF50",
-  },
-  {
-    rank: "3rd",
-    label: "Third Place",
-    LucideIcon: Award,
-    accent: "#D85C8A",
-    bg: PINK,
-    iconColor: "#D85C8A",
-  },
+  { rank: "1st", label: "First Place",  LucideIcon: Trophy, accent: "#5BA4E6", bg: BLUE,   iconColor: "#5BA4E6" },
+  { rank: "2nd", label: "Second Place", LucideIcon: Medal,  accent: "#4CAF50", bg: GREEN,  iconColor: "#4CAF50" },
+  { rank: "3rd", label: "Third Place",  LucideIcon: Award,  accent: "#D85C8A", bg: PINK,   iconColor: "#D85C8A" },
 ];
 
-/* Card size config per rank */
 const CARD_SIZES = [
-  /* 1st */ { padding: "32px 20px 28px", iconBox: 72, iconSize: 34, nameSize: 20, rankFontSize: 96 },
-  /* 2nd */ { padding: "24px 18px 22px", iconBox: 60, iconSize: 28, nameSize: 17, rankFontSize: 80 },
-  /* 3rd */ { padding: "20px 16px 18px", iconBox: 54, iconSize: 24, nameSize: 15, rankFontSize: 72 },
+  { padding: "32px 20px 28px", iconBox: 72, iconSize: 34, nameSize: 20, rankFontSize: 96 },
+  { padding: "24px 18px 22px", iconBox: 60, iconSize: 28, nameSize: 17, rankFontSize: 80 },
+  { padding: "20px 16px 18px", iconBox: 54, iconSize: 24, nameSize: 15, rankFontSize: 72 },
 ];
 
-function PrizeCard({
-  prize,
-  sizeIndex,  // 0=1st(largest), 1=2nd, 2=3rd(smallest)
-  animIndex,
-}: {
+function PrizeCard({ prize, sizeIndex, animIndex }: {
   prize: typeof PRIZES[0];
   sizeIndex: number;
   animIndex: number;
@@ -317,36 +319,25 @@ function PrizeCard({
         background: prize.bg,
         outline: `1.5px solid ${prize.accent}42`,
         outlineOffset: 0,
-        boxShadow: `
-          0 0 0 4px ${prize.accent}10,
-          0 10px 32px ${prize.accent}22,
-          inset 0 1px 0 rgba(255,255,255,0.85)
-        `,
+        boxShadow: `0 0 0 4px ${prize.accent}10, 0 10px 32px ${prize.accent}22, inset 0 1px 0 rgba(255,255,255,0.85)`,
         padding: sz.padding,
       }}
     >
-      {/* Shimmer sweep */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "linear-gradient(108deg, transparent 28%, rgba(255,255,255,0.52) 50%, transparent 72%)",
-          backgroundSize: "200% 100%",
-        }}
+      <motion.div className="absolute inset-0 pointer-events-none" style={{
+        background: "linear-gradient(108deg, transparent 28%, rgba(255,255,255,0.52) 50%, transparent 72%)",
+        backgroundSize: "200% 100%",
+      }}
         animate={{ backgroundPosition: ["200% 0", "-200% 0"] }}
         transition={{ duration: 3.2, repeat: Infinity, ease: "linear", repeatDelay: 1.8 }}
       />
-      {/* Diagonal gloss */}
       <div className="absolute inset-0 pointer-events-none rounded-2xl"
         style={{ background: "linear-gradient(140deg, rgba(255,255,255,0.55) 0%, transparent 50%)" }} />
-      {/* Dot grid */}
       <div className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `radial-gradient(${prize.accent}28 1px, transparent 1px)`,
           backgroundSize: "13px 13px", opacity: 0.45, borderRadius: "inherit",
         }} />
-      {/* Top accent bar */}
-      <motion.div
-        className="absolute top-0 left-0 right-0 h-[3px]"
+      <motion.div className="absolute top-0 left-0 right-0 h-[3px]"
         style={{
           background: `linear-gradient(90deg, transparent, ${prize.accent}bb 35%, ${prize.accent} 50%, ${prize.accent}bb 65%, transparent)`,
           borderRadius: "16px 16px 0 0",
@@ -355,24 +346,17 @@ function PrizeCard({
         animate={inView ? { scaleX: 1, opacity: 1 } : {}}
         transition={{ duration: 0.6, delay: animIndex * 0.12 + 0.2 }}
       />
-      {/* Corner pip */}
       <div className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full opacity-50"
         style={{ background: prize.accent }} />
-
-      {/* Rank watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
         style={{
           fontFamily: "'Syne', sans-serif", fontWeight: 900,
           fontSize: sz.rankFontSize, color: prize.accent,
           opacity: 0.07, letterSpacing: "-0.04em",
-        }}
-      >
+        }}>
         {prize.rank}
       </div>
-
-      {/* Pulsing ring behind icon */}
-      <motion.div
-        className="absolute rounded-full pointer-events-none"
+      <motion.div className="absolute rounded-full pointer-events-none"
         style={{
           width: sz.iconBox + 18, height: sz.iconBox + 18,
           border: `1.5px solid ${prize.accent}40`,
@@ -382,13 +366,10 @@ function PrizeCard({
         animate={{ scale: [1, 1.28], opacity: [0.5, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
       />
-
-      {/* Icon — NO swing, just scale-in */}
       <motion.div
         className="relative z-10 flex items-center justify-center rounded-xl"
         style={{
-          width:  sz.iconBox,
-          height: sz.iconBox,
+          width: sz.iconBox, height: sz.iconBox,
           background: "rgba(255,255,255,0.6)",
           border: `1.5px solid ${prize.accent}28`,
           boxShadow: `0 0 0 4px ${prize.accent}12`,
@@ -400,32 +381,16 @@ function PrizeCard({
       >
         <LucideIcon size={sz.iconSize} color={prize.iconColor} strokeWidth={1.7} />
       </motion.div>
-
-      {/* Label */}
-      <p
-        className="relative z-10 font-black mt-3 tracking-tight"
-        style={{
-          fontFamily: "'Syne', sans-serif",
-          fontSize: sz.nameSize,
-          color: "#1a1a1a",
-        }}
-      >
+      <p className="relative z-10 font-black mt-3 tracking-tight"
+        style={{ fontFamily: "'Syne', sans-serif", fontSize: sz.nameSize, color: "#1a1a1a" }}>
         {prize.label}
       </p>
-
-      {/* Divider */}
       <div className="w-3/4 my-2.5 h-px rounded-full"
         style={{ background: `linear-gradient(90deg, transparent, ${prize.accent}55, transparent)` }} />
-
-      {/* Locked state */}
       <div className="relative z-10 flex flex-col items-center gap-1.5">
         <motion.div
           className="flex items-center justify-center rounded-full"
-          style={{
-            width: 32, height: 32,
-            background: `${prize.accent}18`,
-            border: `1.5px solid ${prize.accent}45`,
-          }}
+          style={{ width: 32, height: 32, background: `${prize.accent}18`, border: `1.5px solid ${prize.accent}45` }}
           animate={{ scale: [1, 1.1, 1] }}
           transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
         >
@@ -447,13 +412,12 @@ function PrizeCard({
    PRIZE POOL SECTION — default export
 ══════════════════════════════════════════════════════ */
 export default function PrizePoolSection() {
-  const [revealed, setRevealed] = useState(false);
-  const [confetti, setConfetti] = useState(false);
+  const [revealed, setRevealed]   = useState(false);
+  const [lottieOn, setLottieOn]   = useState(false);
   const titleRef    = useRef<HTMLDivElement>(null);
   const titleInView = useInView(titleRef, { once: true, margin: "-60px" });
   const audioRef    = useRef<HTMLAudioElement | null>(null);
 
-  /* Preload hooray sound */
   useEffect(() => {
     audioRef.current = new Audio("/hooting.mpeg");
     audioRef.current.preload = "auto";
@@ -461,23 +425,23 @@ export default function PrizePoolSection() {
 
   const handleRevealed = useCallback(() => {
     setRevealed(true);
-    setConfetti(true);
-    setTimeout(() => setConfetti(false), 4000);
-    /* Play hooray once */
+    setLottieOn(true);                 // trigger Lottie overlay
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
       audioRef.current.play().catch(() => {});
     }
   }, []);
 
+  const handleLottieDone = useCallback(() => {
+    setLottieOn(false);
+  }, []);
+
   return (
     <>
-      <ConfettiOverlay active={confetti} />
+      {/* Lottie celebrate overlay — plays once, fullscreen */}
+      <LottieConfettiOverlay active={lottieOn} onDone={handleLottieDone} />
 
-      <section
-        id="prizes"
-        className="relative w-full py-24 px-4 overflow-hidden"
-      >
+      <section id="prizes" className="relative w-full py-24 px-4 overflow-hidden">
         {/* 4-band pastel wash */}
         <div className="absolute inset-0 flex pointer-events-none">
           {[BLUE, YELLOW, GREEN, PINK].map((c, i) => (
@@ -490,9 +454,7 @@ export default function PrizePoolSection() {
           <span style={{
             fontFamily: "'Syne', sans-serif", fontWeight: 900,
             fontSize: "clamp(100px, 18vw, 240px)", color: "#2d2d2d", whiteSpace: "nowrap",
-          }}>
-            PRIZES
-          </span>
+          }}>PRIZES</span>
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto">
@@ -505,9 +467,7 @@ export default function PrizePoolSection() {
               initial={{ opacity: 0, y: 10 }}
               animate={titleInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5 }}
-            >
-              Win Big
-            </motion.p>
+            >Win Big</motion.p>
 
             <motion.h2
               className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight"
@@ -580,7 +540,7 @@ export default function PrizePoolSection() {
                       boxShadow: "0 4px 16px rgba(200,154,42,0.22)",
                     }}
                   >
-                    🎉 You revealed it! Total prize pool is $4,00,000
+                     You revealed it! Total prize pool is $4,00,000
                   </span>
                 </motion.div>
               )}
@@ -602,28 +562,14 @@ export default function PrizePoolSection() {
             <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, rgba(0,0,0,0.08), transparent)" }} />
           </motion.div>
 
-          {/* ══════════════════════════════════════
-              DESKTOP: podium layout — 2nd | 1st | 3rd
-              MOBILE:  stacked, 1st on top, equal width
-          ══════════════════════════════════════ */}
-
-          {/* Desktop layout */}
+          {/* Desktop podium: 2nd | 1st | 3rd */}
           <div className="hidden sm:flex gap-4 items-end">
-            {/* 2nd place — medium */}
-            <div className="flex-1">
-              <PrizeCard prize={PRIZES[1]} sizeIndex={1} animIndex={1} />
-            </div>
-            {/* 1st place — tallest, slight lift */}
-            <div className="flex-1" style={{ marginBottom: -14 }}>
-              <PrizeCard prize={PRIZES[0]} sizeIndex={0} animIndex={0} />
-            </div>
-            {/* 3rd place — smallest */}
-            <div className="flex-1">
-              <PrizeCard prize={PRIZES[2]} sizeIndex={2} animIndex={2} />
-            </div>
+            <div className="flex-1"><PrizeCard prize={PRIZES[1]} sizeIndex={1} animIndex={1} /></div>
+            <div className="flex-1" style={{ marginBottom: -14 }}><PrizeCard prize={PRIZES[0]} sizeIndex={0} animIndex={0} /></div>
+            <div className="flex-1"><PrizeCard prize={PRIZES[2]} sizeIndex={2} animIndex={2} /></div>
           </div>
 
-          {/* Mobile layout — stacked vertically, 1st > 2nd > 3rd */}
+          {/* Mobile stacked: 1st > 2nd > 3rd */}
           <div className="flex sm:hidden flex-col gap-3">
             <PrizeCard prize={PRIZES[0]} sizeIndex={0} animIndex={0} />
             <PrizeCard prize={PRIZES[1]} sizeIndex={1} animIndex={1} />
@@ -639,7 +585,6 @@ export default function PrizePoolSection() {
           >
             Individual prize amounts revealed on event day
           </motion.p>
-
         </div>
 
         <style>{`

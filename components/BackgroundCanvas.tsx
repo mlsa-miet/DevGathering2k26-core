@@ -11,7 +11,6 @@ function shadeColor(hex: string, factor: number): string {
   return `rgb(${r},${g},${b})`;
 }
 
-// Only left strip (x < 18%) and right strip (x > 78%) — never middle
 const CUBES = [
   // LEFT SIDE
   { color: "#F4808E", size: 58, x: "2%",  y: "8%",  rotate: 18,  duration: 14, delay: 0.0, opacity: 0.92, depth: 1.8 },
@@ -39,9 +38,8 @@ function IsoCube({
   const left  = shadeColor(color, 0.70);
   const right = shadeColor(color, 0.48);
 
-  // Parallax: deeper cubes move more with mouse
   const px = useTransform(mouseX, [-1, 1], [-60 * depth, 60 * depth]);
-const py = useTransform(mouseY, [-1, 1], [-40 * depth, 40 * depth]);
+  const py = useTransform(mouseY, [-1, 1], [-40 * depth, 40 * depth]);
 
   return (
     <motion.div
@@ -58,19 +56,13 @@ const py = useTransform(mouseY, [-1, 1], [-40 * depth, 40 * depth]);
         y: py,
       }}
       initial={{ opacity: 0, scale: 0.2, rotate: rotate - 20 }}
-      animate={{
-        opacity,
-        scale: 1,
-        rotate,
-        // floating drift layered on top of parallax via separate wrapper below
-      }}
+      animate={{ opacity, scale: 1, rotate }}
       transition={{
         opacity: { duration: 1.1, delay, ease: "easeOut" },
         scale:   { duration: 1.1, delay, ease: [0.34, 1.56, 0.64, 1] },
         rotate:  { duration: 1.1, delay, ease: "easeOut" },
       }}
     >
-      {/* Inner wrapper for the floating drift so it composes with parallax */}
       <motion.div
         animate={{
           y: [0, -14, 4, -9, 0],
@@ -87,21 +79,9 @@ const py = useTransform(mouseY, [-1, 1], [-40 * depth, 40 * depth]);
           viewBox={`0 0 ${s * 2} ${s * 1.7}`}
           style={{ overflow: "visible" }}
         >
-          {/* Top face */}
-          <polygon
-            points={`${s},0 ${s*2},${h} ${s},${h*2} 0,${h}`}
-            fill={top}
-          />
-          {/* Left face */}
-          <polygon
-            points={`0,${h} ${s},${h*2} ${s},${h*2+s*0.6} 0,${h+s*0.6}`}
-            fill={left}
-          />
-          {/* Right face */}
-          <polygon
-            points={`${s},${h*2} ${s*2},${h} ${s*2},${h+s*0.6} ${s},${h*2+s*0.6}`}
-            fill={right}
-          />
+          <polygon points={`${s},0 ${s*2},${h} ${s},${h*2} 0,${h}`}               fill={top}   />
+          <polygon points={`0,${h} ${s},${h*2} ${s},${h*2+s*0.6} 0,${h+s*0.6}`}   fill={left}  />
+          <polygon points={`${s},${h*2} ${s*2},${h} ${s*2},${h+s*0.6} ${s},${h*2+s*0.6}`} fill={right} />
         </svg>
       </motion.div>
     </motion.div>
@@ -109,11 +89,9 @@ const py = useTransform(mouseY, [-1, 1], [-40 * depth, 40 * depth]);
 }
 
 export default function BackgroundCanvas() {
-  // Raw mouse position normalised -1 to +1
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
 
-  // Smooth spring so movement feels weighty, not jittery
   const mouseX = useSpring(rawX, { stiffness: 55, damping: 22, mass: 1 });
   const mouseY = useSpring(rawY, { stiffness: 55, damping: 22, mass: 1 });
 
@@ -138,7 +116,7 @@ export default function BackgroundCanvas() {
       }}
       aria-hidden="true"
     >
-      {/* Very faint pastel corner wash */}
+      {/* Pastel corner wash — always visible */}
       <div
         style={{
           position: "absolute",
@@ -152,7 +130,7 @@ export default function BackgroundCanvas() {
         }}
       />
 
-      {/* Grid lines */}
+      {/* Grid lines — always visible */}
       <div
         style={{
           position: "absolute",
@@ -165,10 +143,18 @@ export default function BackgroundCanvas() {
         }}
       />
 
-      {/* Floating 3D cubes — left & right edges only */}
-      {CUBES.map((cube, i) => (
-        <IsoCube key={i} {...cube} mouseX={mouseX} mouseY={mouseY} />
-      ))}
+      {/*
+        Cubes wrapper — hidden on mobile (< 640px), visible on sm+ (≥ 640px).
+        Using a plain <div> with a className so Tailwind can handle the breakpoint.
+        The `hidden sm:block` classes map to:
+          display: none        (default / mobile)
+          display: block       (sm = 640px and above)
+      */}
+      <div className="hidden sm:block">
+        {CUBES.map((cube, i) => (
+          <IsoCube key={i} {...cube} mouseX={mouseX} mouseY={mouseY} />
+        ))}
+      </div>
     </div>
   );
 }

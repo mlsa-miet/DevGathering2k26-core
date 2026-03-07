@@ -10,6 +10,7 @@ import EventTimelineDetails from "@/components/EventsTimeline";
 import ThemesSection from "@/components/ThemeSection";
 import PrizePoolSection from "@/components/PrizePool";
 import BackgroundCanvas from '@/components/BackgroundCanvas';
+import Header from '@/components/Header';
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
     <div className='bg-white'>
       <IntroOverlay>
       <main className="relative z-10">
+        <Header/>
         <HeroSection /> 
         <AboutSection />
         <ThemesSection/>

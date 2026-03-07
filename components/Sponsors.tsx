@@ -296,7 +296,7 @@ export default function SponsorsSection() {
   const partnerAccents = ["#D85C8A","#4CAF50","#5BA4E6","#C89A2A","#D85C8A","#4CAF50","#5BA4E6"];
 
   return (
-    <section className="relative w-full py-24 px-4 overflow-hidden">
+    <section id="sponsors" className="relative w-full py-24 px-4 overflow-hidden">
       {/* 4-band pastel wash */}
       <div className="absolute inset-0 flex pointer-events-none">
         {[BLUE, YELLOW, GREEN, PINK].map((c, i) => (

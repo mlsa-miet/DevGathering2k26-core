@@ -153,7 +153,7 @@ export default function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden px-4 py-16"
+      className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden px-4 py-16 md:mt-7"
     >
       {/* ── Parallax 4-band bg ── */}
       <motion.div className="absolute inset-0 flex pointer-events-none" style={{ y: bgY }}>

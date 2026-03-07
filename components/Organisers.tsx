@@ -320,7 +320,7 @@ export default function OrganisersSection() {
         ══════════════════════════════════════ */}
         <div className="hidden md:block">
           <Separator label="Lead Organisers" />
-          <SubLabel label="Meet the team" color="#E8916E" />
+          {/* <SubLabel label="Meet the team" color="#E8916E" /> */}
 
           {/* Leads — 3 centred in a 5-col grid */}
           <div className="grid grid-cols-5 gap-3">

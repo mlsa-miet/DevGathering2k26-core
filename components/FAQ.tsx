@@ -219,7 +219,7 @@ export default function FAQSection() {
   const col2 = FAQS.slice(half);
 
   return (
-    <section className="relative w-full py-24 px-4 overflow-hidden">
+    <section id="faq" className="relative w-full py-24 px-4 overflow-hidden">
 
       {/* 4-band pastel wash */}
       <div className="absolute inset-0 flex pointer-events-none">
