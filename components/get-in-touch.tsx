@@ -30,7 +30,7 @@ const QUICK_LINKS = [
 const SOCIALS = [
   {
     label: "Instagram",
-    href:  "#",
+    href:  "https://www.instagram.com/mlsamiet",
     accent: "#D85C8A",
     bg: PINK,
     icon: (
@@ -43,7 +43,7 @@ const SOCIALS = [
   },
   {
     label: "LinkedIn",
-    href:  "#",
+    href:  "https://www.linkedin.com/company/mlsa-miet/posts/?feedView=all",
     accent: "#5BA4E6",
     bg: BLUE,
     icon: (
@@ -56,7 +56,7 @@ const SOCIALS = [
   },
   {
     label: "Twitter / X",
-    href:  "#",
+    href:  "https://x.com/MlsaMiet",
     accent: "#4CAF50",
     bg: GREEN,
     icon: (
@@ -67,7 +67,7 @@ const SOCIALS = [
   },
   {
     label: "Website",
-    href:  "#",
+    href:  "https://www.mlsamiet.site/",
     accent: "#C89A2A",
     bg: YELLOW,
     icon: (
@@ -210,25 +210,23 @@ export default function GetInTouchSection() {
               {/* Event logo — replace inner div */}
               <div
                 className="flex items-center justify-center rounded-xl shrink-0"
-                style={{
-                  width: 38, height: 38,
-                  background: BLUE,
-                  border: "1.5px dashed rgba(91,164,230,0.4)",
-                  boxShadow: "0 0 0 3px rgba(91,164,230,0.1)",
-                }}
+             
               >
-                <span style={{ fontFamily: "'DM Sans',sans-serif", color: "#5BA4E6", fontSize: 7, textAlign: "center" }}>logo</span>
+               
               </div>
               {/* Community logo — replace inner div */}
               <div
                 className="flex items-center justify-center rounded-lg shrink-0"
                 style={{
-                  width: 30, height: 30,
-                  background: PINK,
-                  border: "1.5px dashed rgba(216,92,138,0.4)",
+                  width: 60, height: 60,
+                 
                 }}
               >
-                <span style={{ fontFamily: "'DM Sans',sans-serif", color: "#D85C8A", fontSize: 6 }}>MLSA</span>
+               <img
+    src="/Mlsa.ico"
+    alt="MLSA Logo"
+    style={{ width: "100%", height: "100%", objectFit: "contain" }}
+  />
               </div>
               <div>
                 <p className="font-black leading-none text-sm"

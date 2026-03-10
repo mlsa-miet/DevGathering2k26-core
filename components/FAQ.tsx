@@ -15,12 +15,12 @@ const BG_CYCLE     = [BLUE, YELLOW, GREEN, PINK, YELLOW, BLUE, GREEN, PINK];
 /* ── FAQ Data ── */
 const FAQS = [
   {
-    q: "How do I register, and what if I make a mistake in my application?",
-    a: "Submit an application to participate. If you submit incorrect details, re-register using a new ID. For cancellations, email your request to mlsa.community@miet.ac.in with the reason for withdrawal.",
+    q: "How do I register, and what if I make a mistake in the application?",
+    a: "You must submit an application to participate. If you submit incorrect details, you need to re-register using a new ID. For cancellations, email your request to mlsa.community@miet.ac.in with the reason for withdrawal.",
   },
   {
     q: "Who can participate and what are the team requirements?",
-    a: "Participation is open to students from any college or university in India. Teams must have 2 to 4 members, and you must form your team before registration. Cross-college teams are allowed, and a college can have multiple teams.",
+    a: "Participation is open to students from any college/university in India. Teams must have 2 to 4 members, and you must form your team before registration. Cross-college teams are allowed, and a college can have multiple teams.",
   },
   {
     q: "What is the event format, and how will projects be evaluated?",
@@ -44,7 +44,7 @@ const FAQS = [
   },
   {
     q: "Where can I find event details and contact for support?",
-    a: "Event details are available on the official website devgathering2k25.xyz, and updates will be shared via email. For any queries, contact mlsa.community@miet.ac.in. Rest areas will be available for participants, but personal belongings are your responsibility.",
+    a: "Event details are available on the official website devgathering2k26.xyz, and updates will be shared via email. For any queries, contact mlsa.community@miet.ac.in. Rest areas will be available for participants, but personal belongings are your responsibility.",
   },
 ];
 
