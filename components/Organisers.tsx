@@ -27,7 +27,7 @@ interface Person {
 const LEADS: Person[] = [
   { name: "Pranav",    role: "Lead",               linkedin: "#", image: "/team/pranav.PNG" },
   { name: "Avni",      role: "Lead",               linkedin: "#", image: "/team/avni.PNG" },
-  { name: "Kushagra",  role: "Head of Operations", linkedin: "#", image: "/team/kushagra.png" },
+  { name: "Kushagra",  role: "Head of Operations", linkedin: "#", image: "/team/kushagra.PNG" },
 ];
 
 const ORG_ROW1: Person[] = [
@@ -54,7 +54,7 @@ const LinkedInIcon = ({ color }: { color: string }) => (
 );
 
 /* ════════════════════════════════════════════════════ */
-/* CARD COMPONENT: Floating Idle + Slow Continuous Shine */
+/* CARD COMPONENT: Premium Lift & Mobile Text Fix */
 function PersonCard({
   person, index, delay = 0, bg, accent
 }: {
@@ -62,6 +62,9 @@ function PersonCard({
 }) {
   const ref    = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
+
+  // A smooth, premium easing curve. Added "as const" to fix TS error.
+  const premiumEase = [0.22, 1, 0.36, 1] as const;
 
   return (
     <motion.div
@@ -74,7 +77,7 @@ function PersonCard({
       className="group relative w-full cursor-pointer select-none"
       style={{ height: 290 }}
     >
-      {/* ── 1. The Card Base (Glassy & Bright) ── */}
+      {/* ── 1. The Card Base (Subtle Lift) ── */}
       <motion.div 
         className="absolute bottom-0 w-full rounded-2xl overflow-hidden"
         style={{ 
@@ -84,16 +87,16 @@ function PersonCard({
           boxShadow: `0 10px 30px -10px ${accent}20`
         }}
         variants={{
-          hover: { scale: 1.02, boxShadow: `0 20px 40px -5px ${accent}50` },
-          tap:   { scale: 0.98, boxShadow: `0 5px 15px -5px ${accent}40` }
+          // Card base barely moves to create depth distinction from the photo
+          hover: { scale: 1.01, y: -2, boxShadow: `0 15px 35px -5px ${accent}40` },
+          tap:   { scale: 0.99, y: 0, boxShadow: `0 8px 20px -5px ${accent}30` }
         }}
-        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        transition={{ duration: 0.4, ease: premiumEase }}
       >
         {/* Soft Glass Fade */}
         <div className="absolute top-0 left-0 right-0 h-2/3 bg-gradient-to-b from-white/60 to-transparent" />
 
         {/* ✨ THE SLOW SHINE ✨ */}
-        {/* Runs forever, no hover needed */}
         <motion.div
             className="absolute inset-0 z-10"
             style={{
@@ -101,30 +104,23 @@ function PersonCard({
             }}
             animate={{ x: ["-100%", "200%"] }}
             transition={{
-                duration: 3,             // Slow sweep (3 seconds)
-                repeat: Infinity,        // Loop forever
-                repeatDelay: 3 + (index % 3), // Randomized pause so they don't sync up perfectly
+                duration: 3,             
+                repeat: Infinity,        
+                repeatDelay: 3 + (index % 3),
                 ease: "easeInOut",
-                delay: index * 0.2       // Staggered start
+                delay: index * 0.2       
             }}
         />
       </motion.div>
 
-      {/* ── 2. The Person Image (Floating Idle) ── */}
+      {/* ── 2. The Person Image (Separate, Higher Lift) ── */}
       <div className="absolute bottom-0 left-0 right-0 h-full flex items-end justify-center pointer-events-none z-20 overflow-visible pb-16">
         <motion.div
             className="relative w-auto h-[105%]"
-            // IDLE ANIMATION: Gently floats up and down forever
-            animate={{ y: [0, -6, 0] }}
-            transition={{ 
-                duration: 4, 
-                repeat: Infinity, 
-                ease: "easeInOut",
-                delay: index * 0.5 // Different float timing per card
-            }}
             variants={{
-                hover: { y: -15, scale: 1.1, transition: { type: "spring", stiffness: 300 } },
-                tap:   { y: -5, scale: 1.05, transition: { type: "spring", stiffness: 500 } }
+                // Photo lifts much higher and scales to pop out from the card base
+                hover: { y: -14, scale: 1.04, transition: { duration: 0.5, ease: premiumEase } },
+                tap:   { y: -8, scale: 1.02, transition: { duration: 0.4, ease: premiumEase } }
             }}
         >
             {person.image ? (
@@ -144,29 +140,32 @@ function PersonCard({
         </motion.div>
       </div>
 
-      {/* ── 3. Floating Name Card ── */}
+      {/* ── 3. Floating Name Card (Responsive Text Fix) ── */}
       <motion.div 
-        className="absolute bottom-4 left-3 right-3 z-30"
+        className="absolute bottom-4 left-2 right-2 md:left-3 md:right-3 z-30"
         variants={{
-            hover: { y: -5 },
-            tap:   { y: -2 }
+            hover: { y: -4, transition: { duration: 0.4, ease: premiumEase } },
+            tap:   { y: -2, transition: { duration: 0.3, ease: premiumEase } }
         }}
       >
         <div 
-            className="rounded-xl px-4 py-3 flex items-center justify-between backdrop-blur-md transition-colors duration-200 group-hover:bg-white/90"
+            // Adjusted padding for mobile to allow text to fit better
+            className="rounded-xl px-3 py-2.5 md:px-4 md:py-3 flex items-center justify-between backdrop-blur-md transition-colors duration-200 group-hover:bg-white/95"
             style={{ 
                 background: "rgba(255,255,255,0.7)", 
                 border: "1px solid rgba(255,255,255,0.95)",
                 boxShadow: "0 4px 15px rgba(0,0,0,0.06)"
             }}
         >
-            <div className="flex flex-col min-w-0">
-                <h3 className="text-sm font-bold leading-tight truncate" 
-                    style={{ fontFamily: "'Syne', sans-serif", color: "#1a1a1a" }}>
+            <div className="flex flex-col min-w-0 flex-1 pr-2">
+                {/* Removed truncate, added word wrap so long names fit */}
+                <h3 className="text-xs md:text-sm font-bold leading-tight" 
+                    style={{ fontFamily: "'Syne', sans-serif", color: "#1a1a1a", wordBreak: "break-word" }}>
                     {person.name}
                 </h3>
-                <span className="text-[9px] font-bold uppercase tracking-wider mt-0.5 truncate" 
-                   style={{ fontFamily: "'DM Sans', sans-serif", color: accent }}>
+                {/* Replaced truncate with line-clamp-2 to allow long roles like 'Head of Operations' to wrap */}
+                <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-wider mt-0.5 line-clamp-2" 
+                   style={{ fontFamily: "'DM Sans', sans-serif", color: accent, lineHeight: "1.2" }}>
                     {person.role}
                 </span>
             </div>
@@ -174,7 +173,8 @@ function PersonCard({
             <a 
                 href={person.linkedin}
                 target="_blank" rel="noopener noreferrer"
-                className="flex items-center justify-center w-7 h-7 rounded-full bg-white hover:bg-blue-50 transition-colors pointer-events-auto shadow-sm flex-shrink-0"
+                // Scaled LinkedIn button slightly on mobile
+                className="flex items-center justify-center w-6 h-6 md:w-7 md:h-7 rounded-full bg-white hover:bg-blue-50 transition-colors pointer-events-auto shadow-sm flex-shrink-0"
                 onClick={(e) => e.stopPropagation()}
             >
                 <LinkedInIcon color="#0077b5" />
@@ -223,27 +223,6 @@ function Separator({ label }: { label: string }) {
   );
 }
 
-function SubLabel({ label, color, delay = 0 }: { label: string; color: string; delay?: number }) {
-  const ref    = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-30px" });
-  return (
-    <motion.div
-      ref={ref}
-      className="flex items-center gap-2 mb-5"
-      initial={{ opacity: 0, x: -14 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.45, delay, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <div className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
-      <span
-        className="text-[10px] uppercase tracking-[0.38em] font-semibold"
-        style={{ fontFamily: "'DM Sans', sans-serif", color: "#777" }}
-      >
-        {label}
-      </span>
-    </motion.div>
-  );
-}
 
 /* ════════════════════════════════════════════════════ */
 /* MAIN SECTION */
@@ -309,8 +288,8 @@ export default function OrganisersSection() {
         <div className="hidden md:block">
           <Separator label="The Team" />
           
-          {/* Grid: 3 cols, generous gap */}
-          <div className="grid grid-cols-3 gap-8 px-4">
+          {/* Added pt-8 and gap-y-12 to prevent clipping on desktop too */}
+          <div className="grid grid-cols-3 gap-x-8 gap-y-12 pt-8 px-4">
             {allOrganisers.map((p, i) => {
               const { bg, accent } = getColor(i);
               return (
@@ -332,17 +311,18 @@ export default function OrganisersSection() {
         ══════════════════════════════════════ */}
         <div className="block md:hidden">
           <Separator label="Organisers" />
-          <SubLabel label="Meet the team" color="#E8916E" />
+          {/* Removed SubLabel here */}
 
           <div
-            className="relative"
+            className="relative pt-8" // ADDED pt-8 to stop row 1 heads from hitting the top edge
             style={{
-              maxHeight: showAll ? "none" : "340px",
+              maxHeight: showAll ? "none" : "400px", // INCREASED to accommodate the top padding
               overflow: "hidden",
               transition: "max-height 0.5s cubic-bezier(0.22,1,0.36,1)",
             }}
           >
-            <div className="grid grid-cols-2 gap-4">
+             {/* ADDED gap-y-12 to stop row 2 from overlapping row 1 */}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-12">
               {allOrganisers.map((p, i) => {
                  const { bg, accent } = getColor(i);
                  return (
