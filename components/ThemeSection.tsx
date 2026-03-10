@@ -1168,16 +1168,6 @@ export default function ThemesSection() {
             <span style={{ color: "#5BA4E6" }}>Themes</span>
           </motion.h2>
 
-          <motion.div
-            className="mx-auto mt-4 rounded-full"
-            style={{
-              height: 3,
-              background: "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8)",
-            }}
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 140, opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          />
 
           <motion.p
             className="mt-4 text-sm max-w-sm mx-auto"

@@ -297,6 +297,55 @@ const CARD_SIZES = [
   { padding: "20px 16px 18px", iconBox: 54, iconSize: 24, nameSize: 15, rankFontSize: 72 },
 ];
 
+function Separator({ label }: { label: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+
+  return (
+    <div ref={ref} className="flex items-center gap-4 my-10">
+      <motion.div
+        className="flex-1 h-px"
+        style={{ background: "linear-gradient(90deg, transparent, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8, transparent)" }}
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={inView ? { scaleX: 1, opacity: 1 } : {}}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      />
+      <motion.div
+        className="flex items-center gap-2 px-4 py-1.5 rounded-full"
+        style={{
+          background: "white",
+          border: "1.5px solid rgba(0,0,0,0.07)",
+          boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+        }}
+        initial={{ opacity: 0, scale: 0.85 }}
+        animate={inView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {/* 4-dot icon */}
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <circle cx="4"  cy="4"  r="3" fill="#CFE8FF" stroke="#5BA4E6" strokeWidth="1"/>
+          <circle cx="12" cy="4"  r="3" fill="#FFE9A8" stroke="#C89A2A" strokeWidth="1"/>
+          <circle cx="4"  cy="12" r="3" fill="#D7F5D0" stroke="#4CAF50" strokeWidth="1"/>
+          <circle cx="12" cy="12" r="3" fill="#FFD6E8" stroke="#D85C8A" strokeWidth="1"/>
+        </svg>
+        <span
+          className="text-[10px] font-semibold uppercase tracking-[0.35em] whitespace-nowrap"
+          style={{ fontFamily: "'DM Sans', sans-serif", color: "#888" }}
+        >
+          {label}
+        </span>
+      </motion.div>
+      <motion.div
+        className="flex-1 h-px"
+        style={{ background: "linear-gradient(90deg, transparent, #FFD6E8, #D7F5D0, #FFE9A8, #CFE8FF, transparent)" }}
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={inView ? { scaleX: 1, opacity: 1 } : {}}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      />
+    </div>
+  );
+}
+
 function PrizeCard({ prize, sizeIndex, animIndex }: {
   prize: typeof PRIZES[0];
   sizeIndex: number;
@@ -480,14 +529,6 @@ export default function PrizePoolSection() {
               <span style={{ color: "#5BA4E6" }}>Pool</span>
             </motion.h2>
 
-            <motion.div
-              className="mx-auto mt-4 rounded-full"
-              style={{ height: 3, background: "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8)" }}
-              initial={{ width: 0, opacity: 0 }}
-              animate={titleInView ? { width: 140, opacity: 1 } : {}}
-              transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            />
-
             <motion.p
               className="mt-4 text-sm max-w-sm mx-auto"
               style={{ fontFamily: "'DM Sans', sans-serif", color: "#aaa" }}
@@ -548,19 +589,7 @@ export default function PrizePoolSection() {
           </motion.div>
 
           {/* ── Separator ── */}
-          <motion.div
-            className="flex items-center gap-3 mb-6"
-            initial={{ opacity: 0 }}
-            animate={titleInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.65 }}
-          >
-            <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.08))" }} />
-            <span className="text-[9px] uppercase tracking-[0.45em] font-semibold"
-              style={{ fontFamily: "'DM Sans', sans-serif", color: "#bbb" }}>
-              Prize Breakdown
-            </span>
-            <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, rgba(0,0,0,0.08), transparent)" }} />
-          </motion.div>
+          <Separator label="Prize Breakdown" />
 
           {/* Desktop podium: 2nd | 1st | 3rd */}
           <div className="hidden sm:flex gap-4 items-end">

@@ -193,27 +193,7 @@ export default function GetInTouchSection() {
           <div key={i} className="flex-1 opacity-[0.09]" style={{ background: c }} />
         ))}
       </div>
-      {/* Grid */}
-      {/* <div className="absolute inset-0 pointer-events-none" style={{
-        backgroundImage: "linear-gradient(rgba(0,0,0,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.03) 1px,transparent 1px)",
-        backgroundSize: "48px 48px",
-      }} /> */}
-      {/* Rainbow top border */}
-      <div className="absolute top-0 left-0 right-0 h-[3px]"
-        style={{ background: "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8, #CFE8FF)" }} />
-
-      {/* Character slots — only xl */}
-      <CharSlot
-        className="hidden xl:block"
-        style={{ left: 16, bottom: 0, width: 90, height: 160, zIndex: 2 }}
-        label="char PNG"
-      />
-      <CharSlot
-        className="hidden xl:block"
-        style={{ right: 16, bottom: 0, width: 90, height: 160, zIndex: 2 }}
-        label="char PNG"
-      />
-
+      
       {/* ══ Main footer grid ══ */}
       <div className="relative z-10 max-w-6xl mx-auto px-4 py-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -264,7 +244,7 @@ export default function GetInTouchSection() {
 
             <p className="text-xs leading-relaxed"
               style={{ fontFamily: "'DM Sans', sans-serif", color: "#888" }}>
-              A 24-hour hackathon where ideas collide, code comes alive, and the next big thing begins.
+              A 36-hour hackathon where ideas collide, code comes alive, and the next big thing begins.
             </p>
 
             {/* Social icons */}

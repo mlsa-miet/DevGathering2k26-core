@@ -280,13 +280,6 @@ export default function FAQSection() {
             <span style={{ color: "#E8916E" }}>Questions</span>
           </motion.h2>
 
-          <motion.div
-            className="mx-auto mt-4 rounded-full"
-            style={{ height: 3, background: "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8)" }}
-            initial={{ width: 0, opacity: 0 }}
-            animate={titleInView ? { width: 140, opacity: 1 } : {}}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          />
 
           <motion.p
             className="mt-5 text-sm max-w-xs mx-auto"

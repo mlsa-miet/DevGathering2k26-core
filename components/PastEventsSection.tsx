@@ -426,60 +426,7 @@ export default function PastEventsSection() {
           EVENTS
         </span>
       </div>
-
-      {/* Character PNG slots — desktop only, outside the card row */}
-      {/* Left character — replace inner div with your <img> */}
-      <div
-        className="hidden xl:block absolute pointer-events-none select-none"
-        style={{
-          left: "calc(50% - 680px)",
-          top: "50%",
-          transform: "translateY(-50%)",
-          width: 110,
-        }}
-      >
-        {/* ↓ Replace with: <img src="/characters/char-left.png" alt="" style={{width:'100%'}} /> */}
-        <div
-          className="rounded-2xl flex items-center justify-center text-center"
-          style={{
-            width: 110,
-            height: 160,
-            border: "1.5px dashed rgba(0,0,0,0.1)",
-            background: "rgba(0,0,0,0.02)",
-          }}
-        >
-          <span style={{ fontFamily: "'DM Sans',sans-serif", color: "#ccc", fontSize: 9 }}>
-            char PNG
-          </span>
-        </div>
-      </div>
-
-      {/* Right character — replace inner div with your <img> */}
-      <div
-        className="hidden xl:block absolute pointer-events-none select-none"
-        style={{
-          right: "calc(50% - 680px)",
-          top: "38%",
-          transform: "translateY(-50%)",
-          width: 110,
-        }}
-      >
-        {/* ↓ Replace with: <img src="/characters/char-right.png" alt="" style={{width:'100%'}} /> */}
-        <div
-          className="rounded-2xl flex items-center justify-center text-center"
-          style={{
-            width: 110,
-            height: 160,
-            border: "1.5px dashed rgba(0,0,0,0.1)",
-            background: "rgba(0,0,0,0.02)",
-          }}
-        >
-          <span style={{ fontFamily: "'DM Sans',sans-serif", color: "#ccc", fontSize: 9 }}>
-            char PNG
-          </span>
-        </div>
-      </div>
-
+      
       <div className="relative z-10 max-w-5xl mx-auto">
 
         {/* ── Title ── */}
@@ -504,17 +451,6 @@ export default function PastEventsSection() {
             <span style={{ color: "#2d2d2d" }}>Past </span>
             <span style={{ color: "#5BA4E6" }}>Events</span>
           </motion.h2>
-
-          <motion.div
-            className="mx-auto mt-4 rounded-full"
-            style={{
-              height: 3,
-              background: "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8)",
-            }}
-            initial={{ width: 0, opacity: 0 }}
-            animate={titleInView ? { width: 140, opacity: 1 } : {}}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          />
 
           <motion.p
             className="mt-5 text-sm max-w-md mx-auto leading-relaxed"
