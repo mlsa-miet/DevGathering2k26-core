@@ -11,6 +11,10 @@ import {
   Lightbulb,
   Building2,
   ShieldCheck,
+  Sparkles,
+  Trophy,
+  Star,
+  Zap,
 } from "lucide-react";
 
 /* ── Palette ── */
@@ -125,22 +129,8 @@ function Bulb({ on }: { on: boolean }) {
       />
       {on && (
         <>
-          <ellipse
-            cx="45"
-            cy="62"
-            rx="38"
-            ry="38"
-            fill="#fbbf24"
-            opacity="0.12"
-          />
-          <ellipse
-            cx="45"
-            cy="62"
-            rx="28"
-            ry="28"
-            fill="#fbbf24"
-            opacity="0.18"
-          />
+          <ellipse cx="45" cy="62" rx="38" ry="38" fill="#fbbf24" opacity="0.12" />
+          <ellipse cx="45" cy="62" rx="28" ry="28" fill="#fbbf24" opacity="0.18" />
         </>
       )}
       <path
@@ -156,30 +146,9 @@ function Bulb({ on }: { on: boolean }) {
         strokeWidth={on ? "2" : "1.5"}
         strokeLinecap="round"
       />
-      <rect
-        x="32"
-        y="88"
-        width="26"
-        height="5"
-        rx="2"
-        fill={on ? "#fbbf24" : "#d1d5db"}
-      />
-      <rect
-        x="34"
-        y="93"
-        width="22"
-        height="5"
-        rx="2"
-        fill={on ? "#f59e0b" : "#9ca3af"}
-      />
-      <rect
-        x="36"
-        y="98"
-        width="18"
-        height="5"
-        rx="2"
-        fill={on ? "#f59e0b" : "#6b7280"}
-      />
+      <rect x="32" y="88" width="26" height="5" rx="2" fill={on ? "#fbbf24" : "#d1d5db"} />
+      <rect x="34" y="93" width="22" height="5" rx="2" fill={on ? "#f59e0b" : "#9ca3af"} />
+      <rect x="36" y="98" width="18" height="5" rx="2" fill={on ? "#f59e0b" : "#6b7280"} />
       {on && (
         <ellipse
           cx="36"
@@ -244,11 +213,7 @@ function TrackCard({
         zIndex: 10,
       }}
       initial={{ scale: 0.5, opacity: 0 }}
-      animate={
-        revealed
-          ? { scale: 1, opacity: 1, y: 0 }
-          : { scale: 0.88, opacity: 0.55, y: 0 }
-      }
+      animate={revealed ? { scale: 1, opacity: 1, y: 0 } : { scale: 0.88, opacity: 0.55, y: 0 }}
       transition={{
         duration: 0.55,
         delay: revealed ? delay : delay * 0.3,
@@ -261,8 +226,7 @@ function TrackCard({
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background:
-                "linear-gradient(140deg, rgba(255,255,255,0.55) 0%, transparent 52%)",
+              background: "linear-gradient(140deg, rgba(255,255,255,0.55) 0%, transparent 52%)",
               borderRadius: "inherit",
             }}
           />
@@ -287,9 +251,7 @@ function TrackCard({
           borderRadius: "16px 16px 0 0",
           transition: "background 0.4s",
         }}
-        animate={
-          revealed ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }
-        }
+        animate={revealed ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
         transition={{ duration: 0.5, delay: revealed ? delay + 0.15 : 0 }}
       />
 
@@ -300,7 +262,6 @@ function TrackCard({
         />
       )}
 
-      {/* Watermark number */}
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
         style={{
@@ -316,7 +277,6 @@ function TrackCard({
         {track.number}
       </div>
 
-      {/* Lock state */}
       <AnimatePresence>
         {!revealed && (
           <motion.div
@@ -327,11 +287,7 @@ function TrackCard({
           >
             <motion.div
               animate={{ scale: [1, 1.08, 1] }}
-              transition={{
-                duration: 2.2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
               className="flex items-center justify-center rounded-full"
               style={{
                 width: 38,
@@ -364,7 +320,6 @@ function TrackCard({
         )}
       </AnimatePresence>
 
-      {/* Revealed content */}
       <AnimatePresence>
         {revealed && (
           <motion.div
@@ -387,11 +342,7 @@ function TrackCard({
               }}
               initial={{ scale: 0.5, rotate: -15 }}
               animate={{ scale: 1, rotate: 0 }}
-              transition={{
-                duration: 0.4,
-                delay: delay + 0.25,
-                ease: [0.22, 1, 0.36, 1],
-              }}
+              transition={{ duration: 0.4, delay: delay + 0.25, ease: [0.22, 1, 0.36, 1] }}
             >
               <Icon size={22} color={track.accent} strokeWidth={1.8} />
             </motion.div>
@@ -429,9 +380,7 @@ function TrackCard({
 }
 
 /* ══════════════════════════════════════════════════════
-   CONNECTOR LINES — uses viewBox so it scales perfectly
-   with the container regardless of maxWidth/maxHeight CSS.
-   Lines are above cards (zIndex 25).
+   CONNECTOR LINES
 ══════════════════════════════════════════════════════ */
 function ConnectorLines({
   on,
@@ -442,11 +391,8 @@ function ConnectorLines({
   radius: number;
   orbitSize: number;
 }) {
-  // Card dimensions must match TrackCard below
   const CARD_W = 176;
   const CARD_H = 196;
-
-  // center of the SVG viewBox
   const C = orbitSize / 2;
 
   return (
@@ -457,58 +403,34 @@ function ConnectorLines({
       preserveAspectRatio="xMidYMid meet"
     >
       {ANGLES.map((angle, i) => {
-        // Card center in viewBox coords
         const { x: cx, y: cy } = getPolarPosition(angle, radius);
         const cardCX = C + cx;
         const cardCY = C + cy;
-
-        // Unit vector from bulb center → card center
         const len = Math.sqrt(cx * cx + cy * cy);
         const nx = cx / len;
         const ny = cy / len;
-
-        // Ray from card center back toward origin, find nearest card-edge crossing.
-        // Parametric: point = cardCenter + t * (-nx, -ny)  (t > 0 moves toward origin)
         const hw = CARD_W / 2;
         const hh = CARD_H / 2;
-
-        // Ray from bulb (origin) toward card center: P(t) = t * (nx, ny)
-        // Find the t where this ray enters the card rect.
-        // Card rect in absolute coords: [cardCX ± hw, cardCY ± hh]
-        // Solve: C + t*nx = cardCX ± hw  →  t = (cardCX ± hw - C) / nx  (pick the one closer to origin)
         let tEnter = -Infinity;
         let tExit = Infinity;
-
-        // X slab
         if (Math.abs(nx) > 1e-9) {
           const t1 = (cardCX - hw - C) / nx;
           const t2 = (cardCX + hw - C) / nx;
           tEnter = Math.max(tEnter, Math.min(t1, t2));
           tExit = Math.min(tExit, Math.max(t1, t2));
         }
-        // Y slab
         if (Math.abs(ny) > 1e-9) {
           const t1 = (cardCY - hh - C) / ny;
           const t2 = (cardCY + hh - C) / ny;
           tEnter = Math.max(tEnter, Math.min(t1, t2));
           tExit = Math.min(tExit, Math.max(t1, t2));
         }
-
-        // tEnter is where the ray first touches the card edge (nearest point)
-        const tEdge =
-          tEnter > 0 && tEnter <= tExit ? tEnter : Math.max(0, tExit);
-
-        // Edge point: start from bulb center (C,C) along (nx,ny) for tEdge steps
+        const tEdge = tEnter > 0 && tEnter <= tExit ? tEnter : Math.max(0, tExit);
         const EXTRA = 110;
-
         const ex = C + (tEdge + EXTRA) * nx;
         const ey = C + (tEdge + EXTRA) * ny;
-
-        // Bulb center — bulb SVG is centered at (C, C)
-        // The bulb cord starts at the top, glass center is roughly +20px below center
         const startX = C;
         const startY = C;
-
         return (
           <motion.line
             key={i}
@@ -521,16 +443,8 @@ function ConnectorLines({
             strokeDasharray="6 5"
             strokeLinecap="round"
             initial={{ pathLength: 0, opacity: 0 }}
-            animate={
-              on
-                ? { pathLength: 1, opacity: 0.65 }
-                : { pathLength: 0, opacity: 0 }
-            }
-            transition={{
-              duration: 0.5,
-              delay: on ? i * 0.07 : 0,
-              ease: "easeOut",
-            }}
+            animate={on ? { pathLength: 1, opacity: 0.65 } : { pathLength: 0, opacity: 0 }}
+            transition={{ duration: 0.5, delay: on ? i * 0.07 : 0, ease: "easeOut" }}
           />
         );
       })}
@@ -561,11 +475,7 @@ function MobileGrid({ revealedCount }: { revealedCount: number }) {
               transition: "background 0.4s, outline 0.4s, box-shadow 0.4s",
             }}
             initial={{ scale: 0.85, opacity: 0 }}
-            animate={
-              revealed
-                ? { scale: 1, opacity: 1 }
-                : { scale: 0.88, opacity: 0.55 }
-            }
+            animate={revealed ? { scale: 1, opacity: 1 } : { scale: 0.88, opacity: 0.55 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
             {revealed && (
@@ -588,7 +498,6 @@ function MobileGrid({ revealedCount }: { revealedCount: number }) {
               </>
             )}
 
-            {/* Watermark */}
             <div
               className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
               style={{
@@ -620,27 +529,12 @@ function MobileGrid({ revealedCount }: { revealedCount: number }) {
                       border: "1.5px solid rgba(0,0,0,0.1)",
                     }}
                   >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#bbb"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#bbb" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                     </svg>
                   </div>
-                  <p
-                    className="text-[9px] uppercase tracking-[0.35em] font-semibold"
-                    style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      color: "#bbb",
-                    }}
-                  >
+                  <p className="text-[9px] uppercase tracking-[0.35em] font-semibold" style={{ fontFamily: "'DM Sans', sans-serif", color: "#bbb" }}>
                     Track {track.number}
                   </p>
                 </motion.div>
@@ -669,22 +563,10 @@ function MobileGrid({ revealedCount }: { revealedCount: number }) {
                   >
                     <Icon size={22} color={track.accent} strokeWidth={1.8} />
                   </div>
-                  <p
-                    className="font-black leading-tight tracking-tight text-sm"
-                    style={{
-                      fontFamily: "'Syne', sans-serif",
-                      color: "#1a1a1a",
-                    }}
-                  >
+                  <p className="font-black leading-tight tracking-tight text-sm" style={{ fontFamily: "'Syne', sans-serif", color: "#1a1a1a" }}>
                     {track.name}
                   </p>
-                  <p
-                    className="text-[10px] leading-snug flex-1"
-                    style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      color: "#666",
-                    }}
-                  >
+                  <p className="text-[10px] leading-snug flex-1" style={{ fontFamily: "'DM Sans', sans-serif", color: "#666" }}>
                     {track.desc}
                   </p>
                   <span
@@ -709,10 +591,473 @@ function MobileGrid({ revealedCount }: { revealedCount: number }) {
 }
 
 /* ══════════════════════════════════════════════════════
-   THEMES SECTION
+   ✦ ASI ONE — SPECIAL TRACK SECTION
+══════════════════════════════════════════════════════ */
+
+// Floating particle for the ASI One section background
+function AsiParticle({ delay, x, size, duration }: { delay: number; x: number; size: number; duration: number }) {
+  return (
+    <motion.div
+      className="absolute rounded-full pointer-events-none"
+      style={{
+        width: size,
+        height: size,
+        left: `${x}%`,
+        bottom: -20,
+        background: "radial-gradient(circle, rgba(139,92,246,0.6) 0%, rgba(79,70,229,0.2) 60%, transparent 100%)",
+      }}
+      animate={{
+        y: [-300, -600],
+        opacity: [0, 0.7, 0],
+        scale: [0.5, 1, 0.3],
+      }}
+      transition={{
+        duration,
+        delay,
+        repeat: Infinity,
+        ease: "easeOut",
+      }}
+    />
+  );
+}
+
+// Animated neural node for the icon
+function NeuralIcon() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      {/* Center node */}
+      <circle cx="14" cy="14" r="3.5" fill="#a78bfa" />
+      {/* Outer nodes */}
+      <circle cx="14" cy="4" r="2" fill="#7c3aed" />
+      <circle cx="14" cy="24" r="2" fill="#7c3aed" />
+      <circle cx="4" cy="14" r="2" fill="#7c3aed" />
+      <circle cx="24" cy="14" r="2" fill="#7c3aed" />
+      <circle cx="6.5" cy="6.5" r="1.5" fill="#c4b5fd" />
+      <circle cx="21.5" cy="6.5" r="1.5" fill="#c4b5fd" />
+      <circle cx="6.5" cy="21.5" r="1.5" fill="#c4b5fd" />
+      <circle cx="21.5" cy="21.5" r="1.5" fill="#c4b5fd" />
+      {/* Connection lines */}
+      <line x1="14" y1="10.5" x2="14" y2="6" stroke="#7c3aed" strokeWidth="1.2" strokeOpacity="0.7" />
+      <line x1="14" y1="17.5" x2="14" y2="22" stroke="#7c3aed" strokeWidth="1.2" strokeOpacity="0.7" />
+      <line x1="10.5" y1="14" x2="6" y2="14" stroke="#7c3aed" strokeWidth="1.2" strokeOpacity="0.7" />
+      <line x1="17.5" y1="14" x2="22" y2="14" stroke="#7c3aed" strokeWidth="1.2" strokeOpacity="0.7" />
+      <line x1="11.5" y1="11.5" x2="7.5" y2="7.5" stroke="#c4b5fd" strokeWidth="1" strokeOpacity="0.5" />
+      <line x1="16.5" y1="11.5" x2="20.5" y2="7.5" stroke="#c4b5fd" strokeWidth="1" strokeOpacity="0.5" />
+      <line x1="11.5" y1="16.5" x2="7.5" y2="20.5" stroke="#c4b5fd" strokeWidth="1" strokeOpacity="0.5" />
+      <line x1="16.5" y1="16.5" x2="20.5" y2="20.5" stroke="#c4b5fd" strokeWidth="1" strokeOpacity="0.5" />
+    </svg>
+  );
+}
+
+function ASIOneSection({ on }: { on: boolean }) {
+  const PARTICLES = [
+    { delay: 0, x: 10, size: 6, duration: 5 },
+    { delay: 1.2, x: 25, size: 4, duration: 6.5 },
+    { delay: 0.5, x: 42, size: 8, duration: 4.5 },
+    { delay: 2.1, x: 58, size: 5, duration: 7 },
+    { delay: 0.8, x: 74, size: 4, duration: 5.5 },
+    { delay: 1.7, x: 88, size: 7, duration: 6 },
+    { delay: 3.0, x: 33, size: 3, duration: 8 },
+    { delay: 2.5, x: 65, size: 5, duration: 5 },
+    { delay: 1.0, x: 50, size: 4, duration: 7.5 },
+    { delay: 3.5, x: 18, size: 6, duration: 4 },
+  ];
+
+  return (
+    <AnimatePresence>
+      {on && (
+        <motion.div
+          className="relative w-full mt-16"
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 40 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {/* ── Section label ── */}
+          <motion.div
+            className="flex flex-col items-center mb-8"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            {/* Connector line from tracks to ASI */}
+            <motion.div
+              className="w-px bg-gradient-to-b from-transparent via-purple-300 to-purple-500 mb-6"
+              style={{ height: 48 }}
+              initial={{ scaleY: 0, opacity: 0 }}
+              animate={{ scaleY: 1, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.55, ease: "easeOut" }}
+            />
+
+            <div className="flex items-center gap-3 mb-2">
+              <div
+                className="h-px flex-1"
+                style={{
+                  width: 48,
+                  background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.5))",
+                }}
+              />
+              <motion.span
+                className="text-[9px] uppercase tracking-[0.6em] font-bold"
+                style={{ fontFamily: "'DM Sans', sans-serif", color: "#a78bfa" }}
+                animate={{ opacity: [0.6, 1, 0.6] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              >
+                ✦ Beyond the Tracks ✦
+              </motion.span>
+              <div
+                className="h-px flex-1"
+                style={{
+                  width: 48,
+                  background: "linear-gradient(90deg, rgba(139,92,246,0.5), transparent)",
+                }}
+              />
+            </div>
+          </motion.div>
+
+          {/* ── Main ASI One Card ── */}
+          <motion.div
+            className="relative mx-auto overflow-hidden"
+            style={{
+              maxWidth: 860,
+              borderRadius: 28,
+              background: "linear-gradient(135deg, #0f0a1e 0%, #1a0f38 40%, #0d1528 100%)",
+              border: "1.5px solid rgba(139,92,246,0.35)",
+              boxShadow:
+                "0 0 0 1px rgba(139,92,246,0.1), 0 20px 80px rgba(109,40,217,0.35), 0 0 120px rgba(79,70,229,0.15), inset 0 1px 0 rgba(255,255,255,0.06)",
+            }}
+            initial={{ scale: 0.92 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {/* Floating particles */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ borderRadius: "inherit" }}>
+              {PARTICLES.map((p, i) => (
+                <AsiParticle key={i} {...p} />
+              ))}
+            </div>
+
+            {/* Top gradient bar */}
+            <div
+              className="absolute top-0 left-0 right-0 h-[2px]"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent 0%, #7c3aed 20%, #a78bfa 40%, #e879f9 55%, #818cf8 75%, transparent 100%)",
+                borderRadius: "28px 28px 0 0",
+              }}
+            />
+
+            {/* Animated shimmer sweep */}
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(105deg, transparent 30%, rgba(139,92,246,0.06) 50%, transparent 70%)",
+                borderRadius: "inherit",
+              }}
+              animate={{ x: ["-100%", "200%"] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "linear", delay: 1 }}
+            />
+
+            {/* Grid dot texture */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-[0.07]"
+              style={{
+                backgroundImage: "radial-gradient(rgba(167,139,250,0.8) 1px, transparent 1px)",
+                backgroundSize: "20px 20px",
+                borderRadius: "inherit",
+              }}
+            />
+
+            {/* Corner accents */}
+            <div className="absolute top-4 left-4 w-6 h-6 pointer-events-none" style={{ borderTop: "1.5px solid rgba(139,92,246,0.5)", borderLeft: "1.5px solid rgba(139,92,246,0.5)", borderRadius: "3px 0 0 0" }} />
+            <div className="absolute top-4 right-4 w-6 h-6 pointer-events-none" style={{ borderTop: "1.5px solid rgba(139,92,246,0.5)", borderRight: "1.5px solid rgba(139,92,246,0.5)", borderRadius: "0 3px 0 0" }} />
+            <div className="absolute bottom-4 left-4 w-6 h-6 pointer-events-none" style={{ borderBottom: "1.5px solid rgba(139,92,246,0.5)", borderLeft: "1.5px solid rgba(139,92,246,0.5)", borderRadius: "0 0 0 3px" }} />
+            <div className="absolute bottom-4 right-4 w-6 h-6 pointer-events-none" style={{ borderBottom: "1.5px solid rgba(139,92,246,0.5)", borderRight: "1.5px solid rgba(139,92,246,0.5)", borderRadius: "0 0 3px 0" }} />
+
+            {/* Content */}
+            <div className="relative z-10 flex flex-col md:flex-row items-center md:items-stretch gap-0 p-8 md:p-10">
+
+              {/* LEFT — Track identity */}
+              <motion.div
+                className="flex flex-col items-center md:items-start justify-center md:justify-between gap-6 md:w-2/5 md:pr-10 md:border-r pb-8 md:pb-0"
+                style={{ borderColor: "rgba(139,92,246,0.2)" }}
+                initial={{ opacity: 0, x: -24 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+              >
+                {/* Icon + badge */}
+                <div className="flex flex-col items-center md:items-start gap-4">
+                  {/* Glowing icon container */}
+                  <motion.div
+                    className="relative flex items-center justify-center rounded-2xl"
+                    style={{
+                      width: 72,
+                      height: 72,
+                      background:
+                        "linear-gradient(135deg, rgba(109,40,217,0.4) 0%, rgba(79,70,229,0.3) 100%)",
+                      border: "1.5px solid rgba(139,92,246,0.4)",
+                      boxShadow: "0 0 0 6px rgba(109,40,217,0.1), 0 8px 32px rgba(109,40,217,0.4)",
+                    }}
+                    animate={{
+                      boxShadow: [
+                        "0 0 0 6px rgba(109,40,217,0.1), 0 8px 32px rgba(109,40,217,0.4)",
+                        "0 0 0 10px rgba(109,40,217,0.06), 0 8px 48px rgba(109,40,217,0.55)",
+                        "0 0 0 6px rgba(109,40,217,0.1), 0 8px 32px rgba(109,40,217,0.4)",
+                      ],
+                    }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    {/* Rotating ring */}
+                    <motion.div
+                      className="absolute inset-0 rounded-2xl pointer-events-none"
+                      style={{
+                        border: "1px dashed rgba(167,139,250,0.35)",
+                        borderRadius: "inherit",
+                      }}
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                    />
+                    <NeuralIcon />
+                  </motion.div>
+
+                  {/* Track number badge */}
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.4em] px-3 py-1 rounded-full"
+                      style={{
+                        background: "linear-gradient(135deg, rgba(109,40,217,0.35), rgba(79,70,229,0.25))",
+                        border: "1px solid rgba(139,92,246,0.4)",
+                        color: "#c4b5fd",
+                        fontFamily: "'DM Sans', sans-serif",
+                      }}
+                    >
+                      <Star size={8} strokeWidth={2.5} />
+                      Special Track
+                    </span>
+                  </div>
+                </div>
+
+                {/* Title */}
+                <div>
+                  <motion.p
+                    className="text-[10px] uppercase tracking-[0.5em] mb-2"
+                    style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(167,139,250,0.6)" }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.75 }}
+                  >
+                    Track 09
+                  </motion.p>
+                  <motion.h3
+                    className="text-5xl md:text-6xl font-black tracking-tight leading-none"
+                    style={{ fontFamily: "'Syne', sans-serif" }}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.8 }}
+                  >
+                    <span
+                      style={{
+                        background:
+                          "linear-gradient(135deg, #e9d5ff 0%, #a78bfa 30%, #818cf8 55%, #e879f9 80%, #fbbf24 100%)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                      }}
+                    >
+                      ASI
+                    </span>
+                    <br />
+                    <span
+                      style={{
+                        background: "linear-gradient(135deg, #c4b5fd 0%, #818cf8 50%, #a78bfa 100%)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                      }}
+                    >
+                      One
+                    </span>
+                  </motion.h3>
+                </div>
+
+                {/* Desc */}
+                <motion.p
+                  className="text-sm leading-relaxed"
+                  style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(196,181,253,0.7)", maxWidth: 260 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.9 }}
+                >
+                  The most ambitious track at the hackathon. Build toward the frontier of Artificial Superintelligence — systems that reason, adapt, and solve problems beyond human-level across any domain.
+                </motion.p>
+              </motion.div>
+
+              {/* RIGHT — Prize + Winner */}
+              <motion.div
+                className="flex flex-col gap-6 md:w-3/5 md:pl-10"
+                initial={{ opacity: 0, x: 24 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.7 }}
+              >
+                {/* Prize banner */}
+                <motion.div
+                  className="relative overflow-hidden rounded-xl p-4 flex items-center gap-4"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, rgba(251,191,36,0.12) 0%, rgba(245,158,11,0.08) 50%, rgba(234,179,8,0.05) 100%)",
+                    border: "1px solid rgba(251,191,36,0.3)",
+                  }}
+                  animate={{
+                    borderColor: [
+                      "rgba(251,191,36,0.3)",
+                      "rgba(251,191,36,0.55)",
+                      "rgba(251,191,36,0.3)",
+                    ],
+                  }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <motion.div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background:
+                        "linear-gradient(105deg, transparent 30%, rgba(251,191,36,0.04) 50%, transparent 70%)",
+                    }}
+                    animate={{ x: ["-100%", "200%"] }}
+                    transition={{ duration: 3.5, repeat: Infinity, ease: "linear", delay: 0.5 }}
+                  />
+                  <div
+                    className="flex items-center justify-center rounded-xl flex-shrink-0"
+                    style={{
+                      width: 44,
+                      height: 44,
+                      background: "rgba(251,191,36,0.15)",
+                      border: "1px solid rgba(251,191,36,0.4)",
+                    }}
+                  >
+                    <Trophy size={20} color="#fbbf24" strokeWidth={1.8} />
+                  </div>
+                  <div>
+                    <p
+                      className="text-[9px] uppercase tracking-[0.4em] mb-0.5"
+                      style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(251,191,36,0.65)" }}
+                    >
+                      Grand Prize
+                    </p>
+                    <p
+                      className="text-xl font-black"
+                      style={{
+                        fontFamily: "'Syne', sans-serif",
+                        background: "linear-gradient(90deg, #fef3c7, #fbbf24, #f59e0b)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                      }}
+                    >
+                      1 Winner Takes All
+                    </p>
+                  </div>
+                  <Zap
+                    size={14}
+                    color="rgba(251,191,36,0.4)"
+                    style={{ marginLeft: "auto", flexShrink: 0 }}
+                  />
+                </motion.div>
+
+                {/* What we're looking for */}
+                <div>
+                  <p
+                    className="text-[9px] uppercase tracking-[0.45em] mb-3"
+                    style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(167,139,250,0.55)" }}
+                  >
+                    What We're Looking For
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    {[
+                      { icon: "◈", label: "Meta-learning & self-improvement architectures" },
+                      { icon: "◈", label: "Multi-domain reasoning & generalisation" },
+                      { icon: "◈", label: "Novel alignment or interpretability research" },
+                      { icon: "◈", label: "Recursive problem-solving at scale" },
+                    ].map((item, i) => (
+                      <motion.div
+                        key={i}
+                        className="flex items-start gap-2.5"
+                        initial={{ opacity: 0, x: 12 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.4, delay: 0.9 + i * 0.1 }}
+                      >
+                        <span
+                          style={{
+                            color: "#a78bfa",
+                            fontSize: 10,
+                            lineHeight: "20px",
+                            flexShrink: 0,
+                          }}
+                        >
+                          {item.icon}
+                        </span>
+                        <p
+                          className="text-[11px] leading-5"
+                          style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(196,181,253,0.75)" }}
+                        >
+                          {item.label}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div
+                  className="w-full h-px"
+                  style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.3), transparent)" }}
+                />
+
+                {/* Bottom row — special status + sparkle */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <motion.div
+                      className="w-2 h-2 rounded-full"
+                      style={{ background: "#a78bfa" }}
+                      animate={{ scale: [1, 1.4, 1], opacity: [1, 0.5, 1] }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    <span
+                      className="text-[10px] uppercase tracking-[0.35em]"
+                      style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(167,139,250,0.6)" }}
+                    >
+                      Exclusive — Open to All Tracks
+                    </span>
+                  </div>
+                  <Sparkles size={14} color="rgba(167,139,250,0.45)" />
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Bottom ambient line */}
+            <motion.div
+              className="absolute bottom-0 left-0 right-0 h-[1px] pointer-events-none"
+              style={{
+                background: "linear-gradient(90deg, transparent 0%, rgba(139,92,246,0.4) 30%, rgba(232,121,249,0.4) 50%, rgba(139,92,246,0.4) 70%, transparent 100%)",
+                borderRadius: "0 0 28px 28px",
+              }}
+              animate={{ opacity: [0.4, 0.9, 0.4] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </motion.div>
+
+          {/* ── Mobile extra spacing ── */}
+          <div className="h-4" />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/* ══════════════════════════════════════════════════════
+   THEMES SECTION (full — original + ASI One)
 ══════════════════════════════════════════════════════ */
 export default function ThemesSection() {
-  // revealedCount: how many cards are revealed (0–8)
   const [revealedCount, setRevealedCount] = useState(0);
   const [on, setOn] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -721,7 +1066,6 @@ export default function ThemesSection() {
   const RADIUS_DESKTOP = 620;
   const ORBIT_SIZE = RADIUS_DESKTOP * 2 + 240;
 
-  // Preload audio
   useEffect(() => {
     audioRef.current = new Audio("./click.mpeg");
     audioRef.current.preload = "auto";
@@ -736,11 +1080,8 @@ export default function ThemesSection() {
 
   const toggle = useCallback(() => {
     playClick();
-
     if (timerRef.current) clearInterval(timerRef.current);
-
     if (!on) {
-      // Turn ON: reveal cards one by one every 500ms (8 cards × 500ms = 4s total)
       setOn(true);
       setRevealedCount(0);
       let count = 0;
@@ -751,9 +1092,8 @@ export default function ThemesSection() {
           clearInterval(timerRef.current!);
           timerRef.current = null;
         }
-      }, 500); // 4000ms / 8 cards = 500ms each
+      }, 500);
     } else {
-      // Turn OFF: hide cards one by one in reverse every 500ms
       setOn(false);
       let count = TRACKS.length;
       timerRef.current = setInterval(() => {
@@ -768,7 +1108,6 @@ export default function ThemesSection() {
     }
   }, [on, playClick]);
 
-  // Cleanup on unmount
   useEffect(
     () => () => {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -783,11 +1122,7 @@ export default function ThemesSection() {
       {/* 4-band pastel wash */}
       <div className="absolute inset-0 flex pointer-events-none">
         {[BLUE, YELLOW, GREEN, PINK].map((c, i) => (
-          <div
-            key={i}
-            className="flex-1 opacity-[0.08]"
-            style={{ background: c }}
-          />
+          <div key={i} className="flex-1 opacity-[0.08]" style={{ background: c }} />
         ))}
       </div>
 
@@ -837,16 +1172,11 @@ export default function ThemesSection() {
             className="mx-auto mt-4 rounded-full"
             style={{
               height: 3,
-              background:
-                "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8)",
+              background: "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8)",
             }}
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: 140, opacity: 1 }}
-            transition={{
-              duration: 0.7,
-              delay: 0.35,
-              ease: [0.22, 1, 0.36, 1],
-            }}
+            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
           />
 
           <motion.p
@@ -902,11 +1232,7 @@ export default function ThemesSection() {
           >
             <motion.div
               className="rounded-full bg-white"
-              style={{
-                width: 32,
-                height: 32,
-                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-              }}
+              style={{ width: 32, height: 32, boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}
               animate={{ x: on ? 40 : 0 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             />
@@ -939,7 +1265,6 @@ export default function ThemesSection() {
               maxHeight: "min(100vw - 48px, 1000px)",
             }}
           >
-            {/* Ambient glow */}
             <AnimatePresence>
               {on && (
                 <motion.div
@@ -961,7 +1286,6 @@ export default function ThemesSection() {
               )}
             </AnimatePresence>
 
-            {/* Orbit ring */}
             <motion.div
               className="absolute rounded-full pointer-events-none"
               style={{
@@ -969,21 +1293,13 @@ export default function ThemesSection() {
                 height: `${((RADIUS_DESKTOP * 2) / ORBIT_SIZE) * 100}%`,
                 top: `${((ORBIT_SIZE / 2 - RADIUS_DESKTOP) / ORBIT_SIZE) * 100}%`,
                 left: `${((ORBIT_SIZE / 2 - RADIUS_DESKTOP) / ORBIT_SIZE) * 100}%`,
-                border: on
-                  ? "1.5px dashed rgba(251,191,36,0.3)"
-                  : "1.5px dashed rgba(0,0,0,0.07)",
+                border: on ? "1.5px dashed rgba(251,191,36,0.3)" : "1.5px dashed rgba(0,0,0,0.07)",
                 transition: "border 0.5s",
               }}
             />
 
-            {/* Connector lines — touch card edges */}
-            <ConnectorLines
-              on={on}
-              radius={RADIUS_DESKTOP * 0.5}
-              orbitSize={ORBIT_SIZE}
-            />
+            <ConnectorLines on={on} radius={RADIUS_DESKTOP * 0.5} orbitSize={ORBIT_SIZE} />
 
-            {/* Track cards */}
             {TRACKS.map((track, i) => (
               <TrackCard
                 key={track.id}
@@ -995,7 +1311,6 @@ export default function ThemesSection() {
               />
             ))}
 
-            {/* Center Bulb — zIndex 30 so it sits above connector lines */}
             <div
               className="absolute"
               style={{
@@ -1020,11 +1335,7 @@ export default function ThemesSection() {
                         border: "1.5px solid rgba(251,191,36,0.4)",
                       }}
                       animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
-                      transition={{
-                        duration: 1.8,
-                        repeat: Infinity,
-                        ease: "easeOut",
-                      }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
                     />
                     <motion.div
                       className="absolute rounded-full pointer-events-none"
@@ -1038,24 +1349,15 @@ export default function ThemesSection() {
                         border: "1.5px solid rgba(251,191,36,0.25)",
                       }}
                       animate={{ scale: [1, 2], opacity: [0.35, 0] }}
-                      transition={{
-                        duration: 1.8,
-                        delay: 0.5,
-                        repeat: Infinity,
-                        ease: "easeOut",
-                      }}
+                      transition={{ duration: 1.8, delay: 0.5, repeat: Infinity, ease: "easeOut" }}
                     />
                   </>
                 )}
               </AnimatePresence>
-
               <motion.div
                 animate={
                   on
-                    ? {
-                        filter:
-                          "drop-shadow(0 0 24px rgba(251,191,36,0.7)) drop-shadow(0 0 8px rgba(245,158,11,0.5))",
-                      }
+                    ? { filter: "drop-shadow(0 0 24px rgba(251,191,36,0.7)) drop-shadow(0 0 8px rgba(245,158,11,0.5))" }
                     : { filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.12))" }
                 }
                 transition={{ duration: 0.5 }}
@@ -1064,6 +1366,14 @@ export default function ThemesSection() {
               </motion.div>
             </div>
           </div>
+
+          {/* ✦ ASI One special track — rendered below orbit, tied to switch */}
+          <ASIOneSection on={on} />
+        </div>
+
+        {/* ── ASI One on mobile too ── */}
+        <div className="md:hidden">
+          <ASIOneSection on={on} />
         </div>
       </div>
 
