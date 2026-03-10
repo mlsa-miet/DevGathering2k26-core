@@ -304,7 +304,7 @@ const FEATURES = [
     accent: "#4CAF50",
     bg: GREEN,
     bullets: [
-      "₹4,00,000+ in prizes & goodies",
+      "$4,00,000+ in prizes & goodies",
       "Certificates for all participants",
       "A launchpad for your next big thing",
     ],

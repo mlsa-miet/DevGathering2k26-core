@@ -9,8 +9,8 @@ const YELLOW = "#FFE9A8";
 const GREEN = "#D7F5D0";
 const PINK = "#FFD6E8";
 
-/* ── Countdown target: 4 April 2026 09:00 IST ── */
-const TARGET = new Date("2026-04-04T09:00:00+05:30");
+/* ── Countdown target: 10 April 2026 09:00 IST ── */
+const TARGET = new Date("2026-04-10T09:00:00+05:30");
 
 function getTimeLeft() {
   const diff = Math.max(0, TARGET.getTime() - Date.now());
@@ -465,7 +465,7 @@ export default function HeroSection() {
         <div className="flex flex-wrap justify-center gap-2">
           <Pill
             icon={<CalIcon />}
-            text="4 April 2026"
+            text="10-11 April 2026"
             accent="#5BA4E6"
             bg={BLUE}
             delay={0.8}

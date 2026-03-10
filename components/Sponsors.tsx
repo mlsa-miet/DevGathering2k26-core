@@ -9,7 +9,7 @@ const YELLOW = "#FFE9A8";
 const GREEN  = "#D7F5D0";
 const PINK   = "#FFD6E8";
 
-/* ── Sponsors (3 revealed, 7 locked) ── */
+/* ── Sponsors (3 revealed, 6 locked = 9 total) ── */
 const SPONSORS_REVEALED = [
   {
     name: "Microsoft",
@@ -47,9 +47,9 @@ const SPONSORS_REVEALED = [
   },
 ];
 
-const SPONSORS_LOCKED_COUNT = 7;
+const SPONSORS_LOCKED_COUNT = 6;
 
-/* ── Community Partners (3 revealed, 7 locked) ── */
+/* ── Community Partners (3 revealed, 6 locked = 9 total) ── */
 const PARTNERS_REVEALED = [
   {
     name: "MLH",
@@ -86,7 +86,7 @@ const PARTNERS_REVEALED = [
   },
 ];
 
-const PARTNERS_LOCKED_COUNT = 7;
+const PARTNERS_LOCKED_COUNT = 6;
 
 /* ══════════════════════════════════════════════════════ */
 
@@ -116,7 +116,6 @@ function SponsorCard({ card, index, globalDelay = 0 }: { card: CardData; index: 
         minHeight: 96,
       }}
     >
-      {/* Dot texture */}
       <div
         className="absolute inset-0 rounded-xl pointer-events-none"
         style={{
@@ -125,7 +124,6 @@ function SponsorCard({ card, index, globalDelay = 0 }: { card: CardData; index: 
           opacity: 0.6,
         }}
       />
-      {/* Top accent line */}
       <motion.div
         className="absolute top-0 left-4 right-4 h-[2px] rounded-full"
         style={{ background: `linear-gradient(90deg, transparent, ${card.accent}88, transparent)` }}
@@ -133,14 +131,12 @@ function SponsorCard({ card, index, globalDelay = 0 }: { card: CardData; index: 
         animate={inView ? { scaleX: 1 } : {}}
         transition={{ duration: 0.6, delay: globalDelay + index * 0.07 + 0.25 }}
       />
-      {/* Logo */}
       <div
         className="relative z-10 flex items-center justify-center rounded-lg bg-white shadow-sm"
         style={{ width: 52, height: 52, padding: 8 }}
       >
         {card.logo}
       </div>
-      {/* Name */}
       <p
         className="relative z-10 text-xs font-bold tracking-tight text-center"
         style={{ fontFamily: "'Syne', sans-serif", color: "#1a1a1a" }}
@@ -168,10 +164,7 @@ function LockedCard({ bg, accent, index, globalDelay = 0 }: { bg: string; accent
         minHeight: 96,
       }}
     >
-      {/* Frosted layer */}
       <div className="absolute inset-0 rounded-xl" style={{ background: "rgba(255,255,255,0.38)" }} />
-
-      {/* Shimmer sweep */}
       <motion.div
         className="absolute inset-0 rounded-xl pointer-events-none"
         style={{
@@ -181,8 +174,6 @@ function LockedCard({ bg, accent, index, globalDelay = 0 }: { bg: string; accent
         animate={{ backgroundPosition: ["200% 0", "-200% 0"] }}
         transition={{ duration: 2.6, repeat: Infinity, ease: "linear", repeatDelay: 1.4 }}
       />
-
-      {/* Lock icon */}
       <motion.div
         className="relative z-10 flex items-center justify-center rounded-full"
         style={{ width: 36, height: 36, background: `${accent}18`, border: `1.5px solid ${accent}44` }}
@@ -194,13 +185,10 @@ function LockedCard({ bg, accent, index, globalDelay = 0 }: { bg: string; accent
           <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
         </svg>
       </motion.div>
-
       <p className="relative z-10 text-[9px] uppercase tracking-[0.3em]"
         style={{ fontFamily: "'DM Sans', sans-serif", color: accent }}>
         Soon
       </p>
-
-      {/* Pulsing ring */}
       <motion.div
         className="absolute rounded-full pointer-events-none"
         style={{ width: 80, height: 80, border: `1px solid ${accent}33`, top: "50%", left: "50%", translateX: "-50%", translateY: "-50%" }}
@@ -211,13 +199,58 @@ function LockedCard({ bg, accent, index, globalDelay = 0 }: { bg: string; accent
   );
 }
 
+/* ── Single outlined CTA button ── */
+function SectionCTA({
+  label,
+  href,
+  accent,
+  delay = 0,
+}: {
+  label: string;
+  href: string;
+  accent: string;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="flex items-center justify-center mt-6"
+      initial={{ opacity: 0, y: 14 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <motion.a
+        href={href}
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-[0.3em]"
+        style={{
+          background: "rgba(255,255,255,0.7)",
+          fontFamily: "'DM Sans', sans-serif",
+          border: `1.5px solid ${accent}45`,
+          color: accent,
+          backdropFilter: "blur(8px)",
+        }}
+        whileHover={{ scale: 1.05, background: `${accent}10`, borderColor: `${accent}80` }}
+        whileTap={{ scale: 0.97 }}
+      >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+        {label}
+      </motion.a>
+    </motion.div>
+  );
+}
+
 /* ── Thematic separator ── */
 function Separator({ label }: { label: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
 
   return (
-    <div ref={ref} className="flex items-center gap-4 my-10">
+    <div ref={ref} className="flex items-center gap-3 my-10">
       <motion.div
         className="flex-1 h-px"
         style={{ background: "linear-gradient(90deg, transparent, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8, transparent)" }}
@@ -226,7 +259,7 @@ function Separator({ label }: { label: string }) {
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       />
       <motion.div
-        className="flex items-center gap-2 px-4 py-1.5 rounded-full"
+        className="flex items-center gap-2 px-4 py-1.5 rounded-full shrink-0"
         style={{
           background: "white",
           border: "1.5px solid rgba(0,0,0,0.07)",
@@ -236,7 +269,6 @@ function Separator({ label }: { label: string }) {
         animate={inView ? { opacity: 1, scale: 1 } : {}}
         transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
       >
-        {/* 4-dot icon */}
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
           <circle cx="4"  cy="4"  r="3" fill="#CFE8FF" stroke="#5BA4E6" strokeWidth="1"/>
           <circle cx="12" cy="4"  r="3" fill="#FFE9A8" stroke="#C89A2A" strokeWidth="1"/>
@@ -261,39 +293,15 @@ function Separator({ label }: { label: string }) {
   );
 }
 
-/* ── Sub-section header ── */
-function SubHeader({ label, color, delay = 0 }: { label: string; color: string; delay?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      className="flex items-center gap-2 mb-5"
-      initial={{ opacity: 0, x: -16 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <div className="w-2 h-2 rounded-full" style={{ background: color }} />
-      <span
-        className="text-xs uppercase tracking-[0.35em] font-semibold"
-        style={{ fontFamily: "'DM Sans', sans-serif", color: "#666" }}
-      >
-        {label}
-      </span>
-    </motion.div>
-  );
-}
-
 /* ══════════════════════════════════════════════════════ */
 export default function SponsorsSection() {
   const titleRef = useRef<HTMLDivElement>(null);
   const titleInView = useInView(titleRef, { once: true, margin: "-80px" });
 
-  const sponsorBgs   = [BLUE, YELLOW, GREEN, PINK, BLUE, YELLOW, GREEN];
-  const sponsorAccents = ["#5BA4E6","#C89A2A","#4CAF50","#D85C8A","#5BA4E6","#C89A2A","#4CAF50"];
-  const partnerBgs   = [PINK, GREEN, BLUE, YELLOW, PINK, GREEN, BLUE];
-  const partnerAccents = ["#D85C8A","#4CAF50","#5BA4E6","#C89A2A","#D85C8A","#4CAF50","#5BA4E6"];
+  const sponsorBgs     = [BLUE, YELLOW, GREEN, PINK, BLUE, GREEN];
+  const sponsorAccents = ["#5BA4E6","#C89A2A","#4CAF50","#D85C8A","#5BA4E6","#4CAF50"];
+  const partnerBgs     = [PINK, GREEN, BLUE, YELLOW, PINK, BLUE];
+  const partnerAccents = ["#D85C8A","#4CAF50","#5BA4E6","#C89A2A","#D85C8A","#5BA4E6"];
 
   return (
     <section id="sponsors" className="relative w-full py-24 px-4 overflow-hidden">
@@ -303,14 +311,6 @@ export default function SponsorsSection() {
           <div key={i} className="flex-1 opacity-[0.07]" style={{ background: c }} />
         ))}
       </div>
-      {/* Grid */}
-      {/* <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-      /> */}
 
       <div className="relative z-10 max-w-5xl mx-auto">
 
@@ -339,11 +339,11 @@ export default function SponsorsSection() {
           </motion.h2>
         </div>
 
-        {/* ── Sponsors block ── */}
-        <Separator label="Sponsers" />
+        {/* ════════ SPONSORS ════════ */}
+        <Separator label="Sponsors" />
 
-        {/* <SubHeader label="Sponsors" color="#5BA4E6" /> */}
-        <div className="grid grid-cols-5 sm:grid-cols-5 md:grid-cols-10 gap-2.5">
+        {/* 3 cols on mobile, 9 cols on md+ — always one clean row on desktop */}
+        <div className="grid grid-cols-3 gap-2.5 sm:gap-3 md:grid-cols-9">
           {SPONSORS_REVEALED.map((s, i) => (
             <SponsorCard key={s.name} card={s} index={i} />
           ))}
@@ -357,12 +357,17 @@ export default function SponsorsSection() {
           ))}
         </div>
 
-        {/* ── Thematic separator ── */}
+        <SectionCTA
+          label="Apply as Sponsor"
+          href="mailto:mlsa.community@miet.ac.in?subject=Sponsorship%20Inquiry%20–%20DevGathering%202K26"
+          accent="#5BA4E6"
+          delay={0.1}
+        />
+
+        {/* ════════ COMMUNITY PARTNERS ════════ */}
         <Separator label="Community Partners" />
 
-        {/* ── Community Partners block ── */}
-        {/* <SubHeader label="Community Partners" color="#E8916E" delay={0.1} /> */}
-        <div className="grid grid-cols-5 sm:grid-cols-5 md:grid-cols-10 gap-2.5">
+        <div className="grid grid-cols-3 gap-2.5 sm:gap-3 md:grid-cols-9">
           {PARTNERS_REVEALED.map((p, i) => (
             <SponsorCard key={p.name} card={p} index={i} globalDelay={0.1} />
           ))}
@@ -377,7 +382,14 @@ export default function SponsorsSection() {
           ))}
         </div>
 
-        {/* ── CTA ── */}
+        <SectionCTA
+          label="Become a Community Partner"
+          href="mailto:mlsa.community@miet.ac.in?subject=Community%20Partner%20Inquiry%20–%20DevGathering%202K26"
+          accent="#D85C8A"
+          delay={0.1}
+        />
+
+        {/* ── Bottom Get in Touch ── */}
         <motion.div
           className="mt-14 flex flex-col items-center gap-4"
           initial={{ opacity: 0, y: 20 }}
@@ -409,7 +421,6 @@ export default function SponsorsSection() {
         </motion.div>
       </div>
 
-      {/* Fonts */}
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap');`}</style>
     </section>
   );
