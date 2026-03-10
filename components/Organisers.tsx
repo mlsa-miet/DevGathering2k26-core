@@ -27,7 +27,7 @@ interface Person {
 const LEADS: Person[] = [
   { name: "Pranav",    role: "Lead",               linkedin: "#", image: "/team/pranav.PNG" },
   { name: "Avni",      role: "Lead",               linkedin: "#", image: "/team/avni.PNG" },
-  { name: "Kushagra",  role: "Head of Operations", linkedin: "#", image: "/team/kushagra.PNG" },
+  { name: "Kushagra",  role: "Head of Operations", linkedin: "#", image: "/team/kushagra.png" },
 ];
 
 const ORG_ROW1: Person[] = [
