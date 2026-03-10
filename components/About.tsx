@@ -619,8 +619,8 @@ export default function AboutSection() {
             delay={0.68}
           />
           <StatCard
-            value={"$100"}
-            suffix="K+"
+            value={100}
+            suffix="k+"
             label="Prize Pool"
             accent="#D85C8A"
             bg={PINK}
