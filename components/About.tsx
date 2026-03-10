@@ -595,7 +595,7 @@ export default function AboutSection() {
           transition={{ duration: 0.55, delay: 0.5 }}
         >
           <StatCard
-            value={500}
+            value={1200}
             suffix="+"
             label="Registrations"
             accent="#5BA4E6"
@@ -603,7 +603,7 @@ export default function AboutSection() {
             delay={0.52}
           />
           <StatCard
-            value={120}
+            value={350}
             suffix="+"
             label="Projects"
             accent="#E8916E"
@@ -611,7 +611,7 @@ export default function AboutSection() {
             delay={0.6}
           />
           <StatCard
-            value={30}
+            value={35}
             suffix="+"
             label="Colleges"
             accent="#4CAF50"
@@ -619,8 +619,8 @@ export default function AboutSection() {
             delay={0.68}
           />
           <StatCard
-            value={4}
-            suffix="L+"
+            value={"$100"}
+            suffix="K+"
             label="Prize Pool"
             accent="#D85C8A"
             bg={PINK}
