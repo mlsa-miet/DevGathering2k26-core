@@ -947,6 +947,7 @@ export default function EventTimelineDetails() {
               ← → arrow keys also work
             </p>
           </div>
+          
 
           {/* ── Right: Event detail card ── */}
           <div className="flex-1 w-full lg:max-w-none">
