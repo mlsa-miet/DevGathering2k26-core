@@ -33,7 +33,7 @@ const LEADS: Person[] = [
 const ORG_ROW1: Person[] = [
   { name: "Ankit",     role: "Tech Head",     linkedin: "#", image: "/team/ankit.PNG" },
   { name: "Aayushi",   role: "Tech Head",     linkedin: "#", image: "/team/aayushi.PNG" },
-  { name: "Geetanshi", role: "Content Head",  linkedin: "#", image: "/team/geetanshi.PNG" },
+  { name: "Geetanshi", role: "Content Head",  linkedin: "#", image: "/team/geetanshi2.PNG" },
   { name: "Bhavya",    role: "Graphics Head", linkedin: "#", image: "/team/bhavya.PNG" },
   { name: "Prafullit", role: "Outreach Head", linkedin: "#", image: "/team/prafullit.PNG" },
 ];
