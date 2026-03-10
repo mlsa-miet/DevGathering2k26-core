@@ -25,24 +25,24 @@ interface Person {
 /* ════════════════════════════════════════════════════ */
 /* ⚠️  ADD YOUR TRANSPARENT PNG PATHS HERE */
 const LEADS: Person[] = [
-  { name: "Pranav",    role: "Lead",               linkedin: "#", image: "/team/pranav.png" },
-  { name: "Avni",      role: "Lead",               linkedin: "#", image: "/team/avni.png" },
+  { name: "Pranav",    role: "Lead",               linkedin: "#", image: "/team/pranav.PNG" },
+  { name: "Avni",      role: "Lead",               linkedin: "#", image: "/team/avni.PNG" },
   { name: "Kushagra",  role: "Head of Operations", linkedin: "#", image: "/team/kushagra.png" },
 ];
 
 const ORG_ROW1: Person[] = [
-  { name: "Ankit",     role: "Tech Head",     linkedin: "#", image: "/team/ankit.png" },
-  { name: "Aayushi",   role: "Tech Head",     linkedin: "#", image: "/team/aayushi.png" },
-  { name: "Geetanshi", role: "Content Head",  linkedin: "#", image: "/team/geetanshi.png" },
-  { name: "Bhavya",    role: "Graphics Head", linkedin: "#", image: "/team/bhavya.png" },
-  { name: "Prafullit", role: "Outreach Head", linkedin: "#", image: "/team/prafullit.png" },
+  { name: "Ankit",     role: "Tech Head",     linkedin: "#", image: "/team/ankit.PNG" },
+  { name: "Aayushi",   role: "Tech Head",     linkedin: "#", image: "/team/aayushi.PNG" },
+  { name: "Geetanshi", role: "Content Head",  linkedin: "#", image: "/team/geetanshi.PNG" },
+  { name: "Bhavya",    role: "Graphics Head", linkedin: "#", image: "/team/bhavya.PNG" },
+  { name: "Prafullit", role: "Outreach Head", linkedin: "#", image: "/team/prafullit.PNG" },
 ];
 
 const ORG_ROW2: Person[] = [
-  { name: "Ansh",  role: "Outreach Head", linkedin: "#", image: "/team/ansh.png" },
-  { name: "Yojit", role: "Visuals Head",  linkedin: "#", image: "/team/yojit.png" },
-  { name: "Yash",  role: "Socials Head",  linkedin: "#", image: "/team/yash.png" },
-  { name: "Daksh", role: "Workflow Head", linkedin: "#", image: "/team/daksh.png" },
+  { name: "Ansh",  role: "Outreach Head", linkedin: "#", image: "/team/ansh.PNG" },
+  { name: "Yojit", role: "Visuals Head",  linkedin: "#", image: "/team/yojit.PNG" },
+  { name: "Yash",  role: "Socials Head",  linkedin: "#", image: "/team/yash.PNG" },
+  { name: "Daksh", role: "Workflow Head", linkedin: "#", image: "/team/daksh.PNG" },
 ];
 
 const LinkedInIcon = ({ color }: { color: string }) => (
