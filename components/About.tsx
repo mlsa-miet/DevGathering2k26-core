@@ -192,7 +192,10 @@ function Separator({ label }: { label: string }) {
     <div ref={ref} className="flex items-center gap-4 my-10">
       <motion.div
         className="flex-1 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8, transparent)" }}
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8, transparent)",
+        }}
         initial={{ scaleX: 0, opacity: 0 }}
         animate={inView ? { scaleX: 1, opacity: 1 } : {}}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -210,10 +213,38 @@ function Separator({ label }: { label: string }) {
       >
         {/* 4-dot icon */}
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-          <circle cx="4"  cy="4"  r="3" fill="#CFE8FF" stroke="#5BA4E6" strokeWidth="1"/>
-          <circle cx="12" cy="4"  r="3" fill="#FFE9A8" stroke="#C89A2A" strokeWidth="1"/>
-          <circle cx="4"  cy="12" r="3" fill="#D7F5D0" stroke="#4CAF50" strokeWidth="1"/>
-          <circle cx="12" cy="12" r="3" fill="#FFD6E8" stroke="#D85C8A" strokeWidth="1"/>
+          <circle
+            cx="4"
+            cy="4"
+            r="3"
+            fill="#CFE8FF"
+            stroke="#5BA4E6"
+            strokeWidth="1"
+          />
+          <circle
+            cx="12"
+            cy="4"
+            r="3"
+            fill="#FFE9A8"
+            stroke="#C89A2A"
+            strokeWidth="1"
+          />
+          <circle
+            cx="4"
+            cy="12"
+            r="3"
+            fill="#D7F5D0"
+            stroke="#4CAF50"
+            strokeWidth="1"
+          />
+          <circle
+            cx="12"
+            cy="12"
+            r="3"
+            fill="#FFD6E8"
+            stroke="#D85C8A"
+            strokeWidth="1"
+          />
         </svg>
         <span
           className="text-[10px] font-semibold uppercase tracking-[0.35em] whitespace-nowrap"
@@ -224,7 +255,10 @@ function Separator({ label }: { label: string }) {
       </motion.div>
       <motion.div
         className="flex-1 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, #FFD6E8, #D7F5D0, #FFE9A8, #CFE8FF, transparent)" }}
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, #FFD6E8, #D7F5D0, #FFE9A8, #CFE8FF, transparent)",
+        }}
         initial={{ scaleX: 0, opacity: 0 }}
         animate={inView ? { scaleX: 1, opacity: 1 } : {}}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -555,7 +589,7 @@ export default function AboutSection() {
 
         {/* ── Stats row — 4 cards ── */}
         <motion.div
-          className="flex flex-row gap-3 mb-10"
+          className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10 w-full"
           initial={{ opacity: 0, y: 20 }}
           animate={titleInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, delay: 0.5 }}

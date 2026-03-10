@@ -19,7 +19,7 @@ const EVENTS = [
     image: "/images/width_800.jpg",
     accent: "#5BA4E6",
     bg: BLUE,
-    link: "#",
+    link: "https://www.mlsamiet.site/events",
     desktopOffset: "mt-0",
   },
   {
@@ -32,7 +32,7 @@ const EVENTS = [
     image: "/images/samarambh.JPG",
     accent: "#E8916E",
     bg: YELLOW,
-    link: "#",
+    link: "https://www.mlsamiet.site/events",
     desktopOffset: "mt-15",
   },
   {
@@ -45,7 +45,7 @@ const EVENTS = [
     image: "/images/avsar.JPG",
     accent: "#4CAF50",
     bg: GREEN,
-    link: "#",
+    link: "https://www.mlsamiet.site/events",
     desktopOffset: "mt-4",
   },
 ];

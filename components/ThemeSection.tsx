@@ -11,9 +11,7 @@ import {
   Lightbulb,
   Building2,
   ShieldCheck,
-  Sparkles,
   Trophy,
-  Star,
   Zap,
 } from "lucide-react";
 
@@ -413,6 +411,7 @@ function ConnectorLines({
         const hh = CARD_H / 2;
         let tEnter = -Infinity;
         let tExit = Infinity;
+
         if (Math.abs(nx) > 1e-9) {
           const t1 = (cardCX - hw - C) / nx;
           const t2 = (cardCX + hw - C) / nx;
@@ -425,12 +424,14 @@ function ConnectorLines({
           tEnter = Math.max(tEnter, Math.min(t1, t2));
           tExit = Math.min(tExit, Math.max(t1, t2));
         }
+
         const tEdge = tEnter > 0 && tEnter <= tExit ? tEnter : Math.max(0, tExit);
         const EXTRA = 110;
         const ex = C + (tEdge + EXTRA) * nx;
         const ey = C + (tEdge + EXTRA) * ny;
         const startX = C;
         const startY = C;
+
         return (
           <motion.line
             key={i}
@@ -529,12 +530,24 @@ function MobileGrid({ revealedCount }: { revealedCount: number }) {
                       border: "1.5px solid rgba(0,0,0,0.1)",
                     }}
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#bbb" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#bbb"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                     </svg>
                   </div>
-                  <p className="text-[9px] uppercase tracking-[0.35em] font-semibold" style={{ fontFamily: "'DM Sans', sans-serif", color: "#bbb" }}>
+                  <p
+                    className="text-[9px] uppercase tracking-[0.35em] font-semibold"
+                    style={{ fontFamily: "'DM Sans', sans-serif", color: "#bbb" }}
+                  >
                     Track {track.number}
                   </p>
                 </motion.div>
@@ -563,10 +576,16 @@ function MobileGrid({ revealedCount }: { revealedCount: number }) {
                   >
                     <Icon size={22} color={track.accent} strokeWidth={1.8} />
                   </div>
-                  <p className="font-black leading-tight tracking-tight text-sm" style={{ fontFamily: "'Syne', sans-serif", color: "#1a1a1a" }}>
+                  <p
+                    className="font-black leading-tight tracking-tight text-sm"
+                    style={{ fontFamily: "'Syne', sans-serif", color: "#1a1a1a" }}
+                  >
                     {track.name}
                   </p>
-                  <p className="text-[10px] leading-snug flex-1" style={{ fontFamily: "'DM Sans', sans-serif", color: "#666" }}>
+                  <p
+                    className="text-[10px] leading-snug flex-1"
+                    style={{ fontFamily: "'DM Sans', sans-serif", color: "#666" }}
+                  >
                     {track.desc}
                   </p>
                   <span
@@ -591,471 +610,341 @@ function MobileGrid({ revealedCount }: { revealedCount: number }) {
 }
 
 /* ══════════════════════════════════════════════════════
-   ✦ ASI ONE — SPECIAL TRACK SECTION
+   ASI ONE — SPECIAL TRACK CARD
 ══════════════════════════════════════════════════════ */
+function ASIOneCard({ revealed }: { revealed: boolean }) {
+  // Blend of all palette colors for ASI One
+  const asiAccent = "#7C6FE0"; // rich purple-indigo — distinct, premium
+  const asiBg = "linear-gradient(135deg, #EDE9FF 0%, #CFE8FF 40%, #FFE9A8 75%, #D7F5D0 100%)";
 
-// Floating particle for the ASI One section background
-function AsiParticle({ delay, x, size, duration }: { delay: number; x: number; size: number; duration: number }) {
   return (
     <motion.div
-      className="absolute rounded-full pointer-events-none"
+      className="relative w-full max-w-3xl mx-auto mt-16 overflow-hidden rounded-3xl cursor-default"
       style={{
-        width: size,
-        height: size,
-        left: `${x}%`,
-        bottom: -20,
-        background: "radial-gradient(circle, rgba(139,92,246,0.6) 0%, rgba(79,70,229,0.2) 60%, transparent 100%)",
+        background: revealed ? "white" : "#f0f0f0",
+        border: revealed
+          ? `2px solid ${asiAccent}30`
+          : "2px solid rgba(0,0,0,0.07)",
+        boxShadow: revealed
+          ? `0 0 0 6px ${asiAccent}0a, 0 24px 60px ${asiAccent}22, inset 0 1px 0 rgba(255,255,255,0.9)`
+          : "0 4px 16px rgba(0,0,0,0.06)",
+        transition: "background 0.5s, border 0.5s, box-shadow 0.5s",
       }}
-      animate={{
-        y: [-300, -600],
-        opacity: [0, 0.7, 0],
-        scale: [0.5, 1, 0.3],
-      }}
-      transition={{
-        duration,
-        delay,
-        repeat: Infinity,
-        ease: "easeOut",
-      }}
-    />
-  );
-}
-
-// Animated neural node for the icon
-function NeuralIcon() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-      {/* Center node */}
-      <circle cx="14" cy="14" r="3.5" fill="#a78bfa" />
-      {/* Outer nodes */}
-      <circle cx="14" cy="4" r="2" fill="#7c3aed" />
-      <circle cx="14" cy="24" r="2" fill="#7c3aed" />
-      <circle cx="4" cy="14" r="2" fill="#7c3aed" />
-      <circle cx="24" cy="14" r="2" fill="#7c3aed" />
-      <circle cx="6.5" cy="6.5" r="1.5" fill="#c4b5fd" />
-      <circle cx="21.5" cy="6.5" r="1.5" fill="#c4b5fd" />
-      <circle cx="6.5" cy="21.5" r="1.5" fill="#c4b5fd" />
-      <circle cx="21.5" cy="21.5" r="1.5" fill="#c4b5fd" />
-      {/* Connection lines */}
-      <line x1="14" y1="10.5" x2="14" y2="6" stroke="#7c3aed" strokeWidth="1.2" strokeOpacity="0.7" />
-      <line x1="14" y1="17.5" x2="14" y2="22" stroke="#7c3aed" strokeWidth="1.2" strokeOpacity="0.7" />
-      <line x1="10.5" y1="14" x2="6" y2="14" stroke="#7c3aed" strokeWidth="1.2" strokeOpacity="0.7" />
-      <line x1="17.5" y1="14" x2="22" y2="14" stroke="#7c3aed" strokeWidth="1.2" strokeOpacity="0.7" />
-      <line x1="11.5" y1="11.5" x2="7.5" y2="7.5" stroke="#c4b5fd" strokeWidth="1" strokeOpacity="0.5" />
-      <line x1="16.5" y1="11.5" x2="20.5" y2="7.5" stroke="#c4b5fd" strokeWidth="1" strokeOpacity="0.5" />
-      <line x1="11.5" y1="16.5" x2="7.5" y2="20.5" stroke="#c4b5fd" strokeWidth="1" strokeOpacity="0.5" />
-      <line x1="16.5" y1="16.5" x2="20.5" y2="20.5" stroke="#c4b5fd" strokeWidth="1" strokeOpacity="0.5" />
-    </svg>
-  );
-}
-
-function ASIOneSection({ on }: { on: boolean }) {
-  const PARTICLES = [
-    { delay: 0, x: 10, size: 6, duration: 5 },
-    { delay: 1.2, x: 25, size: 4, duration: 6.5 },
-    { delay: 0.5, x: 42, size: 8, duration: 4.5 },
-    { delay: 2.1, x: 58, size: 5, duration: 7 },
-    { delay: 0.8, x: 74, size: 4, duration: 5.5 },
-    { delay: 1.7, x: 88, size: 7, duration: 6 },
-    { delay: 3.0, x: 33, size: 3, duration: 8 },
-    { delay: 2.5, x: 65, size: 5, duration: 5 },
-    { delay: 1.0, x: 50, size: 4, duration: 7.5 },
-    { delay: 3.5, x: 18, size: 6, duration: 4 },
-  ];
-
-  return (
-    <AnimatePresence>
-      {on && (
-        <motion.div
-          className="relative w-full mt-16"
-          initial={{ opacity: 0, y: 60 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 40 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        >
-          {/* ── Section label ── */}
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={revealed ? { scale: 1.012 } : {}}
+    >
+      {/* Animated gradient background when revealed */}
+      <AnimatePresence>
+        {revealed && (
           <motion.div
-            className="flex flex-col items-center mb-8"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
+            className="absolute inset-0 pointer-events-none"
+            style={{ borderRadius: "inherit" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.7 }}
           >
-            {/* Connector line from tracks to ASI */}
-            <motion.div
-              className="w-px bg-gradient-to-b from-transparent via-purple-300 to-purple-500 mb-6"
-              style={{ height: 48 }}
-              initial={{ scaleY: 0, opacity: 0 }}
-              animate={{ scaleY: 1, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.55, ease: "easeOut" }}
-            />
-
-            <div className="flex items-center gap-3 mb-2">
-              <div
-                className="h-px flex-1"
-                style={{
-                  width: 48,
-                  background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.5))",
-                }}
-              />
-              <motion.span
-                className="text-[9px] uppercase tracking-[0.6em] font-bold"
-                style={{ fontFamily: "'DM Sans', sans-serif", color: "#a78bfa" }}
-                animate={{ opacity: [0.6, 1, 0.6] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                ✦ Beyond the Tracks ✦
-              </motion.span>
-              <div
-                className="h-px flex-1"
-                style={{
-                  width: 48,
-                  background: "linear-gradient(90deg, rgba(139,92,246,0.5), transparent)",
-                }}
-              />
-            </div>
-          </motion.div>
-
-          {/* ── Main ASI One Card ── */}
-          <motion.div
-            className="relative mx-auto overflow-hidden"
-            style={{
-              maxWidth: 860,
-              borderRadius: 28,
-              background: "linear-gradient(135deg, #0f0a1e 0%, #1a0f38 40%, #0d1528 100%)",
-              border: "1.5px solid rgba(139,92,246,0.35)",
-              boxShadow:
-                "0 0 0 1px rgba(139,92,246,0.1), 0 20px 80px rgba(109,40,217,0.35), 0 0 120px rgba(79,70,229,0.15), inset 0 1px 0 rgba(255,255,255,0.06)",
-            }}
-            initial={{ scale: 0.92 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {/* Floating particles */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ borderRadius: "inherit" }}>
-              {PARTICLES.map((p, i) => (
-                <AsiParticle key={i} {...p} />
-              ))}
-            </div>
-
-            {/* Top gradient bar */}
+            {/* Pastel gradient wash — uses all 4 palette colors */}
             <div
-              className="absolute top-0 left-0 right-0 h-[2px]"
+              className="absolute inset-0"
               style={{
-                background:
-                  "linear-gradient(90deg, transparent 0%, #7c3aed 20%, #a78bfa 40%, #e879f9 55%, #818cf8 75%, transparent 100%)",
-                borderRadius: "28px 28px 0 0",
+                background: asiBg,
+                opacity: 0.38,
+                borderRadius: "inherit",
               }}
             />
-
-            {/* Animated shimmer sweep */}
+            {/* Dot grid texture */}
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `radial-gradient(${asiAccent}20 1.2px, transparent 1.2px)`,
+                backgroundSize: "14px 14px",
+                opacity: 0.5,
+                borderRadius: "inherit",
+              }}
+            />
+            {/* Shimmer top bar */}
             <motion.div
+              className="absolute top-0 left-0 right-0 h-[4px]"
+              style={{
+                background: `linear-gradient(90deg, #CFE8FF, ${asiAccent}, #FFE9A8, #D7F5D0, ${asiAccent}, #FFD6E8)`,
+                backgroundSize: "300% 100%",
+                borderRadius: "24px 24px 0 0",
+              }}
+              animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+            />
+            {/* Glass glare */}
+            <div
               className="absolute inset-0 pointer-events-none"
               style={{
                 background:
-                  "linear-gradient(105deg, transparent 30%, rgba(139,92,246,0.06) 50%, transparent 70%)",
+                  "linear-gradient(130deg, rgba(255,255,255,0.6) 0%, transparent 45%)",
                 borderRadius: "inherit",
               }}
-              animate={{ x: ["-100%", "200%"] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "linear", delay: 1 }}
             />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            {/* Grid dot texture */}
-            <div
-              className="absolute inset-0 pointer-events-none opacity-[0.07]"
+      {/* LOCKED STATE */}
+      <AnimatePresence>
+        {!revealed && (
+          <motion.div
+            className="relative z-10 flex flex-col items-center justify-center py-14 gap-4"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 0.85 }}
+            transition={{ duration: 0.3 }}
+          >
+            <motion.div
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              className="flex items-center justify-center rounded-full"
               style={{
-                backgroundImage: "radial-gradient(rgba(167,139,250,0.8) 1px, transparent 1px)",
-                backgroundSize: "20px 20px",
-                borderRadius: "inherit",
+                width: 56,
+                height: 56,
+                background: "rgba(0,0,0,0.04)",
+                border: "1.5px solid rgba(0,0,0,0.09)",
               }}
-            />
-
-            {/* Corner accents */}
-            <div className="absolute top-4 left-4 w-6 h-6 pointer-events-none" style={{ borderTop: "1.5px solid rgba(139,92,246,0.5)", borderLeft: "1.5px solid rgba(139,92,246,0.5)", borderRadius: "3px 0 0 0" }} />
-            <div className="absolute top-4 right-4 w-6 h-6 pointer-events-none" style={{ borderTop: "1.5px solid rgba(139,92,246,0.5)", borderRight: "1.5px solid rgba(139,92,246,0.5)", borderRadius: "0 3px 0 0" }} />
-            <div className="absolute bottom-4 left-4 w-6 h-6 pointer-events-none" style={{ borderBottom: "1.5px solid rgba(139,92,246,0.5)", borderLeft: "1.5px solid rgba(139,92,246,0.5)", borderRadius: "0 0 0 3px" }} />
-            <div className="absolute bottom-4 right-4 w-6 h-6 pointer-events-none" style={{ borderBottom: "1.5px solid rgba(139,92,246,0.5)", borderRight: "1.5px solid rgba(139,92,246,0.5)", borderRadius: "0 0 3px 0" }} />
-
-            {/* Content */}
-            <div className="relative z-10 flex flex-col md:flex-row items-center md:items-stretch gap-0 p-8 md:p-10">
-
-              {/* LEFT — Track identity */}
-              <motion.div
-                className="flex flex-col items-center md:items-start justify-center md:justify-between gap-6 md:w-2/5 md:pr-10 md:border-r pb-8 md:pb-0"
-                style={{ borderColor: "rgba(139,92,246,0.2)" }}
-                initial={{ opacity: 0, x: -24 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#ccc"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                {/* Icon + badge */}
-                <div className="flex flex-col items-center md:items-start gap-4">
-                  {/* Glowing icon container */}
-                  <motion.div
-                    className="relative flex items-center justify-center rounded-2xl"
-                    style={{
-                      width: 72,
-                      height: 72,
-                      background:
-                        "linear-gradient(135deg, rgba(109,40,217,0.4) 0%, rgba(79,70,229,0.3) 100%)",
-                      border: "1.5px solid rgba(139,92,246,0.4)",
-                      boxShadow: "0 0 0 6px rgba(109,40,217,0.1), 0 8px 32px rgba(109,40,217,0.4)",
-                    }}
-                    animate={{
-                      boxShadow: [
-                        "0 0 0 6px rgba(109,40,217,0.1), 0 8px 32px rgba(109,40,217,0.4)",
-                        "0 0 0 10px rgba(109,40,217,0.06), 0 8px 48px rgba(109,40,217,0.55)",
-                        "0 0 0 6px rgba(109,40,217,0.1), 0 8px 32px rgba(109,40,217,0.4)",
-                      ],
-                    }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    {/* Rotating ring */}
-                    <motion.div
-                      className="absolute inset-0 rounded-2xl pointer-events-none"
-                      style={{
-                        border: "1px dashed rgba(167,139,250,0.35)",
-                        borderRadius: "inherit",
-                      }}
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-                    />
-                    <NeuralIcon />
-                  </motion.div>
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </motion.div>
+            <div className="text-center">
+              <p
+                className="text-[11px] uppercase tracking-[0.55em] font-bold"
+                style={{ fontFamily: "'DM Sans', sans-serif", color: "#ccc" }}
+              >
+                Special Track
+              </p>
+              <p
+                className="text-xl font-black mt-1"
+                style={{ fontFamily: "'Syne', sans-serif", color: "#e0e0e0" }}
+              >
+                ASI One
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-                  {/* Track number badge */}
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.4em] px-3 py-1 rounded-full"
-                      style={{
-                        background: "linear-gradient(135deg, rgba(109,40,217,0.35), rgba(79,70,229,0.25))",
-                        border: "1px solid rgba(139,92,246,0.4)",
-                        color: "#c4b5fd",
-                        fontFamily: "'DM Sans', sans-serif",
-                      }}
-                    >
-                      <Star size={8} strokeWidth={2.5} />
-                      Special Track
-                    </span>
-                  </div>
-                </div>
-
-                {/* Title */}
-                <div>
-                  <motion.p
-                    className="text-[10px] uppercase tracking-[0.5em] mb-2"
-                    style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(167,139,250,0.6)" }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.75 }}
-                  >
-                    Track 09
-                  </motion.p>
-                  <motion.h3
-                    className="text-5xl md:text-6xl font-black tracking-tight leading-none"
-                    style={{ fontFamily: "'Syne', sans-serif" }}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.8 }}
-                  >
-                    <span
-                      style={{
-                        background:
-                          "linear-gradient(135deg, #e9d5ff 0%, #a78bfa 30%, #818cf8 55%, #e879f9 80%, #fbbf24 100%)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                      }}
-                    >
-                      ASI
-                    </span>
-                    <br />
-                    <span
-                      style={{
-                        background: "linear-gradient(135deg, #c4b5fd 0%, #818cf8 50%, #a78bfa 100%)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                      }}
-                    >
-                      One
-                    </span>
-                  </motion.h3>
-                </div>
-
-                {/* Desc */}
-                <motion.p
-                  className="text-sm leading-relaxed"
-                  style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(196,181,253,0.7)", maxWidth: 260 }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.9 }}
+      {/* REVEALED STATE */}
+      <AnimatePresence>
+        {revealed && (
+          <motion.div
+            className="relative z-10 flex flex-col md:flex-row gap-6 md:gap-10 p-7 md:p-10"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.45, delay: 0.15 }}
+          >
+            {/* Left — Icon + badges */}
+            <div className="flex flex-col items-start gap-4 flex-shrink-0">
+              {/* ASI One official logo */}
+              <motion.div
+                className="flex items-center justify-center"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  role="img"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 2219 512"
+                  style={{ width: 140, height: "auto", color: asiAccent }}
                 >
-                  The most ambitious track at the hackathon. Build toward the frontier of Artificial Superintelligence — systems that reason, adapt, and solve problems beyond human-level across any domain.
-                </motion.p>
+                  <path fill="currentColor" d="M724.5 126.7L633.2 380.2h34l26.9-75.7H813.3l27.8 75.7h35.1L782.2 126.7H724.5zM705 274l41.5-116.7h12.6L802.1 274H705zm363.3-25.9c-12.6-5.9-27.6-9.5-45-10.9l-28.1-2.4c-14.1-1.2-24.8-5.3-31.9-12.5s-10.8-15.4-10.8-24.7c0-8.1 2-15.7 6.1-22.7s10.2-12.8 18.4-17.2s18.6-6.6 31.1-6.6c13 0 23.5 2.3 31.6 6.9c8.1 4.6 14.1 10.5 17.9 17.7s5.7 14.8 5.7 22.9h34c0-16.2-3.8-30.2-11.3-41.8c-7.5-11.7-18-20.8-31.4-27.3s-28.9-9.7-46.5-9.7c-17.8 0-33.5 3.3-46.9 9.9s-23.9 15.7-31.4 27.3s-11.3 25.1-11.3 40.6c0 19.7 6.7 35.5 20.1 47.6s31.4 19 53.8 20.8l28.1 2.4c17.4 1.6 30.6 5.9 39.6 12.7s13.5 15.5 13.5 25.9c0 8.6-2.3 16.5-6.9 23.8s-11.8 13.2-21.5 17.7s-22.2 6.8-37.5 6.8c-16.4 0-29.5-2.5-39.1-7.6s-16.4-11.5-20.5-19.1c-4.1-7.6-6.1-15.3-6.1-22.9h-34c0 15.5 3.9 29.4 11.8 41.7c7.9 12.3 19.2 21.9 34 28.8s32.8 10.4 53.8 10.4c19.9 0 37.4-3.4 52.4-10.1s26.7-16.1 35.1-28.1s12.5-25.8 12.5-41.3c0-13.7-3.4-25.4-10.2-35.2s-16.6-17.7-29.2-23.6zm131.1-121.4h-34V380.2h34V126.7zm124.7 40h-40.3v42.4h40.3V166.7zm0 128.5h-40.3v42.4h40.3V295.2zm196.4 91.2c-21.9 0-41.4-3.8-57.8-11.2c-16.5-7.5-30.6-17.5-41.9-29.7c-11.3-12.3-20-26.2-25.7-41.4c-5.8-15.2-8.7-31-8.7-46.8v-8.9c0-15.8 3-31.7 8.9-47.1c5.9-15.3 14.7-29.3 26.2-41.6c11.4-12.2 25.6-22.1 42.1-29.5c16.5-7.3 35.6-11 56.8-11s40.4 3.7 56.8 11c16.5 7.3 30.6 17.2 42.1 29.5c11.5 12.3 20.3 26.3 26.2 41.6c5.9 15.4 8.9 31.2 8.9 47.1v8.9c0 15.9-2.9 31.6-8.7 46.8c-5.7 15.2-14.4 29.1-25.7 41.4c-11.3 12.2-25.4 22.2-41.9 29.7c-16.4 7.4-35.9 11.2-57.8 11.2zm0-239c-20.4 0-38.4 4.7-53.6 13.9c-15.3 9.2-27.1 22-35.3 37.9c-8.1 15.8-12.1 33.8-12.1 53.7c0 19.5 4 37.3 11.9 53.1c8 15.9 19.7 28.8 34.7 38.2s33.4 14.2 54.4 14.2c21 0 39.3-4.8 54.4-14.2s26.8-22.3 34.7-38.2c7.9-15.8 11.9-33.6 11.9-53.1c0-19.8-4.1-37.9-12.1-53.7c-8.2-15.9-19.9-28.7-35-37.9c-15.1-9.2-33.2-13.9-53.9-13.9zm371.7 232.5V224.5c0-22.5-6.6-40.9-19.5-54.7c-13-14-31-21.1-53.3-21.1c-22.9 0-41.8 7.3-56.1 21.6s-21.6 33.6-21.6 57.2V379.9h-33.5V127.2h33.9v55.5s5.9-16.6 19.7-32c14.6-16.3 38-31.5 70.2-31.5h2c31.6 0 54.9 13.4 69.8 32.7c15.1 19.6 22 44.7 22 82.6V379.9h-33.5zm210.6 6.6c-56.8 0-124.8-37.7-124.8-138c0-53.7 34-129.2 121.8-129.2c81.1 0 118.9 60.5 118.9 121.3v15H2011l.4 6.4c.9 16 3.9 30.6 9.1 43.4c6.5 15.9 16.7 28.7 30.4 38c13.7 9.3 31.2 14 52 14c21.8 0 39.9-5 53.7-14.8c12.3-8.7 20.4-18.9 24.3-30.3l.1-.4h31.8l-.2 .8c-3.8 13.6-9.9 25.6-18.4 35.8c-10.1 12.2-23 21.7-38.3 28.2c-15.5 6.5-33.4 9.8-53 9.8zm-2.9-238.2c-58.7 0-83.1 44.6-87.9 84.2h174.2c-1.7-40.6-27.5-84.2-86.3-84.2zM.2 168.8H168.9V337.5H.2V168.8zM422.1 337.5a84.4 84.4 0 1 0 0-168.8 84.4 84.4 0 1 0 0 168.8zm-84.4 0H168.9V506.3H337.7V337.5zM337.7 0H168.9V168.8H337.7V0z" />
+                </svg>
               </motion.div>
 
-              {/* RIGHT — Prize + Winner */}
+              {/* Special Winner badge */}
               <motion.div
-                className="flex flex-col gap-6 md:w-3/5 md:pl-10"
-                initial={{ opacity: 0, x: 24 }}
+                className="flex flex-col gap-1.5"
+                initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.7 }}
+                transition={{ delay: 0.4 }}
               >
-                {/* Prize banner */}
-                <motion.div
-                  className="relative overflow-hidden rounded-xl p-4 flex items-center gap-4"
+                <span
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest"
                   style={{
-                    background:
-                      "linear-gradient(135deg, rgba(251,191,36,0.12) 0%, rgba(245,158,11,0.08) 50%, rgba(234,179,8,0.05) 100%)",
-                    border: "1px solid rgba(251,191,36,0.3)",
+                    background: `linear-gradient(135deg, ${asiAccent}18, ${asiAccent}28)`,
+                    border: `1.5px solid ${asiAccent}40`,
+                    color: asiAccent,
+                    fontFamily: "'DM Sans', sans-serif",
                   }}
-                  animate={{
-                    borderColor: [
-                      "rgba(251,191,36,0.3)",
-                      "rgba(251,191,36,0.55)",
-                      "rgba(251,191,36,0.3)",
-                    ],
-                  }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <motion.div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background:
-                        "linear-gradient(105deg, transparent 30%, rgba(251,191,36,0.04) 50%, transparent 70%)",
-                    }}
-                    animate={{ x: ["-100%", "200%"] }}
-                    transition={{ duration: 3.5, repeat: Infinity, ease: "linear", delay: 0.5 }}
-                  />
-                  <div
-                    className="flex items-center justify-center rounded-xl flex-shrink-0"
-                    style={{
-                      width: 44,
-                      height: 44,
-                      background: "rgba(251,191,36,0.15)",
-                      border: "1px solid rgba(251,191,36,0.4)",
-                    }}
-                  >
-                    <Trophy size={20} color="#fbbf24" strokeWidth={1.8} />
-                  </div>
-                  <div>
-                    <p
-                      className="text-[9px] uppercase tracking-[0.4em] mb-0.5"
-                      style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(251,191,36,0.65)" }}
-                    >
-                      Grand Prize
-                    </p>
-                    <p
-                      className="text-xl font-black"
-                      style={{
-                        fontFamily: "'Syne', sans-serif",
-                        background: "linear-gradient(90deg, #fef3c7, #fbbf24, #f59e0b)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                      }}
-                    >
-                      1 Winner Takes All
-                    </p>
-                  </div>
-                  <Zap
-                    size={14}
-                    color="rgba(251,191,36,0.4)"
-                    style={{ marginLeft: "auto", flexShrink: 0 }}
-                  />
-                </motion.div>
-
-                {/* What we're looking for */}
-                <div>
-                  <p
-                    className="text-[9px] uppercase tracking-[0.45em] mb-3"
-                    style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(167,139,250,0.55)" }}
-                  >
-                    What We're Looking For
-                  </p>
-                  <div className="flex flex-col gap-2">
-                    {[
-                      { icon: "◈", label: "Meta-learning & self-improvement architectures" },
-                      { icon: "◈", label: "Multi-domain reasoning & generalisation" },
-                      { icon: "◈", label: "Novel alignment or interpretability research" },
-                      { icon: "◈", label: "Recursive problem-solving at scale" },
-                    ].map((item, i) => (
-                      <motion.div
-                        key={i}
-                        className="flex items-start gap-2.5"
-                        initial={{ opacity: 0, x: 12 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.4, delay: 0.9 + i * 0.1 }}
-                      >
-                        <span
-                          style={{
-                            color: "#a78bfa",
-                            fontSize: 10,
-                            lineHeight: "20px",
-                            flexShrink: 0,
-                          }}
-                        >
-                          {item.icon}
-                        </span>
-                        <p
-                          className="text-[11px] leading-5"
-                          style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(196,181,253,0.75)" }}
-                        >
-                          {item.label}
-                        </p>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Divider */}
-                <div
-                  className="w-full h-px"
-                  style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.3), transparent)" }}
-                />
-
-                {/* Bottom row — special status + sparkle */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <motion.div
-                      className="w-2 h-2 rounded-full"
-                      style={{ background: "#a78bfa" }}
-                      animate={{ scale: [1, 1.4, 1], opacity: [1, 0.5, 1] }}
-                      transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                    <span
-                      className="text-[10px] uppercase tracking-[0.35em]"
-                      style={{ fontFamily: "'DM Sans', sans-serif", color: "rgba(167,139,250,0.6)" }}
-                    >
-                      Exclusive — Open to All Tracks
-                    </span>
-                  </div>
-                  <Sparkles size={14} color="rgba(167,139,250,0.45)" />
-                </div>
+                  <Trophy size={9} strokeWidth={2.5} />
+                  Separate Winner
+                </span>
+                <span
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest"
+                  style={{
+                    background: "linear-gradient(135deg, #FFE9A820, #FFE9A840)",
+                    border: "1.5px solid #C89A2A40",
+                    color: "#C89A2A",
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}
+                >
+                  <Zap size={9} strokeWidth={2.5} />
+                  Special Track
+                </span>
               </motion.div>
             </div>
 
-            {/* Bottom ambient line */}
-            <motion.div
-              className="absolute bottom-0 left-0 right-0 h-[1px] pointer-events-none"
-              style={{
-                background: "linear-gradient(90deg, transparent 0%, rgba(139,92,246,0.4) 30%, rgba(232,121,249,0.4) 50%, rgba(139,92,246,0.4) 70%, transparent 100%)",
-                borderRadius: "0 0 28px 28px",
-              }}
-              animate={{ opacity: [0.4, 0.9, 0.4] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </motion.div>
+            {/* Right — Text content */}
+            <div className="flex flex-col gap-3 flex-1">
+              {/* Label */}
+              <motion.p
+                className="text-[9px] uppercase tracking-[0.6em] font-semibold"
+                style={{ fontFamily: "'DM Sans', sans-serif", color: asiAccent + "99" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                Special Theme · Track S
+              </motion.p>
 
-          {/* ── Mobile extra spacing ── */}
-          <div className="h-4" />
-        </motion.div>
-      )}
-    </AnimatePresence>
+              {/* Title */}
+              <motion.h3
+                className="text-3xl md:text-4xl font-black tracking-tight leading-none"
+                style={{ fontFamily: "'Syne', sans-serif", color: "#18181b" }}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 }}
+              >
+                ASI{" "}
+                <span
+                  style={{
+                    background: `linear-gradient(120deg, ${asiAccent}, #5BA4E6, #C89A2A)`,
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
+                >
+                  One
+                </span>
+              </motion.h3>
+
+              {/* Divider */}
+              <motion.div
+                style={{
+                  height: 1.5,
+                  background: `linear-gradient(90deg, ${asiAccent}40, #5BA4E640, #C89A2A30, transparent)`,
+                  borderRadius: 2,
+                }}
+                initial={{ scaleX: 0, originX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 0.45, duration: 0.5 }}
+              />
+
+              {/* Description */}
+              <motion.p
+                className="text-sm leading-relaxed"
+                style={{ fontFamily: "'DM Sans', sans-serif", color: "#555" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                Push the frontier of Artificial Superintelligence. Build systems that reason
+                beyond human-level, exhibit emergent capabilities, or pioneer new paradigms in
+                general intelligence. This track challenges you to think beyond narrow AI —
+                imagine what comes{" "}
+                <span style={{ color: asiAccent, fontWeight: 700 }}>after</span>.
+              </motion.p>
+
+              {/* Info pills row */}
+              <motion.div
+                className="flex flex-wrap gap-2 mt-1"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.58 }}
+              >
+                {[
+                  { label: "Exclusive Winner Prize", color: BLUE, text: "#5BA4E6" },
+                  { label: "Independent Judging Panel", color: GREEN, text: "#4CAF50" },
+                  { label: "Open to all participants", color: YELLOW, text: "#C89A2A" },
+                ].map((pill) => (
+                  <span
+                    key={pill.label}
+                    className="text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
+                    style={{
+                      background: pill.color + "55",
+                      border: `1px solid ${pill.text}30`,
+                      color: pill.text,
+                      fontFamily: "'DM Sans', sans-serif",
+                    }}
+                  >
+                    {pill.label}
+                  </span>
+                ))}
+              </motion.div>
+
+              {/* Bottom notice */}
+              <motion.div
+                className="mt-2 p-3 rounded-xl flex items-start gap-2.5"
+                style={{
+                  background: `${asiAccent}09`,
+                  border: `1px solid ${asiAccent}20`,
+                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.65 }}
+              >
+                <Trophy size={13} color={asiAccent} strokeWidth={2} style={{ flexShrink: 0, marginTop: 1 }} />
+                <p
+                  className="text-[10px] leading-relaxed"
+                  style={{ fontFamily: "'DM Sans', sans-serif", color: "#666" }}
+                >
+                  A{" "}
+                  <span style={{ fontWeight: 700, color: "#18181b" }}>
+                    dedicated winner
+                  </span>{" "}
+                  will be announced separately for this track — independent of the main hackathon
+                  winners. Teams can participate in ASI One alongside any other track.
+                </p>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Corner watermark — always visible */}
+      <div
+        className="absolute bottom-3 right-5 pointer-events-none select-none"
+        style={{
+          fontFamily: "'Syne', sans-serif",
+          fontWeight: 900,
+          fontSize: 52,
+          color: revealed ? asiAccent : "#ddd",
+          opacity: revealed ? 0.07 : 0.2,
+          letterSpacing: "-0.04em",
+          transition: "color 0.5s, opacity 0.5s",
+          lineHeight: 1,
+        }}
+      >
+        S
+      </div>
+    </motion.div>
   );
 }
 
 /* ══════════════════════════════════════════════════════
-   THEMES SECTION (full — original + ASI One)
+   THEMES SECTION
 ══════════════════════════════════════════════════════ */
 export default function ThemesSection() {
   const [revealedCount, setRevealedCount] = useState(0);
@@ -1065,6 +954,9 @@ export default function ThemesSection() {
 
   const RADIUS_DESKTOP = 620;
   const ORBIT_SIZE = RADIUS_DESKTOP * 2 + 240;
+
+  // ASI One reveals after all 8 tracks (delay = 8 * 500ms + 400ms extra)
+  const asiRevealed = on && revealedCount >= TRACKS.length;
 
   useEffect(() => {
     audioRef.current = new Audio("./click.mpeg");
@@ -1080,7 +972,9 @@ export default function ThemesSection() {
 
   const toggle = useCallback(() => {
     playClick();
+
     if (timerRef.current) clearInterval(timerRef.current);
+
     if (!on) {
       setOn(true);
       setRevealedCount(0);
@@ -1168,6 +1062,16 @@ export default function ThemesSection() {
             <span style={{ color: "#5BA4E6" }}>Themes</span>
           </motion.h2>
 
+          <motion.div
+            className="mx-auto mt-4 rounded-full"
+            style={{
+              height: 3,
+              background: "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8)",
+            }}
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: 140, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          />
 
           <motion.p
             className="mt-4 text-sm max-w-sm mx-auto"
@@ -1283,7 +1187,9 @@ export default function ThemesSection() {
                 height: `${((RADIUS_DESKTOP * 2) / ORBIT_SIZE) * 100}%`,
                 top: `${((ORBIT_SIZE / 2 - RADIUS_DESKTOP) / ORBIT_SIZE) * 100}%`,
                 left: `${((ORBIT_SIZE / 2 - RADIUS_DESKTOP) / ORBIT_SIZE) * 100}%`,
-                border: on ? "1.5px dashed rgba(251,191,36,0.3)" : "1.5px dashed rgba(0,0,0,0.07)",
+                border: on
+                  ? "1.5px dashed rgba(251,191,36,0.3)"
+                  : "1.5px dashed rgba(0,0,0,0.07)",
                 transition: "border 0.5s",
               }}
             />
@@ -1344,10 +1250,14 @@ export default function ThemesSection() {
                   </>
                 )}
               </AnimatePresence>
+
               <motion.div
                 animate={
                   on
-                    ? { filter: "drop-shadow(0 0 24px rgba(251,191,36,0.7)) drop-shadow(0 0 8px rgba(245,158,11,0.5))" }
+                    ? {
+                        filter:
+                          "drop-shadow(0 0 24px rgba(251,191,36,0.7)) drop-shadow(0 0 8px rgba(245,158,11,0.5))",
+                      }
                     : { filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.12))" }
                 }
                 transition={{ duration: 0.5 }}
@@ -1356,14 +1266,64 @@ export default function ThemesSection() {
               </motion.div>
             </div>
           </div>
-
-          {/* ✦ ASI One special track — rendered below orbit, tied to switch */}
-          <ASIOneSection on={on} />
         </div>
 
-        {/* ── ASI One on mobile too ── */}
-        <div className="md:hidden">
-          <ASIOneSection on={on} />
+        {/* ══════════════════════════════════════════════════════
+            ASI ONE — SPECIAL TRACK (below orbit, always rendered)
+        ══════════════════════════════════════════════════════ */}
+        <div className="mt-6 md:mt-0 px-2 md:px-0">
+          {/* Section label */}
+          <motion.div
+            className="flex items-center justify-center gap-3 mb-5"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+          >
+            <div
+              className="h-px flex-1 max-w-[120px]"
+              style={{
+                background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.1))",
+              }}
+            />
+            <div className="flex items-center gap-1.5">
+              <div
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: asiRevealed ? "#7C6FE0" : "#ccc",
+                  transition: "background 0.4s",
+                }}
+              />
+              <p
+                className="text-[9px] uppercase tracking-[0.55em] font-bold"
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  color: asiRevealed ? "#7C6FE0" : "#ccc",
+                  transition: "color 0.4s",
+                }}
+              >
+                Special Track
+              </p>
+              <div
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: asiRevealed ? "#7C6FE0" : "#ccc",
+                  transition: "background 0.4s",
+                }}
+              />
+            </div>
+            <div
+              className="h-px flex-1 max-w-[120px]"
+              style={{
+                background: "linear-gradient(90deg, rgba(0,0,0,0.1), transparent)",
+              }}
+            />
+          </motion.div>
+
+          <ASIOneCard revealed={asiRevealed} />
         </div>
       </div>
 

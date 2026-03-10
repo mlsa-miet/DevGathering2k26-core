@@ -22,7 +22,6 @@ function getTimeLeft() {
   };
 }
 
-
 /* ════════════════════════════════════════════════════
    Flip Digit Card
 ════════════════════════════════════════════════════ */
@@ -386,7 +385,7 @@ export default function HeroSection() {
         </motion.div>
 
         {/* ── TITLE BLOCK ── */}
-        <div className="flex flex-col items-center gap-0">
+        <div className="flex flex-col items-center gap-0 px-4 text-center overflow-hidden">
           {/* Main wordmark */}
           <motion.div
             className="flex flex-col items-center"
@@ -399,44 +398,46 @@ export default function HeroSection() {
             }}
           >
             <h1
-              className="font-black leading-[0.92] tracking-tight"
+              className="font-black leading-[0.95] tracking-tight break-words"
               style={{
                 fontFamily: "'Syne', sans-serif",
-                fontSize: "clamp(38px, 8.5vw, 82px)",
+                fontSize: "clamp(30px, 7vw, 82px)",
                 color: "#2d2d2d",
               }}
             >
               Dev<span style={{ color: "#5BA4E6" }}>Gathering</span>
             </h1>
 
-            {/* 2K26 — slightly smaller, accent colour, with flanking lines */}
-            <div className="flex items-center gap-3 mt-0.5">
+            {/* 2K26 */}
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mt-1 w-full">
               <motion.div
                 className="h-[3px] rounded-full hidden sm:block"
                 style={{
                   background: "linear-gradient(90deg, transparent, #E8916E)",
-                  width: 36,
+                  width: "clamp(20px, 5vw, 36px)",
                 }}
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={{ duration: 0.5, delay: 0.65 }}
               />
+
               <h2
                 className="font-black tracking-tight"
                 style={{
                   fontFamily: "'Syne', sans-serif",
-                  fontSize: "clamp(32px, 7.5vw, 68px)",
+                  fontSize: "clamp(26px, 6vw, 68px)",
                   color: "#E8916E",
                   letterSpacing: "-0.02em",
                 }}
               >
                 2K26
               </h2>
+
               <motion.div
                 className="h-[3px] rounded-full hidden sm:block"
                 style={{
                   background: "linear-gradient(90deg, #E8916E, transparent)",
-                  width: 36,
+                  width: "clamp(20px, 5vw, 36px)",
                 }}
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
