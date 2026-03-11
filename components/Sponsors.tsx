@@ -16,29 +16,22 @@ const SPONSORS_REVEALED = [
     accent: "#5BA4E6",
     bg: BLUE,
     logo: (
-    <img
-    src="/fetchai.png"
-    alt="Fetch.ai"
-    style={{
-      width: "36px",
-      height: "36px",
-      objectFit: "contain"
-    }}
-  />
+      <img
+        src="/fetchai.png"
+        alt="Fetch.ai"
+        style={{
+          width: "90px",
+          height: "90px",
+          objectFit: "contain"
+        }}
+      />
     ),
   },
-  
 ];
 
 const SPONSORS_LOCKED_COUNT = 8;
 
-/* ── Community Partners (3 revealed, 6 locked = 9 total) ── */
-
-const PARTNERS_REVEALED = [
- 
-  
-];
-
+/* ── Community Partners (0 revealed, 9 locked = 9 total) ── */
 const PARTNERS_LOCKED_COUNT = 9;
 
 /* ══════════════════════════════════════════════════════ */
@@ -86,7 +79,7 @@ function SponsorCard({ card, index, globalDelay = 0 }: { card: CardData; index: 
       />
       <div
         className="relative z-10 flex items-center justify-center rounded-lg bg-white shadow-sm"
-        style={{ width: 52, height: 52, padding: 8 }}
+        style={{ width: 60, height: 60, padding: 8 }}
       >
         {card.logo}
       </div>
@@ -295,7 +288,6 @@ export default function SponsorsSection() {
         {/* ════════ SPONSORS ════════ */}
         <Separator label="Sponsors" />
 
-        {/* 3 cols on mobile, 9 cols on md+ — always one clean row on desktop */}
         <div className="grid grid-cols-3 gap-2.5 sm:gap-3 md:grid-cols-9">
           {SPONSORS_REVEALED.map((s, i) => (
             <SponsorCard key={s.name} card={s} index={i} />
@@ -312,7 +304,7 @@ export default function SponsorsSection() {
 
         <SectionCTA
           label="Apply as Sponsor"
-          href="mailto:mlsa.community@miet.ac.in?subject=Sponsorship%20Inquiry%20–%20DevGathering%202K26"
+          href="https://www.commudle.com/fill-form/4511"
           accent="#5BA4E6"
           delay={0.1}
         />
@@ -321,15 +313,12 @@ export default function SponsorsSection() {
         <Separator label="Community Partners" />
 
         <div className="grid grid-cols-3 gap-2.5 sm:gap-3 md:grid-cols-9">
-          {PARTNERS_REVEALED.map((p, i) => (
-            <SponsorCard key={p.name} card={p} index={i} globalDelay={0.1} />
-          ))}
           {Array.from({ length: PARTNERS_LOCKED_COUNT }).map((_, i) => (
             <LockedCard
               key={i}
               bg={partnerBgs[i % partnerBgs.length]}
               accent={partnerAccents[i % partnerAccents.length]}
-              index={PARTNERS_REVEALED.length + i}
+              index={i}
               globalDelay={0.1}
             />
           ))}
@@ -337,7 +326,7 @@ export default function SponsorsSection() {
 
         <SectionCTA
           label="Become a Community Partner"
-          href="mailto:mlsa.community@miet.ac.in?subject=Community%20Partner%20Inquiry%20–%20DevGathering%202K26"
+          href="https://www.commudle.com/fill-form/4512"
           accent="#D85C8A"
           delay={0.1}
         />
