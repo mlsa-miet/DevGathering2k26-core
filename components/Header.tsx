@@ -1,22 +1,27 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 
 /* ── Palette ── */
-const BLUE   = "#CFE8FF";
+const BLUE = "#CFE8FF";
 const YELLOW = "#FFE9A8";
-const GREEN  = "#D7F5D0";
-const PINK   = "#FFD6E8";
+const GREEN = "#D7F5D0";
+const PINK = "#FFD6E8";
 
 const NAV_LINKS = [
-  { label: "About",      href: "#about",       accent: "#5BA4E6", bg: BLUE   },
-  { label: "Events",     href: "#past-events",  accent: "#E8916E", bg: YELLOW },
-  { label: "Timeline",   href: "#timeline",     accent: "#4CAF50", bg: GREEN  },
-  { label: "Themes",     href: "#themes",       accent: "#D85C8A", bg: PINK   },
-  { label: "Prizes",     href: "#prizes",       accent: "#C89A2A", bg: YELLOW },
-  { label: "Sponsors",   href: "#sponsors",     accent: "#5BA4E6", bg: BLUE   },
-  { label: "FAQs",       href: "#faq",          accent: "#4CAF50", bg: GREEN  },
+  { label: "About", href: "#about", accent: "#5BA4E6", bg: BLUE },
+  { label: "Themes", href: "#themes", accent: "#D85C8A", bg: PINK },
+  { label: "Prizes", href: "#prizes", accent: "#C89A2A", bg: YELLOW },
+  { label: "Timeline", href: "#timeline", accent: "#4CAF50", bg: GREEN },
+  { label: "Events", href: "#past-events", accent: "#E8916E", bg: YELLOW },
+  { label: "Sponsors", href: "#sponsors", accent: "#5BA4E6", bg: BLUE },
+  { label: "FAQs", href: "#faq", accent: "#4CAF50", bg: GREEN },
 ];
 
 /* ── Active section detection ── */
@@ -29,7 +34,7 @@ function useActiveSection(ids: string[]) {
           if (e.isIntersecting) setActive(e.target.id);
         });
       },
-      { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
+      { rootMargin: "-40% 0px -55% 0px", threshold: 0 },
     );
     ids.forEach((id) => {
       const el = document.getElementById(id);
@@ -44,7 +49,8 @@ function useActiveSection(ids: string[]) {
    DESKTOP NAV LINK
 ══════════════════════════════════════════════════════ */
 function NavLink({
-  link, isActive,
+  link,
+  isActive,
 }: {
   link: (typeof NAV_LINKS)[0];
   isActive: boolean;
@@ -64,7 +70,10 @@ function NavLink({
         {(hovered || isActive) && (
           <motion.div
             className="absolute inset-x-0 inset-y-[-4px] rounded-full"
-            style={{ background: link.bg, border: `1px solid ${link.accent}35` }}
+            style={{
+              background: link.bg,
+              border: `1px solid ${link.accent}35`,
+            }}
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.85 }}
@@ -102,7 +111,9 @@ function NavLink({
    MOBILE MENU LINK
 ══════════════════════════════════════════════════════ */
 function MobileLink({
-  link, index, onClose,
+  link,
+  index,
+  onClose,
 }: {
   link: (typeof NAV_LINKS)[0];
   index: number;
@@ -117,7 +128,11 @@ function MobileLink({
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -16 }}
-      transition={{ duration: 0.28, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
+      transition={{
+        duration: 0.28,
+        delay: index * 0.05,
+        ease: [0.22, 1, 0.36, 1],
+      }}
       whileTap={{ scale: 0.97 }}
       whileHover={{ x: 4 }}
     >
@@ -127,7 +142,10 @@ function MobileLink({
         style={{ background: link.bg }}
       />
       {/* Accent dot */}
-      <div className="relative z-10 w-2 h-2 rounded-full shrink-0" style={{ background: link.accent }} />
+      <div
+        className="relative z-10 w-2 h-2 rounded-full shrink-0"
+        style={{ background: link.accent }}
+      />
       <span
         className="relative z-10 text-sm font-semibold"
         style={{ fontFamily: "'DM Sans', sans-serif", color: "#2d2d2d" }}
@@ -135,7 +153,17 @@ function MobileLink({
         {link.label}
       </span>
       {/* Arrow */}
-      <svg className="relative z-10 ml-auto" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={link.accent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        className="relative z-10 ml-auto"
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke={link.accent}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <polyline points="9 18 15 12 9 6" />
       </svg>
     </motion.a>
@@ -146,8 +174,8 @@ function MobileLink({
    HEADER — default export
 ══════════════════════════════════════════════════════ */
 export default function Header() {
-  const [mobileOpen,   setMobileOpen]   = useState(false);
-  const [scrolled,     setScrolled]     = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
 
   const { scrollY } = useScroll();
@@ -161,11 +189,13 @@ export default function Header() {
   /* Lock body scroll when mobile menu open */
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [mobileOpen]);
 
   const sectionIds = NAV_LINKS.map((l) => l.href.replace("#", ""));
-  const active     = useActiveSection(sectionIds);
+  const active = useActiveSection(sectionIds);
 
   return (
     <>
@@ -174,7 +204,7 @@ export default function Header() {
         className="fixed top-0 left-0 right-0 z-[100]"
         style={{
           WebkitBackdropFilter: scrolled ? "blur(18px) saturate(160%)" : "none",
-          backdropFilter:        scrolled ? "blur(18px) saturate(160%)" : "none",
+          backdropFilter: scrolled ? "blur(18px) saturate(160%)" : "none",
         }}
         animate={{
           background: scrolled
@@ -189,13 +219,15 @@ export default function Header() {
         {/* Rainbow top border — appears on scroll */}
         <motion.div
           className="absolute top-0 left-0 right-0 h-[2.5px]"
-          style={{ background: "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8, #CFE8FF)" }}
+          style={{
+            background:
+              "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8, #CFE8FF)",
+          }}
           animate={{ opacity: scrolled ? 1 : 0 }}
           transition={{ duration: 0.3 }}
         />
 
         <div className="max-w-6xl mx-auto px-4 h-[60px] flex items-center justify-between gap-4">
-
           {/* ── LOGO ── */}
           <motion.a
             href="#"
@@ -215,7 +247,12 @@ export default function Header() {
             <div className="flex flex-col leading-none">
               <span
                 className="font-black tracking-tight"
-                style={{ fontFamily: "'Syne', sans-serif", fontSize: 15, color: "#1a1a1a", letterSpacing: "-0.02em" }}
+                style={{
+                  fontFamily: "'Syne', sans-serif",
+                  fontSize: 15,
+                  color: "#1a1a1a",
+                  letterSpacing: "-0.02em",
+                }}
               >
                 Dev<span style={{ color: "#5BA4E6" }}>Gathering</span>
               </span>
@@ -251,13 +288,25 @@ export default function Header() {
                 boxShadow: "0 3px 14px rgba(91,164,230,0.38)",
                 textDecoration: "none",
               }}
-              whileHover={{ scale: 1.06, boxShadow: "0 5px 20px rgba(91,164,230,0.5)" }}
+              whileHover={{
+                scale: 1.06,
+                boxShadow: "0 5px 20px rgba(91,164,230,0.5)",
+              }}
               whileTap={{ scale: 0.96 }}
             >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                <polyline points="10 17 15 12 10 7"/>
-                <line x1="15" y1="12" x2="3" y2="12"/>
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                <polyline points="10 17 15 12 10 7" />
+                <line x1="15" y1="12" x2="3" y2="12" />
               </svg>
               Register
             </motion.a>
@@ -266,7 +315,8 @@ export default function Header() {
             <motion.button
               className="lg:hidden flex flex-col items-center justify-center rounded-xl"
               style={{
-                width: 38, height: 38,
+                width: 38,
+                height: 38,
                 background: mobileOpen ? PINK : BLUE,
                 border: `1.5px solid ${mobileOpen ? "rgba(216,92,138,0.35)" : "rgba(91,164,230,0.35)"}`,
                 cursor: "pointer",
@@ -277,23 +327,48 @@ export default function Header() {
               whileTap={{ scale: 0.93 }}
               aria-label="Toggle menu"
             >
-              <div className="flex flex-col items-center justify-center gap-[5px]" style={{ width: 18, height: 14 }}>
+              <div
+                className="flex flex-col items-center justify-center gap-[5px]"
+                style={{ width: 18, height: 14 }}
+              >
                 <motion.span
                   className="block rounded-full"
-                  style={{ width: 18, height: 2, background: mobileOpen ? "#D85C8A" : "#5BA4E6", transformOrigin: "center" }}
-                  animate={mobileOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
+                  style={{
+                    width: 18,
+                    height: 2,
+                    background: mobileOpen ? "#D85C8A" : "#5BA4E6",
+                    transformOrigin: "center",
+                  }}
+                  animate={
+                    mobileOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }
+                  }
                   transition={{ duration: 0.25 }}
                 />
                 <motion.span
                   className="block rounded-full"
-                  style={{ width: 12, height: 2, background: mobileOpen ? "#D85C8A" : "#5BA4E6" }}
-                  animate={mobileOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+                  style={{
+                    width: 12,
+                    height: 2,
+                    background: mobileOpen ? "#D85C8A" : "#5BA4E6",
+                  }}
+                  animate={
+                    mobileOpen
+                      ? { opacity: 0, scaleX: 0 }
+                      : { opacity: 1, scaleX: 1 }
+                  }
                   transition={{ duration: 0.2 }}
                 />
                 <motion.span
                   className="block rounded-full"
-                  style={{ width: 18, height: 2, background: mobileOpen ? "#D85C8A" : "#5BA4E6", transformOrigin: "center" }}
-                  animate={mobileOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
+                  style={{
+                    width: 18,
+                    height: 2,
+                    background: mobileOpen ? "#D85C8A" : "#5BA4E6",
+                    transformOrigin: "center",
+                  }}
+                  animate={
+                    mobileOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }
+                  }
                   transition={{ duration: 0.25 }}
                 />
               </div>
@@ -311,7 +386,10 @@ export default function Header() {
             {/* Backdrop */}
             <motion.div
               className="fixed inset-0 z-[98]"
-              style={{ background: "rgba(0,0,0,0.18)", backdropFilter: "blur(3px)" }}
+              style={{
+                background: "rgba(0,0,0,0.18)",
+                backdropFilter: "blur(3px)",
+              }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -337,19 +415,33 @@ export default function Header() {
                 }}
               >
                 {/* Rainbow top bar */}
-                <div className="absolute top-0 left-0 right-0 h-[3px]"
-                  style={{ background: "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8)" }} />
+                <div
+                  className="absolute top-0 left-0 right-0 h-[3px]"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8)",
+                  }}
+                />
 
                 {/* Dot grid texture */}
-                <div className="absolute inset-0 pointer-events-none" style={{
-                  backgroundImage: "radial-gradient(rgba(0,0,0,0.035) 1px, transparent 1px)",
-                  backgroundSize: "14px 14px",
-                }} />
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(rgba(0,0,0,0.035) 1px, transparent 1px)",
+                    backgroundSize: "14px 14px",
+                  }}
+                />
 
                 <div className="relative z-10 p-3 pt-4">
                   {/* Section label */}
-                  <p className="text-[8px] uppercase tracking-[0.5em] font-semibold px-4 mb-2"
-                    style={{ fontFamily: "'DM Sans', sans-serif", color: "#ccc" }}>
+                  <p
+                    className="text-[8px] uppercase tracking-[0.5em] font-semibold px-4 mb-2"
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      color: "#ccc",
+                    }}
+                  >
                     Navigation
                   </p>
 
@@ -366,8 +458,13 @@ export default function Header() {
                   </div>
 
                   {/* Divider */}
-                  <div className="mx-4 my-3 h-px"
-                    style={{ background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.07), transparent)" }} />
+                  <div
+                    className="mx-4 my-3 h-px"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, transparent, rgba(0,0,0,0.07), transparent)",
+                    }}
+                  />
 
                   {/* Mobile CTA */}
                   <div className="px-3 pb-1">
@@ -386,10 +483,19 @@ export default function Header() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: NAV_LINKS.length * 0.05 + 0.05 }}
                     >
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                        <polyline points="10 17 15 12 10 7"/>
-                        <line x1="15" y1="12" x2="3" y2="12"/>
+                      <svg
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                        <polyline points="10 17 15 12 10 7" />
+                        <line x1="15" y1="12" x2="3" y2="12" />
                       </svg>
                       Register for DevGathering 2K26
                     </motion.a>
@@ -399,11 +505,23 @@ export default function Header() {
                   <div className="flex items-center justify-between px-4 pt-3 pb-2">
                     <div className="flex gap-1">
                       {[BLUE, YELLOW, GREEN, PINK].map((c, i) => (
-                        <div key={i} className="w-2 h-2 rounded-full" style={{ background: c, border: "1px solid rgba(0,0,0,0.08)" }} />
+                        <div
+                          key={i}
+                          className="w-2 h-2 rounded-full"
+                          style={{
+                            background: c,
+                            border: "1px solid rgba(0,0,0,0.08)",
+                          }}
+                        />
                       ))}
                     </div>
-                    <p className="text-[9px] uppercase tracking-[0.3em]"
-                      style={{ fontFamily: "'DM Sans', sans-serif", color: "#ccc" }}>
+                    <p
+                      className="text-[9px] uppercase tracking-[0.3em]"
+                      style={{
+                        fontFamily: "'DM Sans', sans-serif",
+                        color: "#ccc",
+                      }}
+                    >
                       MLSA MIET · 2K26
                     </p>
                   </div>

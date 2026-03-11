@@ -15,7 +15,7 @@ const EVENTS = [
     tag: "Flagship Hackathon",
     year: "25",
     description:
-      "500+ registrations, 120+ projects, 30+ colleges — 24 hours of non-stop building and innovation.",
+      "1200+ registrations, 350+ projects, 35+ colleges — 32 hours of non-stop building and innovation.",
     image: "/images/width_800.jpg",
     accent: "#5BA4E6",
     bg: BLUE,
