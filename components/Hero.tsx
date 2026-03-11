@@ -525,7 +525,7 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 1.24, ease: [0.22, 1, 0.36, 1] }}
         >
           <motion.a
-            href="#register"
+            href="https://unstop.com/hackathons/devgathering-2k26-devgathering-2k26-meerut-institute-of-engineering-and-technology-miet-1657272"
             className="relative inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold text-white overflow-hidden"
             style={{
               background: "linear-gradient(135deg, #5BA4E6, #3f8fd4)",

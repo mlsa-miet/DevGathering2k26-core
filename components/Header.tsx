@@ -243,7 +243,7 @@ export default function Header() {
           <div className="flex items-center gap-2.5">
             {/* Register CTA */}
             <motion.a
-              href="#register"
+              href="https://unstop.com/hackathons/devgathering-2k26-devgathering-2k26-meerut-institute-of-engineering-and-technology-miet-1657272"
               className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-white"
               style={{
                 background: "linear-gradient(135deg, #5BA4E6, #3f8fd4)",
@@ -372,7 +372,7 @@ export default function Header() {
                   {/* Mobile CTA */}
                   <div className="px-3 pb-1">
                     <motion.a
-                      href="#register"
+                      href="https://unstop.com/hackathons/devgathering-2k26-devgathering-2k26-meerut-institute-of-engineering-and-technology-miet-1657272"
                       onClick={() => setMobileOpen(false)}
                       className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-bold text-white"
                       style={{
