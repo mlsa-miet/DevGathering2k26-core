@@ -488,7 +488,8 @@ export default function PastEventsSection() {
             See everything
           </p>
           <motion.a
-            href="#gallery"
+            href="https://www.mlsamiet.site/gallery"
+            target="_blank"
             className="inline-flex items-center gap-2 px-7 py-2.5 rounded-full text-sm font-bold text-white"
             style={{
               background: "linear-gradient(135deg, #5BA4E6, #E8916E)",

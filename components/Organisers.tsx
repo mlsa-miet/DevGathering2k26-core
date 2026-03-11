@@ -25,24 +25,24 @@ interface Person {
 /* ════════════════════════════════════════════════════ */
 /* ⚠️  ADD YOUR TRANSPARENT PNG PATHS HERE */
 const LEADS: Person[] = [
-  { name: "Pranav",    role: "Lead",               linkedin: "#", image: "/team/pranav.PNG" },
-  { name: "Avni",      role: "Lead",               linkedin: "#", image: "/team/avni.PNG" },
-  { name: "Kushagra",  role: "Head of Operations", linkedin: "#", image: "/team/kushagra.png" },
+  { name: "Pranav",    role: "Lead",               linkedin: "https://www.linkedin.com/in/pranav-bansal-0b91412aa/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app", image: "/team/pranav.PNG" },
+  { name: "Avni",      role: "Lead",               linkedin: "https://www.linkedin.com/in/avni-gupta-186366281/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app", image: "/team/avni.PNG" },
+  { name: "Kushagra",  role: "Head of Operations", linkedin: "https://www.linkedin.com/in/kushagra-sharma-6b2347245/", image: "/team/kushagra.png" },
 ];
 
 const ORG_ROW1: Person[] = [
-  { name: "Ankit",     role: "Tech Head",     linkedin: "#", image: "/team/ankit.PNG" },
-  { name: "Aayushi",   role: "Tech Head",     linkedin: "#", image: "/team/aayushi.PNG" },
-  { name: "Geetanshi", role: "Content Head",  linkedin: "#", image: "/team/geetanshi2.PNG" },
-  { name: "Bhavya",    role: "Graphics Head", linkedin: "#", image: "/team/bhavya.PNG" },
-  { name: "Prafullit", role: "Outreach Head", linkedin: "#", image: "/team/prafullit.PNG" },
+  { name: "Ankit",     role: "Tech Head",     linkedin: "https://www.linkedin.com/in/i-ankit01/", image: "/team/ankit.PNG" },
+  { name: "Aayushi",   role: "Tech Head",     linkedin: "https://www.linkedin.com/in/aayushi-nagar-688642279/", image: "/team/aayushi.PNG" },
+  { name: "Geetanshi", role: "Content Head",  linkedin: "https://www.linkedin.com/in/geetanshi-goel-49ba5832b/", image: "/team/geetanshi2.PNG" },
+  { name: "Bhavya",    role: "Graphics Head", linkedin: "https://www.linkedin.com/in/anmolkumar01/", image: "/team/bhavya.PNG" },
+  { name: "Prafullit", role: "Outreach Head", linkedin: "https://www.linkedin.com/in/prafullit-bhattacharya-9443b4306/", image: "/team/prafullit.PNG" },
 ];
 
 const ORG_ROW2: Person[] = [
-  { name: "Ansh",  role: "Outreach Head", linkedin: "#", image: "/team/ansh.PNG" },
-  { name: "Yojit", role: "Visuals Head",  linkedin: "#", image: "/team/yojit.PNG" },
-  { name: "Yash",  role: "Socials Head",  linkedin: "#", image: "/team/yash.PNG" },
-  { name: "Daksh", role: "Workflow Head", linkedin: "#", image: "/team/daksh.PNG" },
+  { name: "Ansh",  role: "Outreach Head", linkedin: "linkedin.com/in/anshgoyal15032007", image: "/team/ansh.PNG" },
+  { name: "Yojit", role: "Visuals Head",  linkedin: "https://www.linkedin.com/in/yojit-tyagi-6a9429316/", image: "/team/yojit.PNG" },
+  { name: "Yash",  role: "Socials Head",  linkedin: "https://www.linkedin.com/in/yash-goyal-b3bb8129a/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app", image: "/team/yash.PNG" },
+  { name: "Daksh", role: "Workflow Head", linkedin: "https://www.linkedin.com/in/daksh-goswami-9607712ba/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app", image: "/team/daksh.PNG" },
 ];
 
 const LinkedInIcon = ({ color }: { color: string }) => (
@@ -52,6 +52,54 @@ const LinkedInIcon = ({ color }: { color: string }) => (
     <circle cx="4" cy="4" r="2"/>
   </svg>
 );
+
+function Separator({ label }: { label: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+
+  return (
+    <div ref={ref} className="flex items-center gap-3 my-10">
+      <motion.div
+        className="flex-1 h-px"
+        style={{ background: "linear-gradient(90deg, transparent, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8, transparent)" }}
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={inView ? { scaleX: 1, opacity: 1 } : {}}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      />
+      <motion.div
+        className="flex items-center gap-2 px-4 py-1.5 rounded-full shrink-0"
+        style={{
+          background: "white",
+          border: "1.5px solid rgba(0,0,0,0.07)",
+          boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+        }}
+        initial={{ opacity: 0, scale: 0.85 }}
+        animate={inView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <circle cx="4"  cy="4"  r="3" fill="#CFE8FF" stroke="#5BA4E6" strokeWidth="1"/>
+          <circle cx="12" cy="4"  r="3" fill="#FFE9A8" stroke="#C89A2A" strokeWidth="1"/>
+          <circle cx="4"  cy="12" r="3" fill="#D7F5D0" stroke="#4CAF50" strokeWidth="1"/>
+          <circle cx="12" cy="12" r="3" fill="#FFD6E8" stroke="#D85C8A" strokeWidth="1"/>
+        </svg>
+        <span
+          className="text-[10px] font-semibold uppercase tracking-[0.35em] whitespace-nowrap"
+          style={{ fontFamily: "'DM Sans', sans-serif", color: "#888" }}
+        >
+          {label}
+        </span>
+      </motion.div>
+      <motion.div
+        className="flex-1 h-px"
+        style={{ background: "linear-gradient(90deg, transparent, #FFD6E8, #D7F5D0, #FFE9A8, #CFE8FF, transparent)" }}
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={inView ? { scaleX: 1, opacity: 1 } : {}}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      />
+    </div>
+  );
+}
 
 /* ════════════════════════════════════════════════════ */
 /* CARD COMPONENT: Premium Lift & Mobile Text Fix */
@@ -185,43 +233,6 @@ function PersonCard({
   );
 }
 
-/* ── Separator ── */
-function Separator({ label }: { label: string }) {
-  const ref    = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-30px" });
-  return (
-    <div ref={ref} className="flex items-center gap-4 my-12">
-      <motion.div
-        className="flex-1 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8, transparent)" }}
-        initial={{ scaleX: 0, opacity: 0 }}
-        animate={inView ? { scaleX: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-      />
-      <motion.div
-        className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white"
-        style={{ border: "1.5px solid rgba(0,0,0,0.07)", boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}
-        initial={{ opacity: 0, scale: 0.82 }}
-        animate={inView ? { opacity: 1, scale: 1 } : {}}
-        transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <span
-          className="text-[10px] font-semibold uppercase tracking-[0.35em] whitespace-nowrap"
-          style={{ fontFamily: "'DM Sans', sans-serif", color: "#888" }}
-        >
-          {label}
-        </span>
-      </motion.div>
-      <motion.div
-        className="flex-1 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, #FFD6E8, #D7F5D0, #FFE9A8, #CFE8FF, transparent)" }}
-        initial={{ scaleX: 0, opacity: 0 }}
-        animate={inView ? { scaleX: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-      />
-    </div>
-  );
-}
 
 
 /* ════════════════════════════════════════════════════ */
@@ -272,13 +283,7 @@ export default function OrganisersSection() {
             <span style={{ color: "#2d2d2d" }}>Meet the </span>
             <span style={{ color: "#5BA4E6" }}>Organisers</span>
           </motion.h2>
-          <motion.div
-            className="mx-auto mt-4 rounded-full"
-            style={{ height: 3, background: "linear-gradient(90deg, #CFE8FF, #FFE9A8, #D7F5D0, #FFD6E8)" }}
-            initial={{ width: 0, opacity: 0 }}
-            animate={titleInView ? { width: 140, opacity: 1 } : {}}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          />
+          
         </div>
 
         {/* ══════════════════════════════════════
