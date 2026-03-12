@@ -89,7 +89,7 @@ const TRACKS = [
   {
     id: 7,
     number: 8,
-    name: "CyberSecurity",
+    name: "Cyber Security",
     Icon: ShieldCheck,
     accent: "#D85C8A",
     bg: PINK,
