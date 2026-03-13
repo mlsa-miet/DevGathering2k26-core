@@ -9,6 +9,7 @@ const YELLOW = "#FFE9A8";
 const GREEN = "#D7F5D0";
 const PINK = "#FFD6E8";
 
+
 /* ── Sponsors (1 revealed, 8 locked = 9 total) ── */
 const SPONSORS_REVEALED = [
   {
