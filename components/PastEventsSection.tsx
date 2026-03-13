@@ -37,11 +37,11 @@ const EVENTS = [
   },
   {
     id: 3,
-    name: "Salesforce",
+    name: "Agentforce",
     tag: "Industry Workshop",
     year: "26",
     description:
-      "Exclusive hands-on workshop with Salesforce engineers on CRM dev, Apex, and LWC.",
+      "Exclusive hands-on workshop with Agentforce engineers on CRM dev, Apex, and LWC.",
     image: "/images/avsar.JPG",
     accent: "#4CAF50",
     bg: GREEN,
