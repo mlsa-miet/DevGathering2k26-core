@@ -9,11 +9,11 @@ const YELLOW = "#FFE9A8";
 const GREEN = "#D7F5D0";
 const PINK = "#FFD6E8";
 
-
-/* ── Sponsors (1 revealed, 8 locked = 9 total) ── */
+/* ── Sponsors ── */
 const SPONSORS_REVEALED = [
   {
     name: "ASI:One",
+    link: "https://asi1.ai",
     accent: "#5BA4E6",
     bg: BLUE,
     logo: (
@@ -32,17 +32,51 @@ const SPONSORS_REVEALED = [
       </svg>
     ),
   },
+  {
+    name: "Incogni",
+    link: "#",
+    accent: "#5BA4E6",
+    bg: BLUE,
+    logo: <img src="./Incogni_logo.png" alt="Incogni" style={{ width: "100%", height: "100%", objectFit: "contain" }} />,
+  },
+  {
+    name: "Nexos AI",
+    link: "#",
+    accent: "#C89A2A",
+    bg: YELLOW,
+    logo: <img src="./nexos-ai-logo.png" alt="Nexos AI" style={{ width: "100%", height: "100%", objectFit: "contain" }} />,
+  },
+  {
+    name: "Nord VPN",
+    link: "#",
+    accent: "#4CAF50",
+    bg: GREEN,
+    logo: <img src="./NordVPN_Logo.png" alt="Nord VPN" style={{ width: "100%", height: "100%", objectFit: "contain" }} />,
+  },
+  {
+    name: "NordPass",
+    link: "#",
+    accent: "#D85C8A",
+    bg: PINK,
+    logo: <img src="./nordpass-logo.png" alt="NordPass" style={{ width: "100%", height: "100%", objectFit: "contain" }} />,
+  },
+  {
+    name: "Saily",
+    link: "#",
+    accent: "#5BA4E6",
+    bg: GREEN,
+    logo: <img src="./saily-logo.png" alt="Saily" style={{ width: "100%", height: "100%", objectFit: "contain" }} />,
+  },
 ];
 
-const SPONSORS_LOCKED_COUNT = 8;
-
-/* ── Community Partners (0 revealed, 9 locked = 9 total) ── */
+const SPONSORS_LOCKED_COUNT = 3;
 const PARTNERS_LOCKED_COUNT = 9;
 
 /* ══════════════════════════════════════════════════════ */
 
 interface CardData {
   name: string;
+  link: string;
   accent: string;
   bg: string;
   logo: React.ReactNode;
@@ -61,54 +95,61 @@ function SponsorCard({
   const inView = useInView(ref, { once: true, margin: "-40px" });
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 32, scale: 0.9 }}
-      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-      transition={{
-        duration: 0.55,
-        delay: globalDelay + index * 0.07,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      whileHover={{ y: -5, scale: 1.04 }}
-      className="relative flex flex-col items-center justify-center gap-2 rounded-xl p-3 cursor-default overflow-hidden"
-      style={{
-        background: card.bg,
-        border: `1.5px solid ${card.accent}28`,
-        boxShadow: `0 4px 18px ${card.accent}1a`,
-        minHeight: 96,
-      }}
+    <a
+      href={card.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ textDecoration: "none", display: "block" }}
     >
-      <div
-        className="absolute inset-0 rounded-xl pointer-events-none"
-        style={{
-          backgroundImage: `radial-gradient(${card.accent}22 1px, transparent 1px)`,
-          backgroundSize: "14px 14px",
-          opacity: 0.6,
-        }}
-      />
       <motion.div
-        className="absolute top-0 left-4 right-4 h-[2px] rounded-full"
-        style={{
-          background: `linear-gradient(90deg, transparent, ${card.accent}88, transparent)`,
+        ref={ref}
+        initial={{ opacity: 0, y: 32, scale: 0.9 }}
+        animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+        transition={{
+          duration: 0.55,
+          delay: globalDelay + index * 0.07,
+          ease: [0.22, 1, 0.36, 1],
         }}
-        initial={{ scaleX: 0 }}
-        animate={inView ? { scaleX: 1 } : {}}
-        transition={{ duration: 0.6, delay: globalDelay + index * 0.07 + 0.25 }}
-      />
-      <div
-        className="relative z-10 flex items-center justify-center rounded-lg bg-white shadow-sm"
-        style={{ width: 60, height: 60, padding: 8 }}
+        whileHover={{ y: -5, scale: 1.04 }}
+        className="relative flex flex-col items-center justify-center gap-2 rounded-xl p-3 cursor-pointer overflow-hidden"
+        style={{
+          background: card.bg,
+          border: `1.5px solid ${card.accent}28`,
+          boxShadow: `0 4px 18px ${card.accent}1a`,
+          minHeight: 96,
+        }}
       >
-        {card.logo}
-      </div>
-      <p
-        className="relative z-10 text-xs font-bold tracking-tight text-center"
-        style={{ fontFamily: "'Syne', sans-serif", color: "#1a1a1a" }}
-      >
-        {card.name}
-      </p>
-    </motion.div>
+        <div
+          className="absolute inset-0 rounded-xl pointer-events-none"
+          style={{
+            backgroundImage: `radial-gradient(${card.accent}22 1px, transparent 1px)`,
+            backgroundSize: "14px 14px",
+            opacity: 0.6,
+          }}
+        />
+        <motion.div
+          className="absolute top-0 left-4 right-4 h-[2px] rounded-full"
+          style={{
+            background: `linear-gradient(90deg, transparent, ${card.accent}88, transparent)`,
+          }}
+          initial={{ scaleX: 0 }}
+          animate={inView ? { scaleX: 1 } : {}}
+          transition={{ duration: 0.6, delay: globalDelay + index * 0.07 + 0.25 }}
+        />
+        <div
+          className="relative z-10 flex items-center justify-center rounded-lg bg-white shadow-sm"
+          style={{ width: 70, height: 70, padding: 8 }}
+        >
+          {card.logo}
+        </div>
+        <p
+          className="relative z-10 text-xs font-bold tracking-tight text-center"
+          style={{ fontFamily: "'Syne', sans-serif", color: "#1a1a1a" }}
+        >
+          {card.name}
+        </p>
+      </motion.div>
+    </a>
   );
 }
 
@@ -211,7 +252,6 @@ function LockedCard({
   );
 }
 
-/* ── Single outlined CTA button ── */
 function SectionCTA({
   label,
   href,
@@ -236,6 +276,8 @@ function SectionCTA({
     >
       <motion.a
         href={href}
+        target="_blank"
+        rel="noopener noreferrer"
         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-[0.3em]"
         style={{
           background: "rgba(255,255,255,0.7)",
@@ -243,6 +285,7 @@ function SectionCTA({
           border: `1.5px solid ${accent}45`,
           color: accent,
           backdropFilter: "blur(8px)",
+          textDecoration: "none",
         }}
         whileHover={{
           scale: 1.05,
@@ -269,7 +312,6 @@ function SectionCTA({
   );
 }
 
-/* ── Thematic separator ── */
 function Separator({ label }: { label: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
@@ -298,38 +340,10 @@ function Separator({ label }: { label: string }) {
         transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
       >
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-          <circle
-            cx="4"
-            cy="4"
-            r="3"
-            fill="#CFE8FF"
-            stroke="#5BA4E6"
-            strokeWidth="1"
-          />
-          <circle
-            cx="12"
-            cy="4"
-            r="3"
-            fill="#FFE9A8"
-            stroke="#C89A2A"
-            strokeWidth="1"
-          />
-          <circle
-            cx="4"
-            cy="12"
-            r="3"
-            fill="#D7F5D0"
-            stroke="#4CAF50"
-            strokeWidth="1"
-          />
-          <circle
-            cx="12"
-            cy="12"
-            r="3"
-            fill="#FFD6E8"
-            stroke="#D85C8A"
-            strokeWidth="1"
-          />
+          <circle cx="4" cy="4" r="3" fill="#CFE8FF" stroke="#5BA4E6" strokeWidth="1" />
+          <circle cx="12" cy="4" r="3" fill="#FFE9A8" stroke="#C89A2A" strokeWidth="1" />
+          <circle cx="4" cy="12" r="3" fill="#D7F5D0" stroke="#4CAF50" strokeWidth="1" />
+          <circle cx="12" cy="12" r="3" fill="#FFD6E8" stroke="#D85C8A" strokeWidth="1" />
         </svg>
         <span
           className="text-[10px] font-semibold uppercase tracking-[0.35em] whitespace-nowrap"
@@ -358,37 +372,16 @@ export default function SponsorsSection() {
   const titleInView = useInView(titleRef, { once: true, margin: "-80px" });
 
   const sponsorBgs = [BLUE, YELLOW, GREEN, PINK, BLUE, GREEN];
-  const sponsorAccents = [
-    "#5BA4E6",
-    "#C89A2A",
-    "#4CAF50",
-    "#D85C8A",
-    "#5BA4E6",
-    "#4CAF50",
-  ];
+  const sponsorAccents = ["#5BA4E6", "#C89A2A", "#4CAF50", "#D85C8A", "#5BA4E6", "#4CAF50"];
   const partnerBgs = [PINK, GREEN, BLUE, YELLOW, PINK, BLUE];
-  const partnerAccents = [
-    "#D85C8A",
-    "#4CAF50",
-    "#5BA4E6",
-    "#C89A2A",
-    "#D85C8A",
-    "#5BA4E6",
-  ];
+  const partnerAccents = ["#D85C8A", "#4CAF50", "#5BA4E6", "#C89A2A", "#D85C8A", "#5BA4E6"];
 
   return (
-    <section
-      id="sponsors"
-      className="relative w-full py-24 px-4 overflow-hidden"
-    >
+    <section id="sponsors" className="relative w-full py-24 px-4 overflow-hidden">
       {/* 4-band pastel wash */}
       <div className="absolute inset-0 flex pointer-events-none">
         {[BLUE, YELLOW, GREEN, PINK].map((c, i) => (
-          <div
-            key={i}
-            className="flex-1 opacity-[0.07]"
-            style={{ background: c }}
-          />
+          <div key={i} className="flex-1 opacity-[0.07]" style={{ background: c }} />
         ))}
       </div>
 
@@ -485,6 +478,7 @@ export default function SponsorsSection() {
               background: "linear-gradient(135deg, #5BA4E6, #E8916E)",
               fontFamily: "'DM Sans', sans-serif",
               boxShadow: "0 4px 20px rgba(91,164,230,0.3)",
+              textDecoration: "none",
             }}
             whileHover={{
               scale: 1.05,
