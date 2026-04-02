@@ -11,6 +11,8 @@ import ThemesSection from "@/components/ThemeSection";
 import PrizePoolSection from "@/components/PrizePool";
 import BackgroundCanvas from '@/components/BackgroundCanvas';
 import Header from '@/components/Header';
+import PreMeetupSection from '@/components/PreMeetup';
+import ASIAgentWidget from '@/components/AsiAgentWidget';
 
 export default function Home() {
   return (
@@ -21,6 +23,7 @@ export default function Home() {
       <main className="relative z-10">
         <Header/>
         <HeroSection /> 
+        {/* <PreMeetupSection/> */}
         <AboutSection />
         <ThemesSection/>
         <PrizePoolSection/>
@@ -30,6 +33,7 @@ export default function Home() {
         <Sponsors />
         <FAQ />
         <GetInTouch />
+        <ASIAgentWidget/>
       </main>
       </IntroOverlay>
       </div>
